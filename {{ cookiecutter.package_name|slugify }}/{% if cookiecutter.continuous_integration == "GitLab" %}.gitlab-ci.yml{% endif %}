@@ -120,13 +120,6 @@ Publish:
     SENTRY_ORG: {{ cookiecutter.sentry_org }}
     SENTRY_PROJECT: {{ cookiecutter.sentry_project }}
   {%- endif %}
-  after_script:
-    - appbundle $DOCKER_IMAGE_SHA $CI_ENVIRONMENT_NAME $CI_PROJECT_NAME
-  {%- if cookiecutter.sentry_dsn %}
-    - VERSION=$(sed -E -n 's/^.*version.*"([^"]*)".*$/\1/p' pyproject.toml | head -n 1)
-    - SENTRY_RELEASE="{{ cookiecutter.package_name|slugify }}@$VERSION"
-    - sentry-release $SENTRY_RELEASE
-  {%- endif %}
   when: manual
 {% for environment in ["feature", "development", "test", "acceptance", "production"] %}
 Deploy ({{ environment }}):

@@ -37,7 +37,7 @@ jobs:
           key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('my-package/pyproject.toml') }}
 
       - name: Install Python environment
-        run:
+        run: |
           git init
           git add .
           poetry config virtualenvs.in-project true
