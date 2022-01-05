@@ -14,7 +14,7 @@ A modern [cookiecutter](https://cookiecutter.readthedocs.io) template for scaffo
 2. Create a new repository and clone it locally.
 3. In the repository's parent directory, run:
    ```bash
-   cruft create -f git+ssh://git@github.com:radix-ai/poetry-cookiecutter.git
+   cruft create -f git@github.com:radix-ai/poetry-cookiecutter.git
    ```
 
 </details>
