@@ -1,0 +1,18 @@
+{
+  "package_name": "My Package",
+  "package_description": "A Python package that ...",
+  "package_url": "",
+  "author_name": "John Smith",
+  "author_email": "john@example.com",
+  "with_fastapi_api": "1",
+  "with_jupyter_lab": "1",
+  "with_pydantic_typing": "1",
+  "with_streamlit_app": "1",
+  "with_typer_cli": "1",
+  "continuous_integration": ["GitHub", "GitLab"],
+  "sentry_dsn": "",
+  "sentry_org": "",
+  "sentry_project": "{% if cookiecutter.sentry_dsn %}{{ cookiecutter.package_name|slugify }}{% endif %}",
+  "private_package_repository_name": "",
+  "private_package_repository_url": ""
+}

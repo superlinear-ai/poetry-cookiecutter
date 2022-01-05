@@ -1,0 +1,53 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+
+      matrix:
+        python-version: ["3.8"]
+      fail-fast: false
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
+        uses: actions/setup-python@v2
+        with:
+          python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+
+      - name: Cache Python environment
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: {% raw %}venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}{% endraw %}
+
+      - name: Install Poetry
+        run: pip install --no-input poetry
+
+      - name: Install Python environment
+        run: |
+{%- if cookiecutter.private_package_repository_name %}
+          poetry config http-basic.{{ cookiecutter.private_package_repository_name }} "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD }}"
+{%- endif %}
+          poetry config virtualenvs.in-project true
+          poetry install --no-interaction
+
+      - name: Lint
+        run: poetry run poe lint
+
+      - name: Test
+        run: poetry run poe test
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          files: reports/coverage.xml

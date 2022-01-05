@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  dev:
+    build:
+      args:
+{%- if cookiecutter.private_package_repository_name %}
+        POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
+        POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
+{%- else %}
+        POETRY_PYPI_TOKEN_PYPI: $POETRY_PYPI_TOKEN_PYPI
+{%- endif %}
+      context: .
+      target: dev
+    command: [ "sleep", "infinity" ]
+    environment:
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+    ports:
+      - "8000:8000"
+    volumes:
+      # app
+      - .:/app/:cached
+      # env
+      - ${POETRY_CACHE_DIR:-~/Library/Caches/pypoetry/}:/root/.cache/pypoetry/:cached
+      - {{ cookiecutter.package_name|slugify }}-env:/usr/local/
+      # git
+      - ~/.gitconfig:/etc/gitconfig:cached
+      # ssh
+      - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock:cached
+      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:cached
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
+  app:
+    build:
+      args:
+{%- if cookiecutter.private_package_repository_name %}
+        POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
+        POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
+{%- else %}
+        POETRY_PYPI_TOKEN_PYPI: $POETRY_PYPI_TOKEN_PYPI
+{%- endif %}
+      context: .
+      target: app
+    ports:
+      - "8000:8000"
+    profiles:
+      - app
+{%- endif %}
+
+volumes:
+  {{ cookiecutter.package_name|slugify }}-env:

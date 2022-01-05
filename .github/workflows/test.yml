@@ -1,0 +1,49 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+
+      matrix:
+        python-version: ["3.8"]
+      fail-fast: false
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache Python environment
+        uses: actions/cache@v2
+        with:
+          path: my-package/.venv
+          key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('my-package/pyproject.toml') }}
+
+      - name: Install Cruft and Poetry
+        run: pip install --no-input cruft poetry
+
+      - name: Scaffold package
+        run: |
+          cruft create --no-input .
+          cd my-package
+          git init
+          git add .
+          poetry config virtualenvs.in-project true
+          poetry install --no-interaction
+
+      - name: Lint package
+        run: poetry run poe lint
+
+      - name: Test package
+        run: poetry run poe test
