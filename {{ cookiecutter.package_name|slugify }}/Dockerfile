@@ -50,19 +50,15 @@ FROM dev AS ci
 # TODO: Add `--without dev` when Poetry 1.2.0 is released.
 COPY poetry.lock pyproject.toml /app/
 RUN --mount=type=cache,target=/root/.cache \
-{%- if cookiecutter.private_package_repository_name %}
+    {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry-http-basic-username \
     --mount=type=secret,id=poetry-http-basic-password \
-{%- else %}
-    --mount=type=secret,id=poetry-pypi-token \
-{%- endif %}
+    {%- endif %}
     mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
-{%- if cookiecutter.private_package_repository_name %}
+    {%- if cookiecutter.private_package_repository_name %}
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
-{%- else %}
-    POETRY_PYPI_TOKEN_PYPI=${POETRY_PYPI_TOKEN_PYPI:-$(cat /run/secrets/poetry-pypi-token)} \
-{%- endif %}
+    {%- endif %}
     poetry install --no-interaction
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 

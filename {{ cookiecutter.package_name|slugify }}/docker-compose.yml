@@ -4,12 +4,12 @@ services:
   dev:
     build:
       args:
-{%- if cookiecutter.private_package_repository_name %}
+        {%- if cookiecutter.private_package_repository_name %}
         POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
         POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
-{%- else %}
+        {%- else %}
         POETRY_PYPI_TOKEN_PYPI: $POETRY_PYPI_TOKEN_PYPI
-{%- endif %}
+        {%- endif %}
       context: .
       target: dev
     command: [ "sleep", "infinity" ]
@@ -32,12 +32,12 @@ services:
   app:
     build:
       args:
-{%- if cookiecutter.private_package_repository_name %}
+        {%- if cookiecutter.private_package_repository_name %}
         POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
         POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
-{%- else %}
+        {%- else %}
         POETRY_PYPI_TOKEN_PYPI: $POETRY_PYPI_TOKEN_PYPI
-{%- endif %}
+        {%- endif %}
       context: .
       target: app
     ports:
