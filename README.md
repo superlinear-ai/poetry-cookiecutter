@@ -1,6 +1,6 @@
 # Poetry Cookiecutter
 
-A modern [cookiecutter](https://cookiecutter.readthedocs.io) template for scaffolding Python packages and apps.
+A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffolding Python packages and apps.
 
 ## Using
 
