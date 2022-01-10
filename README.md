@@ -20,7 +20,7 @@ A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffo
 </details>
 
 <details open>
-<summary>Updating a cookiecutter project with the latest template</summary>
+<summary>Updating your project with the latest template</summary>
 
 1. Run `cruft check` to check for updates.
 2. Run `cruft update` to update to the latest scaffolding.
