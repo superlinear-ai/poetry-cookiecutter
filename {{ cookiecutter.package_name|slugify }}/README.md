@@ -3,7 +3,7 @@
 {{ cookiecutter.package_description }}
 
 {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int -%}
-## Usage
+## Using
 
 To serve this package, run `docker-compose up app`.
 {%- else -%}
