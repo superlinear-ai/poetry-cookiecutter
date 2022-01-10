@@ -16,7 +16,7 @@ Test:
         files:
           - poetry.lock
       paths:
-          - .venv/
+        - .venv/
     - key: $CI_COMMIT_REF_SLUG
       paths:
         - .mypy_cache/
