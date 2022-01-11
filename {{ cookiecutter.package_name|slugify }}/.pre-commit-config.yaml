@@ -56,7 +56,7 @@ repos:
         types: [python]
       - id: pyupgrade
         name: pyupgrade
-        entry: pyupgrade
+        entry: pyupgrade --py38-plus
         require_serial: true
         language: system
         types: [python]
