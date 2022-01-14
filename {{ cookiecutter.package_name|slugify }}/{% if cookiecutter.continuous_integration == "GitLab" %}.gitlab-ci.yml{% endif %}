@@ -40,6 +40,9 @@ variables:
         DOCKER_TAGS_JOINED=${DOCKER_TAGS[@]}
         DOCKER_TAGS_JOINED="--tag $DOCKER_IMAGE:${DOCKER_TAGS_JOINED// / --tag $DOCKER_IMAGE:}"
         DOCKER_BUILDKIT=1 docker build \
+          {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
+          --build-arg APP_BASE_IMAGE=${DOCKER_BASE_IMAGE:-ci} \
+          {%- endif %}
           --build-arg SOURCE_BRANCH=$CI_COMMIT_REF_NAME \
           --build-arg SOURCE_COMMIT=$CI_COMMIT_SHA \
           --build-arg SOURCE_TIMESTAMP=$CI_COMMIT_TIMESTAMP \
@@ -78,6 +81,11 @@ Test:
     paths:
       - .mypy_cache/
       - .pytest_cache/
+  {%- if cookiecutter.private_package_repository_name %}
+  variables:
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: gitlab-ci-token
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $CI_JOB_TOKEN
+  {%- endif %}
   script:
     - poetry install --no-interaction  # TODO: Add `--only test` when Poetry 1.2.0 is released.
     - poe lint
@@ -115,6 +123,7 @@ Publish:
     - .docker
   stage: deploy
   variables:
+    DOCKER_BASE_IMAGE: $CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE
     DOCKER_IMAGE_SHA: $CI_COMMIT_SHORT_SHA
     DOCKER_TARGET: app

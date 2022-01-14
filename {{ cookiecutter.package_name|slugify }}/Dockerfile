@@ -1,4 +1,8 @@
 # syntax=docker/dockerfile:experimental
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
+ARG APP_BASE_IMAGE=ci
+{%- endif %}
+
 FROM python:3.8-slim AS dev
 
 # Install development tools: compilers, curl, fish, git, ssh, and starship.
@@ -62,7 +66,7 @@ RUN --mount=type=cache,target=/root/.cache \
     poetry install --no-dev --no-interaction
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
-FROM ci AS app
+FROM $APP_BASE_IMAGE AS app
 
 # Copy the package source code to the working directory.
 COPY . .
