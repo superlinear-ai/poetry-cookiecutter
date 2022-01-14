@@ -43,12 +43,11 @@ ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_P
 ARG POETRY_PYPI_TOKEN_PYPI
 ENV POETRY_PYPI_TOKEN_PYPI $POETRY_PYPI_TOKEN_PYPI
 {%- endif %}
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
-FROM dev AS app
+FROM dev as ci
 
 # Install the Python environment.
-# TODO: Add `--without dev` when Poetry 1.2.0 is released.
+# TODO: Replace `--no-dev` with `--without test` when Poetry 1.2.0 is released.
 COPY poetry.lock pyproject.toml /app/
 RUN --mount=type=cache,target=/root/.cache \
     {%- if cookiecutter.private_package_repository_name %}
@@ -60,7 +59,10 @@ RUN --mount=type=cache,target=/root/.cache \
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
     {%- endif %}
-    poetry install --no-interaction
+    poetry install --no-dev --no-interaction
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
+
+FROM ci AS app
 
 # Copy the package source code to the working directory.
 COPY . .

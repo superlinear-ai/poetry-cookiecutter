@@ -50,7 +50,7 @@ uvicorn = { extras = ["standard"], version = "^0.16.0" }
 {%- endif %}
 
 # https://python-poetry.org/docs/master/managing-dependencies/
-# TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.ci` when Poetry 1.2.0 is released.
+# TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.test` when Poetry 1.2.0 is released.
 [tool.poetry.dev-dependencies]
 cruft = "^2.10.1"
 black = "^21.12b0"

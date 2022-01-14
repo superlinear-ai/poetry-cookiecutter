@@ -1,4 +1,5 @@
 stages:
+  - build
   - test
   - {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}deploy{% else %}publish{% endif %}
 {%- if cookiecutter.sentry_dsn %}
@@ -7,34 +8,82 @@ variables:
   GIT_DEPTH: 100
 {%- endif %}
 
+# Base Docker build script.
+.docker:
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  variables:
+    DOCKER_REGISTRY: $CI_REGISTRY
+    DOCKER_REGISTRY_USER: $CI_REGISTRY_USER
+    DOCKER_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
+    {%- if cookiecutter.private_package_repository_name %}
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: gitlab-ci-token
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $CI_JOB_TOKEN
+    {%- endif %}
+  script:
+    - DOCKER_IMAGE_SHA=${DOCKER_IMAGE_SHA:-$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)}
+    - echo "CI_IMAGE_SHA=$DOCKER_IMAGE_SHA" >> .env
+    - |
+      echo -n $DOCKER_REGISTRY_PASSWORD | docker login --username $DOCKER_REGISTRY_USER --password-stdin $DOCKER_REGISTRY
+      DOCKER_PUSH=${DOCKER_PUSH:-$(timeout 2s docker pull $DOCKER_IMAGE:$DOCKER_IMAGE_SHA >/dev/null 2>1 && echo $? || echo $?)}
+      if [ $DOCKER_PUSH -ne 1 ]; then
+        echo "$DOCKER_IMAGE:$DOCKER_IMAGE_SHA exists, skipping this job..."
+      else
+        # Compile a list of image tags consisting of a hash of its contents, the latest tag if this
+        # pipeline is running for the default branch, and the Git tag if this commit is tagged.
+        DOCKER_TAGS=( "$DOCKER_IMAGE_SHA" )
+        if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then DOCKER_TAGS+=( "latest" ); fi
+        if [[ -n $CI_COMMIT_TAG ]]; then DOCKER_TAGS+=( "$CI_COMMIT_TAG" ); fi
+        if [[ -n $CI_ENVIRONMENT_NAME ]]; then DOCKER_TAGS+=( "$CI_ENVIRONMENT_NAME" ); fi
+        # Build the Docker image with all of the selected tags.
+        DOCKER_TAGS_JOINED=${DOCKER_TAGS[@]}
+        DOCKER_TAGS_JOINED="--tag $DOCKER_IMAGE:${DOCKER_TAGS_JOINED// / --tag $DOCKER_IMAGE:}"
+        DOCKER_BUILDKIT=1 docker build \
+          --build-arg SOURCE_BRANCH=$CI_COMMIT_REF_NAME \
+          --build-arg SOURCE_COMMIT=$CI_COMMIT_SHA \
+          --build-arg SOURCE_TIMESTAMP=$CI_COMMIT_TIMESTAMP \
+          {%- if cookiecutter.private_package_repository_name %}
+          --secret id=poetry-http-basic-username,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME \
+          --secret id=poetry-http-basic-password,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD \
+          {%- endif %}
+          --target $DOCKER_TARGET \
+          --pull \
+          $DOCKER_TAGS_JOINED \
+          .
+        # Push all the tagged images.
+        for DOCKER_TAG in ${DOCKER_TAGS[@]}; do
+          docker push "$DOCKER_IMAGE:$DOCKER_TAG"
+        done
+      fi
+
+# Build CI Docker image.
+Build CI:
+  extends:
+    - .docker
+  stage: build
+  variables:
+    DOCKER_IMAGE: $CI_REGISTRY_IMAGE/ci
+    DOCKER_TARGET: ci
+  artifacts:
+    reports:
+      dotenv: .env
+
 # Lint and test the package.
 Test:
   stage: test
-  image: python:3.8-slim
+  image: $CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA
   cache:
-    - key:
-        files:
-          - poetry.lock
-      paths:
-        - .venv/
-    - key: $CI_COMMIT_REF_SLUG
-      paths:
-        - .mypy_cache/
-        - .pytest_cache/
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .mypy_cache/
+      - .pytest_cache/
   script:
-    - apt-get update && apt-get install --no-install-recommends --yes git
-    - pip install --no-input poetry
-    {%- if cookiecutter.private_package_repository_name %}
-    - poetry config http-basic.{{ cookiecutter.private_package_repository_name|lower }} gitlab-ci-token $CI_JOB_TOKEN
-    {%- endif %}
-    - poetry config virtualenvs.in-project true
-    - poetry install --no-interaction
-    - poetry run poe lint
-    - poetry run poe test
+    - poetry install --no-interaction  # TODO: Add `--only test` when Poetry 1.2.0 is released.
+    - poe lint
+    - poe test
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   artifacts:
-    exclude:
-      - .venv/**/*
     reports:
       cobertura: reports/coverage.xml
       junit:
@@ -47,9 +96,8 @@ Test:
 # Publish this package version to a (private) package repository.
 Publish:
   stage: publish
-  image: python:3.8-slim
+  image: $CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA
   script:
-    - pip install --no-input poetry
     {%- if cookiecutter.private_package_repository_name %}
     - poetry config repositories.private "{{ cookiecutter.private_package_repository_url.replace('simple', '') }}"
     - poetry config http-basic.private "gitlab-ci-token" "$CI_JOB_TOKEN"
@@ -63,41 +111,17 @@ Publish:
 {%- else -%}
 # Build the application as a Docker image and push it to the GitLab registry.
 .deploy:
+  extends:
+    - .docker
   stage: deploy
-  image: docker:stable
-  services:
-    - docker:stable-dind
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE
-    DOCKER_REGISTRY: $CI_REGISTRY
-    DOCKER_REGISTRY_USER: $CI_REGISTRY_USER
-    DOCKER_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
-  script:
-    - |
-      # Compile a list of image tags.
-      DOCKER_TAGS=( "$CI_COMMIT_SHORT_SHA" )
-      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then DOCKER_TAGS+=( "latest" ); fi
-      if [[ -n $CI_COMMIT_TAG ]]; then DOCKER_TAGS+=( "$CI_COMMIT_TAG" ); fi
-      if [[ -n $CI_ENVIRONMENT_NAME ]]; then DOCKER_TAGS+=( "$CI_ENVIRONMENT_NAME" ); fi
-      # Build the Docker image with all of the selected tags.
-      DOCKER_TAGS_JOINED=${DOCKER_TAGS[@]}
-      DOCKER_TAGS_JOINED="--tag $DOCKER_IMAGE:${DOCKER_TAGS_JOINED// / --tag $DOCKER_IMAGE:}"
-      DOCKER_BUILDKIT=1 docker build \
-        --build-arg SOURCE_BRANCH=$CI_COMMIT_REF_NAME \
-        --build-arg SOURCE_COMMIT=$CI_COMMIT_SHA \
-        --build-arg SOURCE_TIMESTAMP=$CI_COMMIT_TIMESTAMP \
-        {%- if cookiecutter.private_package_repository_name %}
-        --secret id=poetry-http-basic-username,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME \
-        --secret id=poetry-http-basic-password,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD \
-        {%- endif %}
-        --target app \
-        --pull \
-        $DOCKER_TAGS_JOINED \
-        .
-      # Push all the tagged images.
-      for DOCKER_TAG in ${DOCKER_TAGS[@]}; do
-        docker push "$DOCKER_IMAGE:$DOCKER_TAG"
-      done
+    DOCKER_IMAGE_SHA: $CI_COMMIT_SHORT_SHA
+    DOCKER_TARGET: app
+    {%- if cookiecutter.sentry_dsn %}
+    SENTRY_ORG: {{ cookiecutter.sentry_org }}
+    SENTRY_PROJECT: {{ cookiecutter.sentry_project }}
+    {%- endif %}
   when: manual
 {% for environment in ["feature", "development", "test", "acceptance", "production"] %}
 Deploy ({{ environment }}):
