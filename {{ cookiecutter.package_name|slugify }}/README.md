@@ -86,8 +86,9 @@ To add and install this package as a dependency of your project, run `poetry add
 <details open>
 <summary>Developing</summary>
 
-- This project's [development environment](#development-environment) is managed by [Docker Compose](https://docs.docker.com/compose/) with `docker-compose.yml` and `Dockerfile`, while its dependencies are specified with [Poetry](https://github.com/python-poetry/poetry) in `pyproject.toml` and `poetry.lock`.
-- This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen). Every commit is linted by [pre-commit](https://pre-commit.com/) with the linters listed in `.pre-commit-config.yaml`. All linters are configured in `pyproject.toml`.
+- This project's development environment is managed by [Docker Compose](https://docs.docker.com/compose/) with `docker-compose.yml` and `Dockerfile`, while its dependencies are specified with [Poetry](https://github.com/python-poetry/poetry) in `pyproject.toml` and `poetry.lock`.
+- This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
+- Every commit is linted by [pre-commit](https://pre-commit.com/) with the linters listed in `.pre-commit-config.yaml`. All linters are configured in `pyproject.toml`.
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
 - Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `poetry.lock`. Add `--group dev` if you only need the package for local development, or `--group ci` if you only need the package for linting or testing.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
