@@ -5,7 +5,7 @@ A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffo
 ## Using
 
 <details open>
-<summary>Setting up a new project with this cookiecutter template</summary>
+<summary>Setting up a new project with this template</summary>
 
 1. Install [Cruft](https://cruft.github.io/cruft/) in your Python environment with:
    ```bash
