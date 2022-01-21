@@ -1,6 +1,10 @@
 name: Test
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - ${{ github.event.repository.default_branch }}
+  pull_request:
 
 jobs:
 

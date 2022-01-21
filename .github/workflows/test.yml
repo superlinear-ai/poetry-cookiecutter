@@ -1,6 +1,10 @@
 name: Test
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - ${{ github.event.repository.default_branch }}
+  pull_request:
 
 jobs:
 
@@ -28,7 +32,8 @@ jobs:
         run: pip install --no-input cruft poetry
 
       - name: Scaffold package
-        run: cruft create --no-input .
+        run: |
+          cruft create --no-input --extra-context '{"with_fastapi_api": "1"}' .
 
       - name: Cache Python environment
         uses: actions/cache@v2
