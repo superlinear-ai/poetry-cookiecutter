@@ -122,7 +122,9 @@ profile = "black"
 # https://mypy.readthedocs.io/en/latest/config_file.html
 [tool.mypy]
 junit_xml = "reports/mypy.xml"
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int %}
 plugins = "pydantic.mypy"
+{%- endif %}
 strict = true
 disallow_subclassing_any = false
 disallow_untyped_decorators = false
