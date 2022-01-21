@@ -3,7 +3,8 @@ name: Test
 on:
   push:
     branches:
-      - ${{ github.event.repository.default_branch }}
+      - main
+      - master
   pull_request:
 
 jobs:
