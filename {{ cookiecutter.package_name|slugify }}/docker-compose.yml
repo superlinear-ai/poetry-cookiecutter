@@ -15,8 +15,10 @@ services:
     command: [ "sleep", "infinity" ]
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+    {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
     ports:
       - "8000:8000"
+    {%- endif %}
     volumes:
       # app
       - .:/app/:cached
@@ -28,7 +30,7 @@ services:
       # ssh
       - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock:cached
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts:cached
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
+  {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
   app:
     build:
       args:
@@ -40,11 +42,13 @@ services:
         {%- endif %}
       context: .
       target: app
+    {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
     ports:
       - "8000:8000"
+    {%- endif %}
     profiles:
       - app
-{%- endif %}
+  {%- endif %}
 
 volumes:
   {{ cookiecutter.package_name|slugify }}-env:
