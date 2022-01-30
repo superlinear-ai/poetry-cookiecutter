@@ -7,7 +7,7 @@ FROM python:3.8-slim AS dev
 
 # Install development tools: compilers, curl, fish, git, ssh, and starship.
 RUN apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git fish ssh && \
+    apt-get install --no-install-recommends --yes build-essential curl fish git ssh && \
     chsh --shell /usr/bin/fish && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     mkdir -p ~/.config/fish/completions/ && \
