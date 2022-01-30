@@ -36,7 +36,7 @@ A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffo
 - ✍️ Code formatting with [black](https://github.com/psf/black) and [isort](https://github.com/PyCQA/isort)
 - ✅ Code linting with [pre-commit](https://pre-commit.com/): [bandit](https://github.com/PyCQA/bandit), [darglint](https://github.com/terrencepreilly/darglint), [flake8](https://github.com/PyCQA/flake8), [mypy](https://github.com/python/mypy), [pre-commit-hooks](https://github.com/pre-commit/pre-commit-hooks), [pydocstyle](https://github.com/PyCQA/pydocstyle), [pygrep-hooks](https://github.com/pre-commit/pygrep-hooks), [pyupgrade](https://github.com/asottile/pyupgrade), [safety](https://github.com/pyupio/safety), and [shellcheck](https://github.com/koalaman/shellcheck)
 - 🏷 Follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen)
-- ♻️ Continuous integration with [GitHub Actions](https://docs.github.com/en/actions) or [GitLab CI](https://docs.gitlab.com/ee/ci/)
+- ♻️ Continuous integration with [GitHub Actions](https://docs.github.com/en/actions) or [GitLab CI/CD](https://docs.gitlab.com/ee/ci/)
 - 🧪 Test coverage with [Coverage.py](https://github.com/nedbat/coveragepy)
 - 🏗 Scaffolding upgrades with [Cookiecutter](https://github.com/cookiecutter/cookiecutter) and [Cruft](https://github.com/cruft/cruft)
 - 🧰 Automated dependency updating with [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/about-dependabot-version-updates)

@@ -48,15 +48,15 @@ repos:
         require_serial: true
         language: system
         stages: [commit-msg]
-      - id: isort
-        name: isort
-        entry: isort
-        require_serial: true
-        language: system
-        types: [python]
       - id: pyupgrade
         name: pyupgrade
         entry: pyupgrade --py38-plus
+        require_serial: true
+        language: system
+        types: [python]
+      - id: isort
+        name: isort
+        entry: isort
         require_serial: true
         language: system
         types: [python]

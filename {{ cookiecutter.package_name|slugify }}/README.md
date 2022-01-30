@@ -79,18 +79,17 @@ To add and install this package as a dependency of your project, run `poetry add
 
 1. Clone this repository.
 2. Open the cloned repository in VS Code and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> > _Remote-Containers: Reopen in Container_ to start a [Development Container](https://code.visualstudio.com/docs/remote/containers). Alternatively, open the cloned repository in PyCharm and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
-3. Run `poe install` in the development environment to create the Python environment and register [pre-commit](https://pre-commit.com/). This happens automatically in VS Code, but needs to be done manually in PyCharm.
+3. _PyCharm only:_ Run `poe install` in the development environment to create the Python environment and register [pre-commit](https://pre-commit.com/).
 
 </details>
 
-<details open>
+<details>
 <summary>Developing</summary>
 
-- This project's development environment is managed by [Docker Compose](https://docs.docker.com/compose/) with `docker-compose.yml` and `Dockerfile`, while its dependencies are specified with [Poetry](https://github.com/python-poetry/poetry) in `pyproject.toml` and `poetry.lock`.
 - This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
-- Every commit is linted by [pre-commit](https://pre-commit.com/) with the linters listed in `.pre-commit-config.yaml`. All linters are configured in `pyproject.toml`.
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
 - Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `poetry.lock`. Add `--group dev` if you only need the package for local development, or `--group test` if you only need the package for linting or testing.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
+- Run `cz bump` to bump the package's version, update the `CHANGELOG.md`, and create a git tag.
 
 </details>
