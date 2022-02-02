@@ -73,6 +73,10 @@ COPY . .
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
+
+RUN --mount=type=cache,target=/root/.cache \
+    pip install --no-input poethepoet
+
 ARG PORT=8000
 ENV PORT $PORT
 EXPOSE $PORT
