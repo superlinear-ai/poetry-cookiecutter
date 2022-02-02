@@ -268,7 +268,6 @@ testpaths = "tests"
   cmd = """
     streamlit run
       --browser.gatherUsageStats false
-      --global.sharingMode off
       --server.address 0.0.0.0
       --server.port $port
       --theme.base light
