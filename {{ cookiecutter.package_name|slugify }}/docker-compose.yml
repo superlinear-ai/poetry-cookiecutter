@@ -24,7 +24,6 @@ services:
       - .:/app/:cached
       # env
       - ${POETRY_CACHE_DIR:-~/Library/Caches/pypoetry/}:/root/.cache/pypoetry/:cached
-      - {{ cookiecutter.package_name|slugify }}-env:/usr/local/
       # git
       - ~/.gitconfig:/etc/gitconfig:cached
       # ssh
@@ -49,6 +48,3 @@ services:
     profiles:
       - app
   {%- endif %}
-
-volumes:
-  {{ cookiecutter.package_name|slugify }}-env:
