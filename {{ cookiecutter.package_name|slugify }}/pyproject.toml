@@ -32,7 +32,7 @@ version_files = ["pyproject.toml:version"]
 fastapi = "^0.70.1"
 gunicorn = "^20.1.0"
 {%- endif %}
-python = "^3.8.12"
+python = "^3.8.10"
 {%- if cookiecutter.with_pydantic_typing|int %}
 pydantic = "^1.9.0"
 {%- endif %}

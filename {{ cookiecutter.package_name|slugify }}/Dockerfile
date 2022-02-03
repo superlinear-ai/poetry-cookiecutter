@@ -3,11 +3,14 @@
 ARG APP_BASE_IMAGE=ci
 {%- endif %}
 
-FROM python:3.8-slim AS dev
+FROM ubuntu:20.04 AS dev
 
 # Install development tools: compilers, curl, fish, git, ssh, and starship.
-RUN apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl fish git ssh && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    apt-get install --no-install-recommends --yes software-properties-common && \
+    apt-get install --no-install-recommends --yes build-essential curl git ssh pip python3-venv && \
+    add-apt-repository --yes ppa:fish-shell/release-3 && \
+    apt-get install --quiet --yes fish && \
     chsh --shell /usr/bin/fish && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     mkdir -p ~/.config/fish/completions/ && \
@@ -28,7 +31,7 @@ WORKDIR /app/
 ENV PATH /root/.local/bin/:$PATH
 RUN --mount=type=cache,target=/root/.cache \
     pip install --no-input --upgrade pip poethepoet && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - && \
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 - && \
     poetry config virtualenvs.create false && \
     poetry completions fish > ~/.config/fish/completions/poetry.fish && \
     poe _fish_completion > ~/.config/fish/completions/poe.fish
