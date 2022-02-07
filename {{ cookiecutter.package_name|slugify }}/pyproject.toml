@@ -32,6 +32,7 @@ version_files = ["pyproject.toml:version"]
 fastapi = "^0.70.1"
 gunicorn = "^20.1.0"
 {%- endif %}
+poethepoet = "^0.12.2"
 python = "^3.8.12"
 {%- if cookiecutter.with_pydantic_typing|int %}
 pydantic = "^1.9.0"
@@ -74,7 +75,6 @@ jupyterlab = "^3.2.5"
 mypy = "^0.931"
 pdoc = "^8.0.1"
 pep8-naming = "^0.12.1"
-poethepoet = "^0.12.2"
 pre-commit = "^2.16.0"
 pydocstyle = { extras = ["toml"], version = "^6.1.1" }
 pytest = "^6.2.5"
