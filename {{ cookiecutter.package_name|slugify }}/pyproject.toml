@@ -32,7 +32,9 @@ version_files = ["pyproject.toml:version"]
 fastapi = "^0.70.1"
 gunicorn = "^20.1.0"
 {%- endif %}
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.12.2"
+{%- endif %}
 python = "^3.8.12"
 {%- if cookiecutter.with_pydantic_typing|int %}
 pydantic = "^1.9.0"
@@ -73,6 +75,9 @@ isort = "^5.10.1"
 jupyterlab = "^3.2.5"
 {%- endif %}
 mypy = "^0.931"
+{%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
+poethepoet = "^0.12.2"
+{%- endif %}
 pdoc = "^8.0.1"
 pep8-naming = "^0.12.1"
 pre-commit = "^2.16.0"
