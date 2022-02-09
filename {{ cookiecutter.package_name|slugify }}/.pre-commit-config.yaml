@@ -76,11 +76,6 @@ repos:
         entry: flake8
         language: system
         types: [python]
-      - id: mypy
-        name: mypy
-        entry: mypy
-        language: system
-        types: [python]
       - id: pydocstyle
         name: pydocstyle
         entry: pydocstyle
@@ -92,3 +87,8 @@ repos:
         language: system
         files: pyproject.toml
         pass_filenames: false
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]

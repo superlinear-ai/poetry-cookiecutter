@@ -88,7 +88,8 @@ To add and install this package as a dependency of your project, run `poetry add
 
 - This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
-- Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `poetry.lock`. Add `--group dev` if you only need the package for local development, or `--group test` if you only need the package for linting or testing.
+- Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `pyproject.toml` and `poetry.lock`. Add `--group dev` if you only need the package for local development, or `--group test` if you only need the package for linting or testing.
+- Run `poetry remove {package}` from within the development environment to uninstall a run time dependency and remove it from `pyproject.toml` and `poetry.lock`.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
 - Run `cz bump` to bump the package's version, update the `CHANGELOG.md`, and create a git tag.
 
