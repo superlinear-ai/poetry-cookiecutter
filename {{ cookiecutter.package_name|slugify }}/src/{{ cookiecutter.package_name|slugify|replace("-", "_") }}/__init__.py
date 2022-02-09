@@ -1,4 +1,5 @@
 """{{ cookiecutter.package_name }} package."""
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
 
 import logging
 
@@ -25,3 +26,4 @@ def configure_root_logger() -> None:
 
 
 configure_root_logger()
+{%- endif %}
