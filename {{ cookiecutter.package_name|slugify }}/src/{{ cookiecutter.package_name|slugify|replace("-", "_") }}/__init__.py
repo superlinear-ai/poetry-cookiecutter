@@ -12,17 +12,7 @@ def configure_root_logger() -> None:
     for handler in logging.root.handlers:
         logging.root.removeHandler(handler)
     # Add coloredlogs' coloured StreamHandler to the root logger.
-    coloredlogs.install(
-        fmt="%(asctime)s %(name)s %(funcName)s %(levelname)s %(message)s",
-        datefmt="%H:%M:%S",
-        field_styles={
-            "asctime": {"color": "green"},
-            "name": {"color": "blue"},
-            "funcName": {"color": "magenta"},
-            "levelname": {"color": "black", "bold": True},
-        },
-        isatty=True,
-    )
+    coloredlogs.install()
 
 
 configure_root_logger()
