@@ -75,11 +75,11 @@ isort = "^5.10.1"
 jupyterlab = "^3.2.5"
 {%- endif %}
 mypy = "^0.931"
+pdoc = "^8.0.1"
+pep8-naming = "^0.12.1"
 {%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.12.2"
 {%- endif %}
-pdoc = "^8.0.1"
-pep8-naming = "^0.12.1"
 pre-commit = "^2.16.0"
 pydocstyle = { extras = ["toml"], version = "^6.1.1" }
 pytest = "^6.2.5"
