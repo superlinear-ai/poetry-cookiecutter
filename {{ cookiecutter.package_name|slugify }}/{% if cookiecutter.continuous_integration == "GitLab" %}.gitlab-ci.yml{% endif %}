@@ -17,12 +17,12 @@ variables:
     DOCKER_REGISTRY: $CI_REGISTRY
     DOCKER_REGISTRY_USER: $CI_REGISTRY_USER
     DOCKER_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
+    DOCKER_IMAGE_SHA: $CI_COMMIT_SHA
     {%- if cookiecutter.private_package_repository_name %}
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: gitlab-ci-token
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $CI_JOB_TOKEN
     {%- endif %}
   script:
-    - DOCKER_IMAGE_SHA="${DOCKER_IMAGE_SHA:-$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)}"
     - echo "CI_IMAGE_SHA=$DOCKER_IMAGE_SHA" >> .env
     - |
       echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin "$DOCKER_REGISTRY"
