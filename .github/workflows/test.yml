@@ -48,6 +48,7 @@ jobs:
           git add .
           poetry config virtualenvs.in-project true
           poetry install --no-interaction
+          poetry show
         working-directory: ./my-package
 
       - name: Lint package
