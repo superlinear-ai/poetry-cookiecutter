@@ -113,7 +113,7 @@ skip_covered = true
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
 branch = true
-command_line = "--module pytest tests"
+command_line = "--module pytest src tests"
 data_file = "reports/.coverage"
 source = ["src"]
 
@@ -158,7 +158,7 @@ convention = "numpy"
 
 # https://docs.pytest.org/en/latest/customize.html#adding-default-options
 [tool.pytest.ini_options]
-addopts = "-W error -W ignore::DeprecationWarning --exitfirst --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "-W error -W ignore::DeprecationWarning --doctest-modules --exitfirst --verbosity=2 --junitxml=reports/pytest.xml"
 junit_family = "xunit2"
 testpaths = "tests"
 
