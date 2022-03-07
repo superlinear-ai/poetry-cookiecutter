@@ -79,7 +79,7 @@ isort = "^5.10.1"
 jupyterlab = "^3.2.5"
 {%- endif %}
 mypy = "^0.931"
-pdoc = "^8.0.1"
+pdoc = "^10.0.0"
 pep8-naming = "^0.12.1"
 {%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.12.2"
