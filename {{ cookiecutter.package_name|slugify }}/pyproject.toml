@@ -58,7 +58,7 @@ uvicorn = { extras = ["standard"], version = "^0.16.0" }
 # https://python-poetry.org/docs/master/managing-dependencies/
 # TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.test` when Poetry 1.2.0 is released.
 [tool.poetry.dev-dependencies]
-bandit = "1.7.2"
+bandit = "1.7.2"  # TODO: remove this line once this is solved: https://github.com/PyCQA/bandit/issues/841
 black = "^22.1.0"
 commitizen = "^2.20.2"
 coverage = { extras = ["toml"], version = "^6.2" }
