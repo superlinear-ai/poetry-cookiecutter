@@ -58,7 +58,6 @@ uvicorn = { extras = ["standard"], version = "^0.16.0" }
 # https://python-poetry.org/docs/master/managing-dependencies/
 # TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.test` when Poetry 1.2.0 is released.
 [tool.poetry.dev-dependencies]
-bandit = "1.7.2"  # TODO: remove this line once this is solved: https://github.com/tylerwince/flake8-bandit/issues/21
 black = "^22.1.0"
 commitizen = "^2.20.2"
 coverage = { extras = ["toml"], version = "^6.2" }
@@ -66,7 +65,7 @@ cruft = "^2.10.1"
 darglint = "^1.8.1"
 flake8 = "^4.0.1"
 flake8-comprehensions = "^3.7.0"
-flake8-bandit = "^2.1.2"
+flake8-bandit = "^3.0.0"
 flake8-bugbear = "^22.1.11"
 flake8-mutable = "^1.2.0"
 flake8-pytest-style = "^1.6.0"
