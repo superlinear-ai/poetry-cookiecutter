@@ -1,3 +1,7 @@
+name: 'Build and Push a docker image'
+
+description: 'Build and Push a docker image with a caching mechanism.'
+
 inputs:
   DOCKER_REGISTRY:
     description: "The docker registry"
