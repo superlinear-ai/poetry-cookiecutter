@@ -32,9 +32,9 @@ inputs:
     required: true
     default: "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME }}"
   POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:
-  description: "Poetry private package repository password."
-  required: true
-  default: "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD }}"
+    description: "Poetry private package repository password."
+    required: true
+    default: "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD }}"
   {%- endif %}
   {%- if cookiecutter.sentry_dsn %}
   SENTRY_ORG:
