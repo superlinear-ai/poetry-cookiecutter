@@ -14,7 +14,7 @@ inputs:
   DOCKER_TARGET:
     description: "The dockerfile target"
     required: true
-  DOCKER_PUSH:
+  DOCKER_BUILD_PUSH:
     description: "Wether or not to build and push the image, even if the docker image is already cached on the registry."
     required: false
   {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
@@ -64,7 +64,7 @@ runs:
         DOCKER_PASSWORD={% raw %}${{ inputs.DOCKER_PASSWORD }}{% endraw %}
         DOCKER_IMAGE={% raw %}${{ inputs.DOCKER_IMAGE }}{% endraw %}
         DOCKER_TARGET={% raw %}${{ inputs.DOCKER_TARGET }}{% endraw %}
-        DOCKER_PUSH={% raw %}${{ inputs.DOCKER_PUSH }}{% endraw %}
+        DOCKER_BUILD_PUSH={% raw %}${{ inputs.DOCKER_BUILD_PUSH }}{% endraw %}
         {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
         DOCKER_BASE_IMAGE={% raw %}${{ inputs.DOCKER_BASE_IMAGE }}{% endraw %}
         {%- endif %}
@@ -86,9 +86,9 @@ runs:
         # Log in to github container registry.
         echo -n $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin $DOCKER_REGISTRY
 
-        # Check if we need to rebuild the docker image.
-        DOCKER_PUSH=${DOCKER_PUSH:-$(timeout 2s docker pull $DOCKER_IMAGE:$DOCKER_IMAGE_SHA >/dev/null 2>1 && echo $? || echo $?)}
-        if [ $DOCKER_PUSH -ne 1 ]; then
+        # Check if we need to build and push the docker image.
+        DOCKER_BUILD_PUSH=${DOCKER_BUILD_PUSH:-$(timeout 2s docker pull $DOCKER_IMAGE:$DOCKER_IMAGE_SHA >/dev/null 2>1 && echo $? || echo $?)}
+        if [ $DOCKER_BUILD_PUSH -ne 1 ]; then
           echo "$DOCKER_IMAGE:$DOCKER_IMAGE_SHA exists, skipping this job..."
         else
           # Compile a list of image tags consisting of a hash of its contents, the latest tag if this

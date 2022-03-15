@@ -64,6 +64,6 @@ jobs:
           DOCKER_PASSWORD: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
           DOCKER_IMAGE: "{% raw %}${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}{% endraw %}"
           DOCKER_TARGET: "app"
-          DOCKER_PUSH: 1
+          DOCKER_BUILD_PUSH: 1
           DOCKER_BASE_IMAGE: {% raw %}${{ steps.base_image.outputs.DOCKER_BASE_IMAGE }}{% endraw %}
           DOCKER_IMAGE_SHA: {% raw %}${{ steps.image_sha.outputs.DOCKER_IMAGE_SHA }}{% endraw %}
