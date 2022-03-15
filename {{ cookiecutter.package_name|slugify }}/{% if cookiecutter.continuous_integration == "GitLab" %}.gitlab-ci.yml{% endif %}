@@ -52,6 +52,7 @@ variables:
           {%- endif %}
           --build-arg SOURCE_BRANCH="$CI_COMMIT_REF_NAME" \
           --build-arg SOURCE_COMMIT="$CI_COMMIT_SHA" \
+          --build-arg SOURCE_TIMESTAMP="$CI_COMMIT_TIMESTAMP" \
           {%- if cookiecutter.sentry_dsn %}
           --build-arg SENTRY_ORG="$SENTRY_ORG" \
           --build-arg SENTRY_PROJECT="$SENTRY_PROJECT" \
