@@ -17,10 +17,12 @@ inputs:
   DOCKER_PUSH:
     description: "Wether or not to build and push the image, even if the docker image is already cached on the registry."
     required: false
+  {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
   DOCKER_BASE_IMAGE:
     description: "The docker base image to build upon. If not provided, 'ci' will be used."
     required: false
     default: "ci"
+  {%- endif %}
   DOCKER_IMAGE_SHA:
     description: "SHA docker tag. If not provided, it will be recomputed."
     required: false
@@ -33,6 +35,16 @@ inputs:
   description: "Poetry private package repository password."
   required: true
   default: "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD }}"
+  {%- endif %}
+  {%- if cookiecutter.sentry_dsn %}
+  SENTRY_ORG:
+    description: "Sentry setting. The slug of the organization to use for a command."
+    required: true
+    default: {{ cookiecutter.sentry_org }}
+  SENTRY_PROJECT:
+    description: "Sentry setting. The slug of the project to use for a command."
+    required: true
+    default: {{ cookiecutter.sentry_project }}
   {%- endif %}
 
 outputs:
@@ -53,7 +65,9 @@ runs:
         DOCKER_IMAGE={% raw %}${{ inputs.DOCKER_IMAGE }}{% endraw %}
         DOCKER_TARGET={% raw %}${{ inputs.DOCKER_TARGET }}{% endraw %}
         DOCKER_PUSH={% raw %}${{ inputs.DOCKER_PUSH }}{% endraw %}
+        {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
         DOCKER_BASE_IMAGE={% raw %}${{ inputs.DOCKER_BASE_IMAGE }}{% endraw %}
+        {%- endif %}
         DOCKER_IMAGE_SHA={% raw %}${{ inputs.DOCKER_IMAGE_SHA }}{% endraw %}
 
         # Convert github to gitlab compatible variables.
@@ -88,10 +102,16 @@ runs:
           DOCKER_TAGS_JOINED=${DOCKER_TAGS[@]}
           DOCKER_TAGS_JOINED="--tag $DOCKER_IMAGE:${DOCKER_TAGS_JOINED// / --tag $DOCKER_IMAGE:}"
           DOCKER_BUILDKIT=1 docker build \
-              --build-arg APP_BASE_IMAGE=$DOCKER_BASE_IMAGE \
+              {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
+              --build-arg APP_BASE_IMAGE="$DOCKER_BASE_IMAGE" \
+              {%- endif %}
               --build-arg SOURCE_BRANCH=$CI_COMMIT_REF_NAME \
               --build-arg SOURCE_COMMIT=$CI_COMMIT_SHA \
               --build-arg SOURCE_TIMESTAMP=$CI_COMMIT_TIMESTAMP \
+              {%- if cookiecutter.sentry_dsn %}
+              --build-arg SENTRY_ORG="$SENTRY_ORG" \
+              --build-arg SENTRY_PROJECT="$SENTRY_PROJECT" \
+              {%- endif %}
               {%- if cookiecutter.private_package_repository_name %}
               --secret id=poetry-http-basic-username,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME \
               --secret id=poetry-http-basic-password,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD \
