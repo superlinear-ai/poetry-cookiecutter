@@ -41,7 +41,7 @@ variables:
         if [ -n "$CI_COMMIT_TAG" ]; then DOCKER_TAGS="$DOCKER_TAGS $CI_COMMIT_TAG"; fi
         if [ -n "$CI_ENVIRONMENT_NAME" ]; then DOCKER_TAGS="$DOCKER_TAGS $CI_ENVIRONMENT_NAME"; fi
         DOCKER_TAGS_JOINED=""
-        for DOCKER_TAG in "$DOCKER_TAGS"; do
+        for DOCKER_TAG in $DOCKER_TAGS; do
           DOCKER_TAGS_JOINED="$DOCKER_TAGS_JOINED --tag $DOCKER_IMAGE:$DOCKER_TAG"
         done
 
@@ -52,6 +52,7 @@ variables:
           {%- endif %}
           --build-arg SOURCE_BRANCH="$CI_COMMIT_REF_NAME" \
           --build-arg SOURCE_COMMIT="$CI_COMMIT_SHA" \
+          --build-arg SOURCE_TIMESTAMP="$CI_COMMIT_TIMESTAMP" \
           {%- if cookiecutter.sentry_dsn %}
           --build-arg SENTRY_ORG="$SENTRY_ORG" \
           --build-arg SENTRY_PROJECT="$SENTRY_PROJECT" \
@@ -66,7 +67,7 @@ variables:
           .
 
         # Push all the tagged images.
-        for DOCKER_TAG in "$DOCKER_TAGS"; do
+        for DOCKER_TAG in $DOCKER_TAGS; do
           docker push "$DOCKER_IMAGE:$DOCKER_TAG"
         done
       fi
