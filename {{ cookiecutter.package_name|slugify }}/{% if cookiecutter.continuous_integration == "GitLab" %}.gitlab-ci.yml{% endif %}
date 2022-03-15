@@ -85,11 +85,6 @@ Test:
     paths:
       - .mypy_cache/
       - .pytest_cache/
-  {%- if cookiecutter.private_package_repository_name %}
-  variables:
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: gitlab-ci-token
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $CI_JOB_TOKEN
-  {%- endif %}
   script:
     - poetry install --no-interaction  # TODO: Add `--only test` when Poetry 1.2.0 is released.
     - poe lint
