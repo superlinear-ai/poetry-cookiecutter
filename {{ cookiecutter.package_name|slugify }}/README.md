@@ -18,7 +18,17 @@ To add and install this package as a dependency of your project, run `poetry add
 <summary>Setup: once per device</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
-1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) for GitLab, [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account), and [add the SSH key to your authentication agent](https://docs.gitlab.com/ee/ssh/README.html#configure-ssh-to-point-to-a-different-directory).
+1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) for GitLab and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
+1. Edit `~/.ssh/config` to configure SSH to automatically load your SSH keys:
+    ```
+    Host *
+      AddKeysToAgent yes
+      IgnoreUnknown UseKeychain
+      UseKeychain yes
+
+    Host gitlab.com
+      IdentityFile ~/.ssh/{id_rsa_gitlab}
+    ```
 {%- if cookiecutter.private_package_repository_name %}
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```bash
@@ -36,7 +46,17 @@ To add and install this package as a dependency of your project, run `poetry add
     ```
 {%- endif %}
 {%- else -%}
-1. [Generate an SSH key and add it to your authentication agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent), and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+1. Edit `~/.ssh/config` to configure SSH to automatically load your SSH keys:
+    ```
+    Host *
+      AddKeysToAgent yes
+      IgnoreUnknown UseKeychain
+      UseKeychain yes
+
+    Host github.com
+      IdentityFile ~/.ssh/{id_rsa_github}
+    ```
 {%- if cookiecutter.private_package_repository_name %}
 1. [Configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```bash
