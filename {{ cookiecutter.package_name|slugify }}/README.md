@@ -18,7 +18,7 @@ To add and install this package as a dependency of your project, run `poetry add
 <summary>Setup: once per device</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
-1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) for GitLab and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
+1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
 1. Edit `~/.ssh/config` to configure SSH to automatically load your SSH keys:
     ```
     Host *
