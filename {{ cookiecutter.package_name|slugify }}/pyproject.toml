@@ -28,10 +28,8 @@ version_files = ["pyproject.toml:version"]
 
 # https://python-poetry.org/docs/dependency-specification/
 [tool.poetry.dependencies]
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-coloredlogs = "^15.0.1"
-{%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
+coloredlogs = "^15.0.1"
 fastapi = "^0.70.1"
 gunicorn = "^20.1.0"
 {%- endif %}
