@@ -79,7 +79,6 @@ To add and install this package as a dependency of your project, run `poetry add
 
 1. Clone this repository.
 2. Open the cloned repository in VS Code and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> > _Remote-Containers: Reopen in Container_ to start a [Development Container](https://code.visualstudio.com/docs/remote/containers). Alternatively, open the cloned repository in PyCharm and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
-3. _PyCharm only:_ Run `poe install` in the development environment to create the Python environment and register [pre-commit](https://pre-commit.com/).
 
 </details>
 

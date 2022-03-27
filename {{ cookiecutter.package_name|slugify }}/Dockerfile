@@ -3,7 +3,7 @@
 ARG APP_BASE_IMAGE=ci
 {%- endif %}
 
-FROM python:3.8-slim AS dev
+FROM python:3.8-slim AS base
 
 # Install development tools: compilers, curl, fish, git, ssh, and starship.
 RUN apt-get update && \
@@ -21,20 +21,14 @@ RUN apt-get update && \
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
-# Set the working directory.
-WORKDIR /app/
-
 # Install base development environment with Poetry and Poe the Poet.
 ENV PATH /root/.local/bin/:$PATH
-RUN --mount=type=cache,target=/root/.cache \
+RUN --mount=type=cache,target=/root/.cache/ \
     pip install --no-input --upgrade pip poethepoet && \
     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - && \
     poetry config virtualenvs.create false && \
     poetry completions fish > ~/.config/fish/completions/poetry.fish && \
     poe _fish_completion > ~/.config/fish/completions/poe.fish
-
-# Let Poe the Poet know it doesn't need to activate the Python environment.
-ENV POETRY_ACTIVE 1
 
 # Enable Poetry to publish to {% if cookiecutter.private_package_repository_name %}and install from a private package repository{% else %}PyPI{% endif %} [1].
 # [1] https://pythonspeed.com/articles/build-secrets-docker-compose/
@@ -48,12 +42,37 @@ ARG POETRY_PYPI_TOKEN_PYPI
 ENV POETRY_PYPI_TOKEN_PYPI $POETRY_PYPI_TOKEN_PYPI
 {%- endif %}
 
-FROM dev as ci
+# Let Poe the Poet know it doesn't need to activate the Python environment.
+ENV POETRY_ACTIVE 1
 
-# Install the Python environment.
+# Set the working directory.
+WORKDIR /app/
+
+FROM base as dev
+
+# Install the development Python environment.
+COPY poetry.lock* pyproject.toml /app/
+RUN --mount=type=cache,target=/root/.cache/ \
+    {%- if cookiecutter.private_package_repository_name %}
+    --mount=type=secret,id=poetry-http-basic-username \
+    --mount=type=secret,id=poetry-http-basic-password \
+    {%- endif %}
+    mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
+    {%- if cookiecutter.private_package_repository_name %}
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
+    {%- endif %}
+    poetry install --no-interaction && \
+    pre-commit install --install-hooks --hook-type commit-msg --hook-type pre-commit && \
+    mkdir -p /var/lib/poetry/ && \
+    cp poetry.lock /var/lib/poetry/
+
+FROM base as ci
+
+# Install the run time Python environment.
 # TODO: Replace `--no-dev` with `--without test` when Poetry 1.2.0 is released.
 COPY poetry.lock pyproject.toml /app/
-RUN --mount=type=cache,target=/root/.cache \
+RUN --mount=type=cache,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry-http-basic-username \
     --mount=type=secret,id=poetry-http-basic-password \

@@ -203,20 +203,6 @@ testpaths = "tests"
     name = "outputdirectory"
     options = ["--output-directory"]
     default = "docs"
-  
-  [tool.poe.tasks.install]
-  help = "Install this package's Python environment"
-
-    [[tool.poe.tasks.install.sequence]]
-    cmd = "poetry install --no-interaction"
-
-    [[tool.poe.tasks.install.sequence]]
-    cmd = """
-      pre-commit install
-        --install-hooks
-        --hook-type commit-msg
-        --hook-type pre-commit
-      """
 {%- if cookiecutter.with_jupyter_lab|int %}
 
   [tool.poe.tasks.lab]

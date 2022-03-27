@@ -12,7 +12,12 @@ services:
         {%- endif %}
       context: .
       target: dev
-    command: [ "sleep", "infinity" ]
+    command:
+      [
+        "sh",
+        "-c",
+        "cp --update /var/lib/poetry/poetry.lock /app/ && sleep infinity"
+      ]
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
     {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
@@ -22,9 +27,6 @@ services:
     volumes:
       # app
       - .:/app/:cached
-      # env
-      - ${POETRY_CACHE_DIR:-~/Library/Caches/pypoetry/}:/root/.cache/pypoetry/:cached
-      - {{ cookiecutter.package_name|slugify }}-env:/usr/local/
       # git
       - ~/.gitconfig:/etc/gitconfig:cached
       # ssh
@@ -49,6 +51,3 @@ services:
     profiles:
       - app
   {%- endif %}
-
-volumes:
-  {{ cookiecutter.package_name|slugify }}-env:
