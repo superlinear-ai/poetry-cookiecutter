@@ -16,7 +16,7 @@ jobs:
     strategy:
 
       matrix:
-        python-version: ["{{ cookiecutter.python_version }}"]
+        python-version: ["3.8"]
       fail-fast: false
 
     steps:
