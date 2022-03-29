@@ -20,7 +20,7 @@ To add and install this package as a dependency of your project, run `poetry add
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
 1. Configure SSH to automatically load your SSH keys:
-    ```bash
+    ```sh
     echo "Host *" >> ~/.ssh/config
     echo "  AddKeysToAgent yes" >> ~/.ssh/config
     echo "  IgnoreUnknown UseKeychain" >> ~/.ssh/config
@@ -28,7 +28,7 @@ To add and install this package as a dependency of your project, run `poetry add
     ```
 {%- if cookiecutter.private_package_repository_name %}
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
-    ```bash
+    ```sh
     # bash
     echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME='{personal access token name}'" >> ~/.bash_profile
     echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD='{personal access token}'" >> ~/.bash_profile
@@ -45,7 +45,7 @@ To add and install this package as a dependency of your project, run `poetry add
 {%- else -%}
 1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 1. Configure SSH to automatically load your SSH keys:
-    ```bash
+    ```sh
     echo "Host *" >> ~/.ssh/config
     echo "  AddKeysToAgent yes" >> ~/.ssh/config
     echo "  IgnoreUnknown UseKeychain" >> ~/.ssh/config
@@ -53,7 +53,7 @@ To add and install this package as a dependency of your project, run `poetry add
     ```
 {%- if cookiecutter.private_package_repository_name %}
 1. [Configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
-    ```bash
+    ```sh
     # bash
     echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME='{username}'" >> ~/.bash_profile
     echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD='{password}'" >> ~/.bash_profile
@@ -70,7 +70,7 @@ To add and install this package as a dependency of your project, run `poetry add
 {%- endif %}
 1. [Install Docker Desktop](https://www.docker.com/get-started).
 1. [Configure Docker and Docker Compose to use the BuildKit build system](https://pythonspeed.com/articles/docker-buildkit/):
-    ```bash
+    ```sh
     # bash
     echo "export DOCKER_BUILDKIT=1" >> ~/.bash_profile
     echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> ~/.bash_profile
