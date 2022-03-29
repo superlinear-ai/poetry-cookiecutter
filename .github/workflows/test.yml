@@ -30,7 +30,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Cruft and Poetry
-        run: pip install --no-input cruft poetry
+        run: pip install --no-input cruft poetry "click<=8.0.4"  # pinned to work around https://github.com/tiangolo/typer/issues/377, change when that is fixed
 
       - name: Scaffold package
         run: |
