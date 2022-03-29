@@ -21,10 +21,12 @@ To add and install this package as a dependency of your project, run `poetry add
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
 1. Configure SSH to automatically load your SSH keys:
     ```sh
-    echo "Host *" >> ~/.ssh/config
-    echo "  AddKeysToAgent yes" >> ~/.ssh/config
-    echo "  IgnoreUnknown UseKeychain" >> ~/.ssh/config
-    echo "  UseKeychain yes" >> ~/.ssh/config
+    cat << EOF >> ~/.ssh/config
+    Host *
+      AddKeysToAgent yes
+      IgnoreUnknown UseKeychain
+      UseKeychain yes
+    EOF
     ```
 {%- if cookiecutter.private_package_repository_name %}
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
@@ -46,10 +48,12 @@ To add and install this package as a dependency of your project, run `poetry add
 1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 1. Configure SSH to automatically load your SSH keys:
     ```sh
-    echo "Host *" >> ~/.ssh/config
-    echo "  AddKeysToAgent yes" >> ~/.ssh/config
-    echo "  IgnoreUnknown UseKeychain" >> ~/.ssh/config
-    echo "  UseKeychain yes" >> ~/.ssh/config
+    cat << EOF >> ~/.ssh/config
+    Host *
+      AddKeysToAgent yes
+      IgnoreUnknown UseKeychain
+      UseKeychain yes
+    EOF
     ```
 {%- if cookiecutter.private_package_repository_name %}
 1. [Configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
