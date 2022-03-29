@@ -2,11 +2,6 @@ stages:
   - build
   - test
   - {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}deploy{% else %}publish{% endif %}
-{%- if cookiecutter.sentry_dsn %}
-
-variables:
-  GIT_DEPTH: 100
-{%- endif %}
 
 # Base Docker build script.
 .docker:
@@ -132,10 +127,6 @@ Publish:
     DOCKER_IMAGE_SHA: ${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
     DOCKER_PUSH: 1
     DOCKER_TARGET: app
-    {%- if cookiecutter.sentry_dsn %}
-    SENTRY_ORG: {{ cookiecutter.sentry_org }}
-    SENTRY_PROJECT: {{ cookiecutter.sentry_project }}
-    {%- endif %}
   when: manual
 {% for environment in ["feature", "development", "test", "acceptance", "production"] %}
 Deploy ({{ environment }}):
