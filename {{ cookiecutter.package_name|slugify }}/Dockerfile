@@ -63,9 +63,9 @@ RUN --mount=type=cache,target=/root/.cache/ \
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
     {%- endif %}
     poetry install --no-interaction && \
-    pre-commit install --install-hooks --hook-type commit-msg --hook-type pre-commit && \
-    mkdir -p /var/lib/poetry/ && \
-    cp poetry.lock /var/lib/poetry/
+    mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
+    git init && pre-commit install --hook-type commit-msg --hook-type pre-commit && \
+    mkdir -p /var/lib/git/ && cp .git/hooks/(commit-msg|pre-commit) /var/lib/git/
 
 FROM base as ci
 
