@@ -4,6 +4,7 @@
   "package_url": "",
   "author_name": "John Smith",
   "author_email": "john@example.com",
+  "python_version": "3.8",
   "with_fastapi_api": "0",
   "with_jupyter_lab": "0",
   "with_pydantic_typing": "0",
