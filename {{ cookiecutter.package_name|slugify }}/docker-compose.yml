@@ -16,7 +16,7 @@ services:
       [
         "sh",
         "-c",
-        "cp --update /var/lib/poetry/poetry.lock && cp --update /var/lib/git/* /app/.git/hooks/ && sleep infinity"
+        "cp --update /var/lib/poetry/poetry.lock /app/ && cp --update /var/lib/git/* /app/.git/hooks/ && sleep infinity"
       ]
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
