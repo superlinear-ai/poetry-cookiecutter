@@ -3,8 +3,6 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "dev",
     "workspaceFolder": "/app/",
-    "initializeCommand": "mkdir -p ${POETRY_CACHE_DIR:-~/Library/Caches/pypoetry/}",
-    "onCreateCommand": "poe install",
     "extensions": [
         "bungcip.better-toml",
         "eamodio.gitlens",
