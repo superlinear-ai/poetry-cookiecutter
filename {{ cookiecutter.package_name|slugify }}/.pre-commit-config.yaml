@@ -50,7 +50,7 @@ repos:
         stages: [commit-msg]
       - id: pyupgrade
         name: pyupgrade
-        entry: pyupgrade --py38-plus
+        entry: pyupgrade --py{{ cookiecutter.python_version|replace(".", "") }}-plus
         require_serial: true
         language: system
         types: [python]
