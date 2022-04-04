@@ -3,7 +3,7 @@
 ARG APP_BASE_IMAGE=ci
 {%- endif %}
 
-FROM python:3.8-slim AS base
+FROM python:{{ cookiecutter.python_version }}-slim AS dev
 
 # Install development tools: compilers, curl, fish, git, ssh, and starship.
 RUN apt-get update && \

@@ -28,22 +28,20 @@ version_files = ["pyproject.toml:version"]
 
 # https://python-poetry.org/docs/dependency-specification/
 [tool.poetry.dependencies]
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-coloredlogs = "^15.0.1"
-{%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
+coloredlogs = "^15.0.1"
 fastapi = "^0.70.1"
 gunicorn = "^20.1.0"
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.12.2"
 {%- endif %}
-python = "^3.8.12"
+python = "^{{ cookiecutter.python_version }}"
 {%- if cookiecutter.with_pydantic_typing|int %}
 pydantic = "^1.9.0"
 {%- endif %}
-{%- if cookiecutter.sentry_dsn %}
-sentry-sdk = "^1.5.1"
+{%- if cookiecutter.with_sentry_logging|int %}
+sentry-sdk = "^1.5.8"
 {%- endif %}
 {%- if cookiecutter.with_streamlit_app|int %}
 streamlit = "^1.3.0"
@@ -158,7 +156,7 @@ convention = "numpy"
 
 # https://docs.pytest.org/en/latest/customize.html#adding-default-options
 [tool.pytest.ini_options]
-addopts = "-W error -W ignore::DeprecationWarning --doctest-modules --exitfirst --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "-W error -W ignore::DeprecationWarning --doctest-modules --exitfirst --failed-first --verbosity=2 --junitxml=reports/pytest.xml"
 junit_family = "xunit2"
 testpaths = "tests"
 
