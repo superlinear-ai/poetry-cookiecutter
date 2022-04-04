@@ -40,16 +40,6 @@ inputs:
     required: true
     default: "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD }}"
   {%- endif %}
-  {%- if cookiecutter.sentry_dsn %}
-  SENTRY_ORG:
-    description: "Sentry setting. The slug of the organization to use for a command."
-    required: true
-    default: {{ cookiecutter.sentry_org }}
-  SENTRY_PROJECT:
-    description: "Sentry setting. The slug of the project to use for a command."
-    required: true
-    default: {{ cookiecutter.sentry_project }}
-  {%- endif %}
 
 outputs:
   DOCKER_TAG_SHA:
@@ -112,10 +102,6 @@ runs:
               --build-arg SOURCE_BRANCH=$CI_COMMIT_REF_NAME \
               --build-arg SOURCE_COMMIT=$CI_COMMIT_SHA \
               --build-arg SOURCE_TIMESTAMP=$CI_COMMIT_TIMESTAMP \
-              {%- if cookiecutter.sentry_dsn %}
-              --build-arg SENTRY_ORG="$SENTRY_ORG" \
-              --build-arg SENTRY_PROJECT="$SENTRY_PROJECT" \
-              {%- endif %}
               {%- if cookiecutter.private_package_repository_name %}
               --secret id=poetry-http-basic-username,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME \
               --secret id=poetry-http-basic-password,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD \

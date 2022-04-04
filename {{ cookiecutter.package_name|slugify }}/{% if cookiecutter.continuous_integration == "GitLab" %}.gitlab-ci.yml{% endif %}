@@ -2,11 +2,6 @@ stages:
   - build
   - test
   - {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}deploy{% else %}publish{% endif %}
-{%- if cookiecutter.sentry_dsn %}
-
-variables:
-  GIT_DEPTH: 100
-{%- endif %}
 
 # Base Docker build script.
 .docker:
@@ -20,10 +15,6 @@ variables:
     {%- if cookiecutter.private_package_repository_name %}
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: gitlab-ci-token
     POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $CI_JOB_TOKEN
-    {%- endif %}
-    {%- if cookiecutter.sentry_dsn %}
-    SENTRY_ORG: {{ cookiecutter.sentry_org }}
-    SENTRY_PROJECT: {{ cookiecutter.sentry_project }}
     {%- endif %}
   script:
     - DOCKER_IMAGE_SHA="${DOCKER_IMAGE_SHA:-$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)}"
@@ -53,10 +44,6 @@ variables:
           --build-arg SOURCE_BRANCH="$CI_COMMIT_REF_NAME" \
           --build-arg SOURCE_COMMIT="$CI_COMMIT_SHA" \
           --build-arg SOURCE_TIMESTAMP="$CI_COMMIT_TIMESTAMP" \
-          {%- if cookiecutter.sentry_dsn %}
-          --build-arg SENTRY_ORG="$SENTRY_ORG" \
-          --build-arg SENTRY_PROJECT="$SENTRY_PROJECT" \
-          {%- endif %}
           {%- if cookiecutter.private_package_repository_name %}
           --secret id=poetry-http-basic-username,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME \
           --secret id=poetry-http-basic-password,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD \

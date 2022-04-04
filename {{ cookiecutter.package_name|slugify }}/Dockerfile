@@ -47,12 +47,6 @@ ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_P
 ARG POETRY_PYPI_TOKEN_PYPI
 ENV POETRY_PYPI_TOKEN_PYPI $POETRY_PYPI_TOKEN_PYPI
 {%- endif %}
-{%- if cookiecutter.sentry_dsn %}
-ARG SENTRY_ORG
-ENV SENTRY_ORG $SENTRY_ORG
-ARG SENTRY_PROJECT
-ENV SENTRY_PROJECT SENTRY_PROJECT
-{%- endif %}
 
 FROM dev as ci
 

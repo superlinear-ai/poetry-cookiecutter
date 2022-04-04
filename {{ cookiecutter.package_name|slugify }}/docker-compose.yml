@@ -10,10 +10,6 @@ services:
         {%- else %}
         POETRY_PYPI_TOKEN_PYPI: $POETRY_PYPI_TOKEN_PYPI
         {%- endif %}
-        {%- if cookiecutter.sentry_dsn %}
-        SENTRY_ORG: $SENTRY_ORG
-        SENTRY_PROJECT: $SENTRY_PROJECT
-        {%- endif %}
       context: .
       target: dev
     command: [ "sleep", "infinity" ]
@@ -43,10 +39,6 @@ services:
         POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
         {%- else %}
         POETRY_PYPI_TOKEN_PYPI: $POETRY_PYPI_TOKEN_PYPI
-        {%- endif %}
-        {%- if cookiecutter.sentry_dsn %}
-        SENTRY_ORG: $SENTRY_ORG
-        SENTRY_PROJECT: $SENTRY_PROJECT
         {%- endif %}
       context: .
       target: app
