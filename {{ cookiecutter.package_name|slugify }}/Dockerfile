@@ -28,7 +28,7 @@ WORKDIR /app/
 ENV PATH /root/.local/bin/:$PATH
 RUN --mount=type=cache,target=/root/.cache \
     pip install --no-input --upgrade pip poethepoet && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - && \
+    curl -sSL https://install.python-poetry.org | python - --version 1.1.13 && \
     poetry config virtualenvs.create false && \
     poetry completions fish > ~/.config/fish/completions/poetry.fish && \
     poe _fish_completion > ~/.config/fish/completions/poe.fish
