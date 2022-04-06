@@ -65,7 +65,7 @@ RUN --mount=type=cache,target=/root/.cache/ \
     poetry install --no-interaction && \
     mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
     git init && pre-commit install --hook-type commit-msg --hook-type pre-commit && \
-    mkdir -p /var/lib/git/ && cp .git/hooks/(commit-msg|pre-commit) /var/lib/git/
+    mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/
 
 FROM base as ci
 
