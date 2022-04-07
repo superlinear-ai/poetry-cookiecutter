@@ -93,9 +93,6 @@ COPY . .
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-ARG PORT=8000
-ENV PORT $PORT
-EXPOSE $PORT
 ENTRYPOINT ["/usr/local/bin/poe"]
 CMD [{% if cookiecutter.with_fastapi_api|int %}"serve"{% else %}"streamlit"{% endif %}]
 {%- else %}
