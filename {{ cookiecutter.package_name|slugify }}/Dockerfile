@@ -3,7 +3,7 @@
 ARG APP_BASE_IMAGE=ci
 {%- endif %}
 
-FROM python:{{ cookiecutter.python_version }}-slim AS dev
+FROM python:{{ cookiecutter.python_version }}-slim AS base
 
 # Install development tools: compilers, curl, fish, git, ssh, and starship.
 RUN apt-get update && \
@@ -21,15 +21,13 @@ RUN apt-get update && \
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
-# Install base development environment with Poetry and Poe the Poet.
+# Install Poetry.
 ENV POETRY_VERSION 1.1.13
 ENV PATH /root/.local/bin/:$PATH
 RUN --mount=type=cache,target=/root/.cache/ \
-    pip install --no-input --upgrade pip poethepoet && \
     curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION && \
     poetry config virtualenvs.create false && \
-    poetry completions fish > ~/.config/fish/completions/poetry.fish && \
-    poe _fish_completion > ~/.config/fish/completions/poe.fish
+    poetry completions fish > ~/.config/fish/completions/poetry.fish
 
 # Enable Poetry to publish to {% if cookiecutter.private_package_repository_name %}and install from a private package repository{% else %}PyPI{% endif %} [1].
 # [1] https://pythonspeed.com/articles/build-secrets-docker-compose/
@@ -66,7 +64,8 @@ RUN --mount=type=cache,target=/root/.cache/ \
     poetry install --no-interaction && \
     mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
     git init && pre-commit install --hook-type commit-msg --hook-type pre-commit && \
-    mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/
+    mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/ && \
+    poe _fish_completion > ~/.config/fish/completions/poe.fish
 
 FROM base as ci
 
