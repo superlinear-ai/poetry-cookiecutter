@@ -33,10 +33,10 @@ RUN --mount=type=cache,target=/root/.cache/ \
 # Enable Poetry to publish to {% if cookiecutter.private_package_repository_name %}and install from a private package repository{% else %}PyPI{% endif %} [1].
 # [1] https://pythonspeed.com/articles/build-secrets-docker-compose/
 {%- if cookiecutter.private_package_repository_name %}
-ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
-ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
-ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
-ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
+ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME
+ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME
+ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD
+ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD
 {%- else %}
 ARG POETRY_PYPI_TOKEN_PYPI
 ENV POETRY_PYPI_TOKEN_PYPI $POETRY_PYPI_TOKEN_PYPI
@@ -59,8 +59,8 @@ RUN --mount=type=cache,target=/root/.cache/ \
     {%- endif %}
     mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
     {%- if cookiecutter.private_package_repository_name %}
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
     {%- endif %}
     poetry install --no-interaction && \
     mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
@@ -79,8 +79,8 @@ RUN --mount=type=cache,target=/root/.cache/ \
     {%- endif %}
     mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
     {%- if cookiecutter.private_package_repository_name %}
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
     {%- endif %}
     poetry install --no-dev --no-interaction
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}

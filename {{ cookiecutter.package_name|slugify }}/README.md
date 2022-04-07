@@ -32,16 +32,16 @@ To add and install this package as a dependency of your project, run `poetry add
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```sh
     # bash
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME='{personal access token name}'" >> ~/.bash_profile
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD='{personal access token}'" >> ~/.bash_profile
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{personal access token name}'" >> ~/.bash_profile
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{personal access token}'" >> ~/.bash_profile
     
     # fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME '{personal access token name}'" >> ~/.config/fish/config.fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD '{personal access token}'" >> ~/.config/fish/config.fish
+    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME '{personal access token name}'" >> ~/.config/fish/config.fish
+    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD '{personal access token}'" >> ~/.config/fish/config.fish
 
     # zsh
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME='{personal access token name}'" >> ~/.zshenv
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD='{personal access token}'" >> ~/.zshenv
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{personal access token name}'" >> ~/.zshenv
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{personal access token}'" >> ~/.zshenv
     ```
 {%- endif %}
 {%- else -%}
@@ -59,16 +59,16 @@ To add and install this package as a dependency of your project, run `poetry add
 1. [Configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```sh
     # bash
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME='{username}'" >> ~/.bash_profile
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD='{password}'" >> ~/.bash_profile
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{username}'" >> ~/.bash_profile
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{password}'" >> ~/.bash_profile
     
     # fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME '{username}'" >> ~/.config/fish/config.fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD '{password}'" >> ~/.config/fish/config.fish
+    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME '{username}'" >> ~/.config/fish/config.fish
+    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD '{password}'" >> ~/.config/fish/config.fish
 
     # zsh
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME='{username}'" >> ~/.zshenv
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD='{password}'" >> ~/.zshenv
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{username}'" >> ~/.zshenv
+    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{password}'" >> ~/.zshenv
     ```
 {%- endif %}
 {%- endif %}

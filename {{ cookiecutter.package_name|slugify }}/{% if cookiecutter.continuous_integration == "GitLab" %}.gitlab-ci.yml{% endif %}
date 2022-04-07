@@ -13,8 +13,8 @@ stages:
     DOCKER_REGISTRY_USER: $CI_REGISTRY_USER
     DOCKER_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
     {%- if cookiecutter.private_package_repository_name %}
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: gitlab-ci-token
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $CI_JOB_TOKEN
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME: gitlab-ci-token
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD: $CI_JOB_TOKEN
     {%- endif %}
   script:
     - DOCKER_IMAGE_SHA="${DOCKER_IMAGE_SHA:-$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)}"
@@ -45,8 +45,8 @@ stages:
           --build-arg SOURCE_COMMIT="$CI_COMMIT_SHA" \
           --build-arg SOURCE_TIMESTAMP="$CI_COMMIT_TIMESTAMP" \
           {%- if cookiecutter.private_package_repository_name %}
-          --secret id=poetry-http-basic-username,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME \
-          --secret id=poetry-http-basic-password,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD \
+          --secret id=poetry-http-basic-username,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME \
+          --secret id=poetry-http-basic-password,env=POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD \
           {%- endif %}
           --target "$DOCKER_TARGET" \
           --pull \
@@ -82,8 +82,8 @@ Test:
       - .pytest_cache/
   {%- if cookiecutter.private_package_repository_name %}
   variables:
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: gitlab-ci-token
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: $CI_JOB_TOKEN
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME: gitlab-ci-token
+    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD: $CI_JOB_TOKEN
   {%- endif %}
   script:
     - poetry install --no-interaction  # TODO: Add `--only test` when Poetry 1.2.0 is released.
