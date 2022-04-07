@@ -234,7 +234,7 @@ testpaths = "tests"
   [tool.poe.tasks.serve]
   help = "Serve a REST API in production"
   cmd = """
-    gunicorn 
+    gunicorn
       --access-logfile -
       --bind 0.0.0.0:$port
       --graceful-timeout 10
