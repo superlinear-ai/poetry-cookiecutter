@@ -38,7 +38,7 @@ jobs:
       - name: Cache Python environment
         uses: actions/cache@v2
         with:
-          path: my-package/.venv
+          path: my-package/.venv/
           key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('my-package/pyproject.toml') }}
 
       - name: Install Python environment
@@ -48,27 +48,29 @@ jobs:
           poetry config virtualenvs.in-project true
           poetry install --no-interaction
           poetry run pre-commit install
-        working-directory: ./my-package
+        working-directory: ./my-package/
 
       - name: Lint package
         run: poetry run poe lint
-        working-directory: ./my-package
+        working-directory: ./my-package/
 
       - name: Test package
         run: poetry run poe test
-        working-directory: ./my-package
+        working-directory: ./my-package/
 
       - name: Build dev Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           target: dev
+        working-directory: ./my-package/
 
       - name: Build ci Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           target: ci
+        working-directory: ./my-package/
 
       - name: Build app Docker image
         uses: docker/build-push-action@v2
@@ -78,3 +80,4 @@ jobs:
             SOURCE_COMMIT=${{ env.GITHUB_SHA }}
           context: .
           target: app
+        working-directory: ./my-package/
