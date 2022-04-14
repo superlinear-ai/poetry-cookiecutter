@@ -61,16 +61,14 @@ jobs:
       - name: Build dev Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./my-package/
           target: dev
-        working-directory: ./my-package/
 
       - name: Build ci Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./my-package/
           target: ci
-        working-directory: ./my-package/
 
       - name: Build app Docker image
         uses: docker/build-push-action@v2
@@ -78,6 +76,5 @@ jobs:
           build-args: |
             SOURCE_BRANCH=${{ env.GITHUB_REF }}
             SOURCE_COMMIT=${{ env.GITHUB_SHA }}
-          context: .
+          context: ./my-package/
           target: app
-        working-directory: ./my-package/
