@@ -33,7 +33,7 @@ jobs:
 
       - name: Scaffold package
         run: |
-          cruft create --no-input --extra-context '{"python_version": "${{ matrix.python-version }}", "with_fastapi_api": "1", "with_typer_cli": "1"}' .
+          cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "${{ matrix.python-version }}", "with_fastapi_api": "1", "with_typer_cli": "1"}' .
 
       - name: Cache Python environment
         uses: actions/cache@v2
@@ -47,7 +47,7 @@ jobs:
           git add .
           poetry config virtualenvs.in-project true
           poetry install --no-interaction
-          pre-commit install
+          poetry run pre-commit install
         working-directory: ./my-package
 
       - name: Lint package
