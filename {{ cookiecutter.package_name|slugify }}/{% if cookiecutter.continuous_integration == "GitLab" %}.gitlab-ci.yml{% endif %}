@@ -89,7 +89,7 @@ Test:
     - poetry install --no-interaction  # TODO: Add `--only test` when Poetry 1.2.0 is released.
     - poe lint
     - poe test
-  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  coverage: '/^TOTAL.*\s+(\d+(?:\.\d+)?)%/'
   artifacts:
     reports:
       cobertura: reports/coverage.xml
