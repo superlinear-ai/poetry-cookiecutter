@@ -50,7 +50,7 @@ WORKDIR /app/
 FROM base as dev
 
 # Install the development Python environment.
-COPY poetry.lock* pyproject.toml /app/
+COPY .pre-commit-config.yaml poetry.lock* pyproject.toml /app/
 RUN --mount=type=cache,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry-http-basic-username \
@@ -63,7 +63,7 @@ RUN --mount=type=cache,target=/root/.cache/ \
     {%- endif %}
     poetry install --no-interaction && \
     mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
-    git init && pre-commit install && \
+    git init && pre-commit install --install-hooks && \
     mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/
 
 FROM base as ci
