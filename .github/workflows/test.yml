@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
 
 jobs:
@@ -34,12 +33,12 @@ jobs:
 
       - name: Scaffold package
         run: |
-          cruft create --no-input --extra-context '{"with_fastapi_api": "1"}' .
+          cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "${{ matrix.python-version }}", "with_fastapi_api": "1", "with_typer_cli": "1"}' .
 
       - name: Cache Python environment
         uses: actions/cache@v2
         with:
-          path: my-package/.venv
+          path: my-package/.venv/
           key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('my-package/pyproject.toml') }}
 
       - name: Install Python environment
@@ -48,12 +47,34 @@ jobs:
           git add .
           poetry config virtualenvs.in-project true
           poetry install --no-interaction
-        working-directory: ./my-package
+          poetry run pre-commit install
+        working-directory: ./my-package/
 
       - name: Lint package
         run: poetry run poe lint
-        working-directory: ./my-package
+        working-directory: ./my-package/
 
       - name: Test package
         run: poetry run poe test
-        working-directory: ./my-package
+        working-directory: ./my-package/
+
+      - name: Build dev Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./my-package/
+          target: dev
+
+      - name: Build ci Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./my-package/
+          target: ci
+
+      - name: Build app Docker image
+        uses: docker/build-push-action@v2
+        with:
+          build-args: |
+            SOURCE_BRANCH=${{ env.GITHUB_REF }}
+            SOURCE_COMMIT=${{ env.GITHUB_SHA }}
+          context: ./my-package/
+          target: app

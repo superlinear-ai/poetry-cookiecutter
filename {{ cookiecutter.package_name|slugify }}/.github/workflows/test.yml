@@ -32,7 +32,7 @@ jobs:
       - name: Cache Python environment
         uses: actions/cache@v2
         with:
-          path: .venv
+          path: .venv/
           key: {% raw %}venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}{% endraw %}
 
       - name: Install Poetry
