@@ -38,11 +38,11 @@
         "python.testing.nosetestsEnabled": false,
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
-        "terminal.integrated.defaultProfile.linux": "fish",
+        "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.inheritEnv": false,
         "terminal.integrated.profiles.linux": {
-            "fish": {
-                "path": "/usr/bin/fish"
+            "zsh": {
+                "path": "/usr/bin/zsh"
             }
         }
     }

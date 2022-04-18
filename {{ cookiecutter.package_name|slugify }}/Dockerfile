@@ -5,14 +5,15 @@ ARG APP_BASE_IMAGE=ci
 
 FROM python:{{ cookiecutter.python_version }}-slim AS base
 
-# Install development tools: compilers, curl, fish, git, ssh, and starship.
+# Install development tools: compilers, curl, git, ssh, starship, vim, and zsh.
 RUN apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl fish git ssh && \
-    chsh --shell /usr/bin/fish && \
+    apt-get install --no-install-recommends --yes build-essential curl git ssh vim zsh zsh-antigen && \
+    chsh --shell /usr/bin/zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    mkdir -p ~/.config/fish/completions/ && \
-    echo "set fish_greeting" >> ~/.config/fish/config.fish && \
-    echo "starship init fish | source" >> ~/.config/fish/config.fish && \
+    echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
+    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
+    echo 'antigen apply' >> ~/.zshrc && \
+    echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     rm -rf /var/lib/apt/lists/*
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
@@ -26,8 +27,7 @@ ENV POETRY_VERSION 1.1.13
 ENV PATH /root/.local/bin/:$PATH
 RUN --mount=type=cache,target=/root/.cache/ \
     curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION && \
-    poetry config virtualenvs.create false && \
-    poetry completions fish > ~/.config/fish/completions/poetry.fish
+    poetry config virtualenvs.create false
 
 # Enable Poetry to publish to {% if cookiecutter.private_package_repository_name %}and install from a private package repository{% else %}PyPI{% endif %} [1].
 # [1] https://pythonspeed.com/articles/build-secrets-docker-compose/
@@ -64,8 +64,7 @@ RUN --mount=type=cache,target=/root/.cache/ \
     poetry install --no-interaction && \
     mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
     git init && pre-commit install && \
-    mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/ && \
-    poe _fish_completion > ~/.config/fish/completions/poe.fish
+    mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/
 
 FROM base as ci
 
