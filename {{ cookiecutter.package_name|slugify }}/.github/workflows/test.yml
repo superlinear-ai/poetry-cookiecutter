@@ -41,7 +41,7 @@ jobs:
       - name: Install Python environment
         run: |
           {%- if cookiecutter.private_package_repository_name %}
-          poetry config http-basic.{{ cookiecutter.private_package_repository_name }} "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD }}"
+          poetry config http-basic.{{ cookiecutter.private_package_repository_name|slugify }} "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}"
           {%- endif %}
           poetry config virtualenvs.in-project true
           poetry install --no-interaction

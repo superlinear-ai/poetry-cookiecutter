@@ -94,7 +94,7 @@ shellcheck-py = "^0.8.0"
 
 # https://python-poetry.org/docs/repositories/#using-a-private-repository
 [[tool.poetry.source]]
-name = "{{ cookiecutter.private_package_repository_name|lower }}"
+name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
 {%- endif %}
 
