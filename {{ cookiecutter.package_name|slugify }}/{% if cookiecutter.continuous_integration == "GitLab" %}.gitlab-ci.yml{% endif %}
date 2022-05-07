@@ -92,7 +92,9 @@ Test:
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   artifacts:
     reports:
-      cobertura: reports/coverage.xml
+      coverage_report: 
+        coverage_format: cobertura
+        path: reports/coverage.xml
       junit:
         - reports/mypy.xml
         - reports/pytest.xml
