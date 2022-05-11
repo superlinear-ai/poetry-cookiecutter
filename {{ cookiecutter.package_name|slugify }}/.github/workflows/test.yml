@@ -53,6 +53,6 @@ jobs:
         run: poetry run poe test
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           files: reports/coverage.xml
