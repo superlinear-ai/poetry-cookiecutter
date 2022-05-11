@@ -44,7 +44,7 @@ To add and install this package as a dependency of your project, run `poetry add
     POETRY_AUTH_TOML_PATH=~/.config/pypoetry/auth.toml
 
     # macOS
-    POETRY_AUTH_TOML_PATH=~/Library/Application Support/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH=~/Library/Application\ Support/pypoetry/auth.toml
 
     # Windows
     POETRY_AUTH_TOML_PATH=$APPDATA/pypoetry/auth.toml
@@ -77,7 +77,7 @@ To add and install this package as a dependency of your project, run `poetry add
     POETRY_AUTH_TOML_PATH=~/.config/pypoetry/auth.toml
 
     # macOS
-    POETRY_AUTH_TOML_PATH=~/Library/Application Support/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH=~/Library/Application\ Support/pypoetry/auth.toml
 
     # Windows
     POETRY_AUTH_TOML_PATH=$APPDATA/pypoetry/auth.toml
