@@ -28,18 +28,6 @@ ENV PATH /root/.local/bin:$PATH
 RUN --mount=type=cache,target=/root/.cache/ \
     curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION
 
-# Enable Poetry to publish to {% if cookiecutter.private_package_repository_name %}and install from a private package repository{% else %}PyPI{% endif %} [1].
-# [1] https://pythonspeed.com/articles/build-secrets-docker-compose/
-{%- if cookiecutter.private_package_repository_name %}
-ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME
-ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME
-ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD
-ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD
-{%- else %}
-ARG POETRY_PYPI_TOKEN_PYPI
-ENV POETRY_PYPI_TOKEN_PYPI $POETRY_PYPI_TOKEN_PYPI
-{%- endif %}
-
 # Create and activate a virtual environment.
 RUN python -m venv /opt/app-env
 ENV PATH=/opt/app-env/bin:$PATH
