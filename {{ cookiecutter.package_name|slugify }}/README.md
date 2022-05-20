@@ -41,13 +41,13 @@ To add and install this package as a dependency of your project, run `poetry add
 1. Create a `.env` file in the project directory that [Docker Compose reads](https://docs.docker.com/compose/env-file/) to pass Poetry's `auth.toml` file as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
     ```sh
     # Linux
-    POETRY_AUTH_TOML_PATH=~/.config/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
 
     # macOS
-    POETRY_AUTH_TOML_PATH=~/Library/Application\ Support/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH="~/Library/Application Support/pypoetry/auth.toml"
 
     # Windows
-    POETRY_AUTH_TOML_PATH=$APPDATA/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
     ```
 {%- endif %}
 {%- else -%}
@@ -74,19 +74,21 @@ To add and install this package as a dependency of your project, run `poetry add
 1. Create a `.env` file in the project directory that [Docker Compose reads](https://docs.docker.com/compose/env-file/) to pass Poetry's `auth.toml` file as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
     ```sh
     # Linux
-    POETRY_AUTH_TOML_PATH=~/.config/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
 
     # macOS
-    POETRY_AUTH_TOML_PATH=~/Library/Application\ Support/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH="~/Library/Application Support/pypoetry/auth.toml"
 
     # Windows
-    POETRY_AUTH_TOML_PATH=$APPDATA/pypoetry/auth.toml
+    POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
     ```
 {%- endif %}
 {%- endif %}
-1. [Install Docker Desktop](https://www.docker.com/get-started). If you are using Linux, you must [configure Docker and Docker Compose to use the BuildKit build system](https://pythonspeed.com/articles/docker-buildkit/). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
+1. [Install Docker Desktop](https://www.docker.com/get-started).
+  - Open Docker Desktop's preferences window and enable _Use Docker Compose V2_.
+  - If you are using Linux, you must [configure Docker and Docker Compose to use the BuildKit build system](https://pythonspeed.com/articles/docker-buildkit/). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
-1. _Optional:_ [Install FiraCode Nerd Font](https://www.nerdfonts.com/font-downloads) with `brew tap homebrew/cask-fonts && brew install --cask font-fira-code-nerd-font` and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use `'FiraCode Nerd Font'`.
+  - _Optional:_ [Install FiraCode Nerd Font](https://www.nerdfonts.com/font-downloads) with `brew tap homebrew/cask-fonts && brew install --cask font-fira-code-nerd-font` and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use `'FiraCode Nerd Font'`.
 
 </details>
 
