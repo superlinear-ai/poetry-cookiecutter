@@ -7,14 +7,14 @@ A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffo
 <details open>
 <summary>Setting up a new project with this template</summary>
 
-1. Install [Cruft](https://cruft.github.io/cruft/) in your Python environment with:
+1. Install [Cruft](https://cruft.github.io/cruft/) in your [Python environment](https://github.com/pyenv/pyenv-virtualenv) with:
    ```sh
    pip install cruft
    ```
 2. Create a new repository and clone it locally.
 3. In the repository's parent directory, run:
    ```sh
-   cruft create -f git@github.com:radix-ai/poetry-cookiecutter.git
+   cruft create -f git@github.com:radix-ai/poetry-cookiecutter
    ```
 
 </details>
