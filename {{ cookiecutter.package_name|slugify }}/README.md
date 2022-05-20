@@ -29,19 +29,25 @@ To add and install this package as a dependency of your project, run `poetry add
     EOF
     ```
 {%- if cookiecutter.private_package_repository_name %}
-1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
+1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
+    ```toml
+    # Linux:   ~/.config/pypoetry/auth.toml
+    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
+    # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
+    [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
+    username = "{personal access token name}"
+    password = "{personal access token}"
+    ```
+1. Create a `.env` file in the project directory that [Docker Compose reads](https://docs.docker.com/compose/env-file/) to pass Poetry's `auth.toml` file as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
     ```sh
-    # bash
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{personal access token name}'" >> ~/.bash_profile
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{personal access token}'" >> ~/.bash_profile
-    
-    # fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME '{personal access token name}'" >> ~/.config/fish/config.fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD '{personal access token}'" >> ~/.config/fish/config.fish
+    # Linux
+    POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
 
-    # zsh
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{personal access token name}'" >> ~/.zshenv
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{personal access token}'" >> ~/.zshenv
+    # macOS
+    POETRY_AUTH_TOML_PATH="~/Library/Application Support/pypoetry/auth.toml"
+
+    # Windows
+    POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
     ```
 {%- endif %}
 {%- else -%}
@@ -56,39 +62,33 @@ To add and install this package as a dependency of your project, run `poetry add
     EOF
     ```
 {%- if cookiecutter.private_package_repository_name %}
-1. [Configure Poetry's credentials for this package's private repository](https://python-poetry.org/docs/repositories/#configuring-credentials):
+1. [Add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
+    ```toml
+    # Linux:   ~/.config/pypoetry/auth.toml
+    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
+    # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
+    [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
+    username = "{username}"
+    password = "{password}"
+    ```
+1. Create a `.env` file in the project directory that [Docker Compose reads](https://docs.docker.com/compose/env-file/) to pass Poetry's `auth.toml` file as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
     ```sh
-    # bash
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{username}'" >> ~/.bash_profile
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{password}'" >> ~/.bash_profile
-    
-    # fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME '{username}'" >> ~/.config/fish/config.fish
-    echo "set --export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD '{password}'" >> ~/.config/fish/config.fish
+    # Linux
+    POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
 
-    # zsh
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME='{username}'" >> ~/.zshenv
-    echo "export POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD='{password}'" >> ~/.zshenv
+    # macOS
+    POETRY_AUTH_TOML_PATH="~/Library/Application Support/pypoetry/auth.toml"
+
+    # Windows
+    POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
     ```
 {%- endif %}
 {%- endif %}
 1. [Install Docker Desktop](https://www.docker.com/get-started).
-1. [Configure Docker and Docker Compose to use the BuildKit build system](https://pythonspeed.com/articles/docker-buildkit/):
-    ```sh
-    # bash
-    echo "export DOCKER_BUILDKIT=1" >> ~/.bash_profile
-    echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> ~/.bash_profile
-
-    # fish
-    echo "set --export DOCKER_BUILDKIT 1" >> ~/.config/fish/config.fish
-    echo "set --export COMPOSE_DOCKER_CLI_BUILD 1" >> ~/.config/fish/config.fish
-    
-    # zsh
-    echo "export DOCKER_BUILDKIT=1" >> ~/.zshenv
-    echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> ~/.zshenv
-    ```
+  - Open Docker Desktop's preferences window and enable _Use Docker Compose V2_.
+  - If you are using Linux, you must [configure Docker and Docker Compose to use the BuildKit build system](https://pythonspeed.com/articles/docker-buildkit/). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
-1. _Optional:_ [Install FiraCode Nerd Font](https://www.nerdfonts.com/font-downloads) with `brew tap homebrew/cask-fonts && brew install --cask font-fira-code-nerd-font` and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use `'FiraCode Nerd Font'`.
+  - _Optional:_ [Install FiraCode Nerd Font](https://www.nerdfonts.com/font-downloads) with `brew tap homebrew/cask-fonts && brew install --cask font-fira-code-nerd-font` and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use `'FiraCode Nerd Font'`.
 
 </details>
 

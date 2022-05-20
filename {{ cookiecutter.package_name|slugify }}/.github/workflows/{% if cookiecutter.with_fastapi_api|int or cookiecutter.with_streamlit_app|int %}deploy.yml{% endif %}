@@ -55,8 +55,10 @@ jobs:
           push: true
           {%- if cookiecutter.private_package_repository_name %}
           secrets: |
-            poetry-http-basic-username={% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_USERNAME }}
-            poetry-http-basic-password={% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper|replace("-", "_") }}_PASSWORD }}
+            "poetry_auth=[http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
+            username = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}""
+            password = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}""
+            "
           {%- endif %}
           tags: |
             {% raw %}${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ github.event.inputs.environment || env.DEFAULT_DEPLOYMENT_ENVIRONMENT }}{% endraw %}
