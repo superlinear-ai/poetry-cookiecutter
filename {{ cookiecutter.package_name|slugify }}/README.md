@@ -38,17 +38,6 @@ To add and install this package as a dependency of your project, run `poetry add
     username = "{personal access token name}"
     password = "{personal access token}"
     ```
-1. Create a `.env` file in the project directory that [Docker Compose reads](https://docs.docker.com/compose/env-file/) to pass Poetry's `auth.toml` file as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
-    ```sh
-    # Linux
-    POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
-
-    # macOS
-    POETRY_AUTH_TOML_PATH="~/Library/Application Support/pypoetry/auth.toml"
-
-    # Windows
-    POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
-    ```
 {%- endif %}
 {%- else -%}
 1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
@@ -71,17 +60,6 @@ To add and install this package as a dependency of your project, run `poetry add
     username = "{username}"
     password = "{password}"
     ```
-1. Create a `.env` file in the project directory that [Docker Compose reads](https://docs.docker.com/compose/env-file/) to pass Poetry's `auth.toml` file as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
-    ```sh
-    # Linux
-    POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
-
-    # macOS
-    POETRY_AUTH_TOML_PATH="~/Library/Application Support/pypoetry/auth.toml"
-
-    # Windows
-    POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
-    ```
 {%- endif %}
 {%- endif %}
 1. [Install Docker Desktop](https://www.docker.com/get-started).
@@ -96,7 +74,20 @@ To add and install this package as a dependency of your project, run `poetry add
 <summary>Setup: once per project</summary>
 
 1. Clone this repository.
-2. Open the cloned repository in VS Code and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> > _Remote-Containers: Reopen in Container_ to start a [Development Container](https://code.visualstudio.com/docs/remote/containers). Alternatively, open the cloned repository in PyCharm and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
+{%- if cookiecutter.private_package_repository_name %}
+1. Create a `.env` file in the project directory that [Docker Compose reads](https://docs.docker.com/compose/env-file/) to pass Poetry's `auth.toml` file as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
+    ```sh
+    # Linux
+    POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
+
+    # macOS
+    POETRY_AUTH_TOML_PATH="~/Library/Application Support/pypoetry/auth.toml"
+
+    # Windows
+    POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
+    ```
+{%- endif %}
+1. Open the cloned repository in VS Code and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> > _Remote-Containers: Reopen in Container_ to start a [Development Container](https://code.visualstudio.com/docs/remote/containers). Alternatively, open the cloned repository in PyCharm and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
 
 </details>
 
