@@ -21,10 +21,10 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -36,7 +36,7 @@ jobs:
           cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "${{ matrix.python-version }}", "with_fastapi_api": "1", "with_typer_cli": "1"}' .
 
       - name: Cache Python environment
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: my-package/.venv/
           key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('my-package/pyproject.toml') }}
