@@ -26,7 +26,7 @@
         ],
         "files.autoSave": "onFocusChange",
         "python.analysis.typeCheckingMode": "off",
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/opt/app-env/bin/python",
         "python.formatting.provider": "black",
         "python.languageServer": "Pylance",
         "python.linting.flake8Enabled": true,

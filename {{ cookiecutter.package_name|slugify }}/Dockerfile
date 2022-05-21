@@ -24,13 +24,14 @@ ENV PYTHONUNBUFFERED 1
 
 # Install Poetry.
 ENV POETRY_VERSION 1.1.13
-ENV PATH /root/.local/bin/:$PATH
+ENV PATH /root/.local/bin:$PATH
 RUN --mount=type=cache,target=/root/.cache/ \
-    curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION && \
-    poetry config virtualenvs.create false
+    curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION
 
-# Let Poe the Poet know it doesn't need to activate the Python environment.
-ENV POETRY_ACTIVE 1
+# Create and activate a virtual environment.
+RUN python -m venv /opt/app-env
+ENV PATH=/opt/app-env/bin:$PATH
+ENV VIRTUAL_ENV=/opt/app-env
 
 # Set the working directory.
 WORKDIR /app/
@@ -69,10 +70,10 @@ COPY . .
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-ENTRYPOINT ["/usr/local/bin/poe"]
+ENTRYPOINT ["/opt/app-env/bin/poe"]
 CMD [{% if cookiecutter.with_fastapi_api|int %}"serve"{% else %}"streamlit"{% endif %}]
 {%- else %}
-ENTRYPOINT ["/usr/local/bin/{{ cookiecutter.package_name|slugify }}"]
+ENTRYPOINT ["/opt/app-env/bin/{{ cookiecutter.package_name|slugify }}"]
 CMD []
 {%- endif %}
 
