@@ -5,9 +5,9 @@ ARG APP_BASE_IMAGE=ci
 
 FROM python:{{ cookiecutter.python_version }}-slim AS base
 
-# Install development tools: compilers, curl, git, ssh, starship, vim, and zsh.
+# Install development tools: compilers, curl, git, gpg, ssh, starship, vim, and zsh.
 RUN apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git ssh vim zsh zsh-antigen && \
+    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh vim zsh zsh-antigen && \
     chsh --shell /usr/bin/zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
