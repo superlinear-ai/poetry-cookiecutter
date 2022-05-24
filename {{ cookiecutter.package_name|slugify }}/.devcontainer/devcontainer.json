@@ -33,7 +33,6 @@
         "python.terminal.activateEnvironment": false,
         "python.testing.pytestEnabled": true,
         "terminal.integrated.defaultProfile.linux": "zsh",
-        "terminal.integrated.inheritEnv": false,
         "terminal.integrated.profiles.linux": {
             "zsh": {
                 "path": "/usr/bin/zsh"
