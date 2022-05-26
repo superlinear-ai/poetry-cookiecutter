@@ -30,8 +30,8 @@ RUN --mount=type=cache,target=/root/.cache/ \
 
 # Create and activate a virtual environment.
 RUN python -m venv /opt/app-env
-ENV PATH=/opt/app-env/bin:$PATH
-ENV VIRTUAL_ENV=/opt/app-env
+ENV PATH /opt/app-env/bin:$PATH
+ENV VIRTUAL_ENV /opt/app-env
 
 # Set the working directory.
 WORKDIR /app/
