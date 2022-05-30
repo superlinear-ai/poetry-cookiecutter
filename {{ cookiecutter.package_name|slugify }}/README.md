@@ -2,18 +2,16 @@
 
 {{ cookiecutter.package_description }}
 
-{% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int -%}
 ## Using
-
-To serve this app, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser.
-{% elif cookiecutter.with_typer_cli|int -%}
-## Using
-
-To use this app, run `docker compose run --rm app {commmand}`.
-{%- else -%}
-## Installing
 
 To add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.package_name|slugify }}`.
+{%- if cookiecutter.with_typer_cli|int %}
+
+To view this app's commands once it's installed, run `{{ cookiecutter.package_name|slugify }} --help`. Alternatively, you can also use `docker compose run --rm app --help`.
+{%- endif %}
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
+
+To serve this app, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running {% if cookiecutter.with_fastapi_api|int %}`poe serve`{% else %}`poe streamlit`{% endif %}.
 {%- endif %}
 
 ## Contributing
