@@ -5,7 +5,11 @@
 {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int -%}
 ## Using
 
-To serve this package, run `docker-compose up app`.
+To serve this app, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser.
+{% elif cookiecutter.with_typer_cli|int -%}
+## Using
+
+To use this app, run `docker compose run --rm app {commmand}`.
 {%- else -%}
 ## Installing
 

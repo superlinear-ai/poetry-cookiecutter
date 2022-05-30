@@ -27,10 +27,7 @@ services:
       {%- endif %}
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
     {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-    hostname: "{{ cookiecutter.package_name|slugify }}-dev.local"
     ports:
-      - "8000"
-    expose:
       - "8000"
     {%- endif %}
     {%- if cookiecutter.private_package_repository_name %}
@@ -54,11 +51,8 @@ services:
       {%- endif %}
     tty: true
     {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-    hostname: "{{ cookiecutter.package_name|slugify }}.local"
     ports:
-      - "8000"
-    expose:
-      - "8000"
+      - "8000:8000"
     {%- endif %}
     profiles:
       - app
