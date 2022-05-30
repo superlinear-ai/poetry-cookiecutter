@@ -2,7 +2,13 @@
 
 A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffolding Python packages and apps.
 
-## Features
+## 🍿 Demo
+
+See [My Package](https://github.com/radix-ai/my-package) for an example of a Python package and app that is scaffolded with this template.
+
+Starting development in My Package is as easy as cloning the repository with `git clone git@github.com:radix-ai/my-package`, opening the cloned repository in [VS Code](https://code.visualstudio.com/) and then running <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_ with VS Code's [Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to start a [Dev Container](https://code.visualstudio.com/docs/remote/containers).
+
+## 🎁 Features
 
 - 🧑‍💻 Quick and reproducible development environments with VS Code's [Dev Containers](https://code.visualstudio.com/docs/remote/containers) and PyCharm's [Docker Compose interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote)
 - 📦 Packaging and dependency management with [Poetry](https://github.com/python-poetry/poetry)
@@ -18,11 +24,11 @@ A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffo
 - 🏗 Scaffolding upgrades with [Cookiecutter](https://github.com/cookiecutter/cookiecutter) and [Cruft](https://github.com/cruft/cruft)
 - 🧰 Automated dependency updating with [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/about-dependabot-version-updates)
 
-## Using
+## ✨ Using
 
-<details open>
-<summary>Setting up a new project with this template</summary>
+### 1. Creating a new Python project
 
+To create a new Python project with this template:
 1. Install [Cruft](https://cruft.github.io/cruft/) in your [Python environment](https://github.com/pyenv/pyenv-virtualenv) with:
    ```sh
    pip install cruft
@@ -33,13 +39,8 @@ A modern [Cookiecutter](https://cookiecutter.readthedocs.io) template for scaffo
    cruft create -f git@github.com:radix-ai/poetry-cookiecutter
    ```
 
-</details>
+### 2. Updating your Python project
 
-<details open>
-<summary>Updating your project with the latest template</summary>
-
-1. Run `cruft check` to check for updates.
-2. Run `cruft update` to update to the latest scaffolding.
-3. Address failed merges in any `.rej` files.
-
-</details>
+To update your Python project with the latest template:
+1. Run `cruft update` to update your project with the latest template.
+2. If any of the updates failed, resolve them by inspecting the generated `.rej` files.
