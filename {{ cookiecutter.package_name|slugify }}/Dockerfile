@@ -66,7 +66,7 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
 FROM $APP_BASE_IMAGE AS app
 
 # Copy the package source code to the working directory.
-COPY src/ .
+COPY src/ *.py /app/
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
