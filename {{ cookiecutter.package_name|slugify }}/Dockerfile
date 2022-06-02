@@ -5,17 +5,6 @@ ARG APP_BASE_IMAGE=ci
 
 FROM python:{{ cookiecutter.python_version }}-slim AS base
 
-# Install development tools: compilers, curl, git, gpg, ssh, starship, vim, and zsh.
-RUN apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh vim zsh zsh-antigen && \
-    chsh --shell /usr/bin/zsh && \
-    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
-    echo 'antigen apply' >> ~/.zshrc && \
-    echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
-    rm -rf /var/lib/apt/lists/*
-
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
 # [1] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONFAULTHANDLER
 # [2] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUNBUFFERED
@@ -24,9 +13,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Install Poetry.
 ENV POETRY_VERSION 1.1.13
-ENV PATH /root/.local/bin:$PATH
-RUN --mount=type=cache,target=/root/.cache/ \
-    curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION
+RUN --mount=type=cache,id=poetry,target=/root/.cache/ pip install poetry==$POETRY_VERSION
 
 # Create and activate a virtual environment.
 RUN python -m venv /opt/app-env
@@ -38,9 +25,22 @@ WORKDIR /app/
 
 FROM base as dev
 
+# Install development tools: curl, git, gpg, ssh, starship, vim, and zsh.
+RUN rm /etc/apt/apt.conf.d/docker-clean
+RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
+    --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
+    apt-get update && \
+    apt-get install --no-install-recommends --yes curl git gnupg ssh vim zsh zsh-antigen && \
+    chsh --shell /usr/bin/zsh && \
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
+    echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
+    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
+    echo 'antigen apply' >> ~/.zshrc && \
+    echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+
 # Install the development Python environment.
 COPY .pre-commit-config.yaml poetry.lock* pyproject.toml /app/
-RUN --mount=type=cache,target=/root/.cache/ \
+RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
@@ -55,7 +55,7 @@ FROM base as ci
 # Install the run time Python environment.
 # TODO: Replace `--no-dev` with `--without test` when Poetry 1.2.0 is released.
 COPY poetry.lock pyproject.toml /app/
-RUN --mount=type=cache,target=/root/.cache/ \
+RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
@@ -66,7 +66,7 @@ RUN --mount=type=cache,target=/root/.cache/ \
 FROM $APP_BASE_IMAGE AS app
 
 # Copy the package source code to the working directory.
-COPY . .
+COPY src/ *.py /app/
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
@@ -77,9 +77,8 @@ ENTRYPOINT ["/opt/app-env/bin/{{ cookiecutter.package_name|slugify }}"]
 CMD []
 {%- endif %}
 
-# The following variables are supplied as build args at build time so that they are available at
-# run time as environment variables [1].
-# [1] https://docs.docker.com/docker-hub/builds/advanced/
+# The following variables are supplied as build args at build time and made available at run time as
+# environment variables.
 ARG SOURCE_BRANCH
 ENV SOURCE_BRANCH $SOURCE_BRANCH
 ARG SOURCE_COMMIT
