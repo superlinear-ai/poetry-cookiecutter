@@ -1,7 +1,4 @@
 # syntax=docker/dockerfile:experimental
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
-ARG APP_BASE_IMAGE=ci
-{%- endif %}
 
 FROM python:{{ cookiecutter.python_version }}-slim AS base
 
@@ -25,12 +22,12 @@ WORKDIR /app/
 
 FROM base as dev
 
-# Install development tools: curl, git, gpg, ssh, starship, vim, and zsh.
+# Install development tools: compilers, curl, git, gpg, ssh, starship, vim, and zsh.
 RUN rm /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes curl git gnupg ssh vim zsh zsh-antigen && \
+    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh vim zsh zsh-antigen && \
     chsh --shell /usr/bin/zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
@@ -63,7 +60,7 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     poetry install --no-dev --no-interaction
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
-FROM $APP_BASE_IMAGE AS app
+FROM ci AS app
 
 # Copy the package source code to the working directory.
 COPY src/ *.py /app/
