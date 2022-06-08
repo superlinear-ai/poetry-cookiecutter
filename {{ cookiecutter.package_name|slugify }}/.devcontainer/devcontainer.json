@@ -3,6 +3,7 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "dev",
     "workspaceFolder": "/app/",
+    "initializeCommand": "ssh-add --apple-load-keychain || true",
     "extensions": [
         "bungcip.better-toml",
         "eamodio.gitlens",
