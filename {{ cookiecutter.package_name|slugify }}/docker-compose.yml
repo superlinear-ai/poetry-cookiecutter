@@ -5,10 +5,6 @@ services:
     build:
       context: .
       target: dev
-      {%- if cookiecutter.private_package_repository_name %}
-      secrets:
-        - poetry_auth
-      {%- endif %}
     tty: true
     entrypoint: []
     command:
@@ -43,14 +39,14 @@ services:
     build:
       context: .
       target: app
-      {%- if cookiecutter.private_package_repository_name %}
-      secrets:
-        - poetry_auth
-      {%- endif %}
     tty: true
     {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
     ports:
       - "8000:8000"
+    {%- endif %}
+    {%- if cookiecutter.private_package_repository_name %}
+    secrets:
+      - poetry_auth
     {%- endif %}
     profiles:
       - app
