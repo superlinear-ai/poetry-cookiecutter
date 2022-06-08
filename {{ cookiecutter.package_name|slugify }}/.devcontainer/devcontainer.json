@@ -3,8 +3,7 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "dev",
     "workspaceFolder": "/app/",
-    "initializeCommand": "mkdir -p ${POETRY_CACHE_DIR:-~/Library/Caches/pypoetry/}",
-    "onCreateCommand": "poe install",
+    "initializeCommand": "ssh-add --apple-load-keychain || true",
     "extensions": [
         "bungcip.better-toml",
         "eamodio.gitlens",
@@ -21,30 +20,23 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": true
         },
-        "editor.formatOnPaste": false,
         "editor.formatOnSave": true,
         "editor.rulers": [
             100
         ],
         "files.autoSave": "onFocusChange",
-        "python.analysis.typeCheckingMode": "off",
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/opt/app-env/bin/python",
         "python.formatting.provider": "black",
-        "python.languageServer": "Pylance",
         "python.linting.flake8Enabled": true,
         "python.linting.mypyEnabled": true,
         "python.linting.pydocstyleEnabled": true,
         "python.linting.pylintEnabled": false,
         "python.terminal.activateEnvironment": false,
-        "python.terminal.activateEnvInCurrentTerminal": false,
-        "python.testing.nosetestsEnabled": false,
         "python.testing.pytestEnabled": true,
-        "python.testing.unittestEnabled": false,
-        "terminal.integrated.defaultProfile.linux": "fish",
-        "terminal.integrated.inheritEnv": false,
+        "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.profiles.linux": {
-            "fish": {
-                "path": "/usr/bin/fish"
+            "zsh": {
+                "path": "/usr/bin/zsh"
             }
         }
     }

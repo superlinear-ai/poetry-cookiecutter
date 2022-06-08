@@ -1,19 +1,6 @@
 # syntax=docker/dockerfile:experimental
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
-ARG APP_BASE_IMAGE=ci
-{%- endif %}
 
-FROM python:{{ cookiecutter.python_version }}-slim AS dev
-
-# Install development tools: compilers, curl, fish, git, ssh, and starship.
-RUN apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl fish git ssh && \
-    chsh --shell /usr/bin/fish && \
-    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    mkdir -p ~/.config/fish/completions/ && \
-    echo "set fish_greeting" >> ~/.config/fish/config.fish && \
-    echo "starship init fish | source" >> ~/.config/fish/config.fish && \
-    rm -rf /var/lib/apt/lists/*
+FROM python:{{ cookiecutter.python_version }}-slim AS base
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
 # [1] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONFAULTHANDLER
@@ -21,71 +8,74 @@ RUN apt-get update && \
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
+# Install Poetry.
+ENV POETRY_VERSION 1.1.13
+RUN --mount=type=cache,id=poetry,target=/root/.cache/ pip install poetry==$POETRY_VERSION
+
+# Create and activate a virtual environment.
+RUN python -m venv /opt/app-env
+ENV PATH /opt/app-env/bin:$PATH
+ENV VIRTUAL_ENV /opt/app-env
+
 # Set the working directory.
 WORKDIR /app/
 
-# Install base development environment with Poetry and Poe the Poet.
-ENV PATH /root/.local/bin/:$PATH
-RUN --mount=type=cache,target=/root/.cache \
-    pip install --no-input --upgrade pip poethepoet && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - && \
-    poetry config virtualenvs.create false && \
-    poetry completions fish > ~/.config/fish/completions/poetry.fish && \
-    poe _fish_completion > ~/.config/fish/completions/poe.fish
+FROM base as dev
 
-# Let Poe the Poet know it doesn't need to activate the Python environment.
-ENV POETRY_ACTIVE 1
+# Install development tools: compilers, curl, git, gpg, ssh, starship, vim, and zsh.
+RUN rm /etc/apt/apt.conf.d/docker-clean
+RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
+    --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
+    apt-get update && \
+    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh vim zsh zsh-antigen && \
+    chsh --shell /usr/bin/zsh && \
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
+    echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
+    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
+    echo 'antigen apply' >> ~/.zshrc && \
+    echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 
-# Enable Poetry to publish to {% if cookiecutter.private_package_repository_name %}and install from a private package repository{% else %}PyPI{% endif %} [1].
-# [1] https://pythonspeed.com/articles/build-secrets-docker-compose/
-{%- if cookiecutter.private_package_repository_name %}
-ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
-ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME
-ARG POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
-ENV POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD $POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD
-{%- else %}
-ARG POETRY_PYPI_TOKEN_PYPI
-ENV POETRY_PYPI_TOKEN_PYPI $POETRY_PYPI_TOKEN_PYPI
-{%- endif %}
-
-FROM dev as ci
-
-# Install the Python environment.
-# TODO: Replace `--no-dev` with `--without test` when Poetry 1.2.0 is released.
-COPY poetry.lock pyproject.toml /app/
-RUN --mount=type=cache,target=/root/.cache \
+# Install the development Python environment.
+COPY .pre-commit-config.yaml poetry.lock* pyproject.toml /app/
+RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-http-basic-username \
-    --mount=type=secret,id=poetry-http-basic-password \
+    --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
     mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
+    poetry install --no-interaction && \
+    mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
+    git init && pre-commit install --install-hooks && \
+    mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/
+
+FROM base as ci
+
+# Install the run time Python environment.
+# TODO: Replace `--no-dev` with `--without test` when Poetry 1.2.0 is released.
+COPY poetry.lock pyproject.toml /app/
+RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME:-$(cat /run/secrets/poetry-http-basic-username)} \
-    POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD=${POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD:-$(cat /run/secrets/poetry-http-basic-password)} \
+    --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
+    mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
     poetry install --no-dev --no-interaction
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
-FROM $APP_BASE_IMAGE AS app
+FROM ci AS app
 
 # Copy the package source code to the working directory.
-COPY . .
+COPY src/ *.py /app/
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-ARG PORT=8000
-ENV PORT $PORT
-EXPOSE $PORT
-ENTRYPOINT ["/usr/local/bin/poe"]
+ENTRYPOINT ["/opt/app-env/bin/poe"]
 CMD [{% if cookiecutter.with_fastapi_api|int %}"serve"{% else %}"streamlit"{% endif %}]
 {%- else %}
-ENTRYPOINT ["/usr/local/bin/{{ cookiecutter.package_name|slugify }}"]
+ENTRYPOINT ["/opt/app-env/bin/{{ cookiecutter.package_name|slugify }}"]
 CMD []
 {%- endif %}
 
-# The following variables are supplied as build args at build time so that they are available at
-# run time as environment variables [1].
-# [1] https://docs.docker.com/docker-hub/builds/advanced/
+# The following variables are supplied as build args at build time and made available at run time as
+# environment variables.
 ARG SOURCE_BRANCH
 ENV SOURCE_BRANCH $SOURCE_BRANCH
 ARG SOURCE_COMMIT
