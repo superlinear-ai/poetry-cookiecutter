@@ -42,7 +42,7 @@ jobs:
           echo ::set-output name=DOCKER_BASE_IMAGE::$DOCKER_BASE_IMAGE
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Compute App image SHA
         id: image_sha
@@ -59,11 +59,19 @@ jobs:
         id: build_push_app
         uses: ./.github/workflows/build_push
         with:
-          DOCKER_REGISTRY: {% raw %}${{ env.REGISTRY }}{% endraw %}
-          DOCKER_USER: {% raw %}${{ github.actor }}{% endraw %}
-          DOCKER_PASSWORD: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
-          DOCKER_IMAGE: "{% raw %}${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}{% endraw %}"
-          DOCKER_TARGET: "app"
-          DOCKER_BUILD_PUSH: 1
-          DOCKER_BASE_IMAGE: {% raw %}${{ steps.base_image.outputs.DOCKER_BASE_IMAGE }}{% endraw %}
-          DOCKER_IMAGE_SHA: {% raw %}${{ steps.image_sha.outputs.DOCKER_IMAGE_SHA }}{% endraw %}
+          build-args: |
+            SOURCE_BRANCH={% raw %}${{ env.GITHUB_REF }}{% endraw %}
+            SOURCE_COMMIT={% raw %}${{ env.GITHUB_SHA }}{% endraw %}
+          context: .
+          push: true
+          {%- if cookiecutter.private_package_repository_name %}
+          secrets: |
+            "poetry_auth=[http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
+            username = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}""
+            password = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}""
+            "
+          {%- endif %}
+          tags: |
+            {% raw %}${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ github.event.inputs.environment || env.DEFAULT_DEPLOYMENT_ENVIRONMENT }}{% endraw %}
+            {% raw %}${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}:${{ env.GIT_TAG }}{% endraw %}
+          target: app

@@ -13,8 +13,11 @@ jobs:
 
     steps:
 
-      - name: Download artifact
-        uses: dawidd6/action-download-artifact@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
         with:
           workflow: test.yml
           workflow_conclusion: success
@@ -32,9 +35,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Publish package
-        shell: bash
-        {%- if cookiecutter.private_package_repository_name %}
-        run: docker run --mount type=bind,src=$PWD,dst=/app --rm {% raw %}${{ steps.base_image.outputs.DOCKER_BASE_IMAGE }}{% endraw %} /bin/bash -c "set -e; poetry config repositories.private '{{ cookiecutter.private_package_repository_url.replace("simple", "") }}'; poetry config http-basic.private '{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME }}' '{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD }}'; poetry publish --build --repository private"
-        {%- else %}
-        run: docker run --mount type=bind,src=$PWD,dst=/app --rm {% raw %}${{ steps.base_image.outputs.DOCKER_BASE_IMAGE }}{% endraw %} /bin/bash -c "set -e; poetry config http-basic.pypi '__token__' '{% raw %}${{ secrets.POETRY_PYPI_TOKEN_PYPI }}{% endraw %}'; poetry publish --build"
-        {%- endif %}
+        run: |
+          {%- if cookiecutter.private_package_repository_name %}
+          poetry config repositories.private "{{ cookiecutter.private_package_repository_url.replace('simple/', '').replace('simple', '') }}"
+          poetry config http-basic.private "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}"
+          poetry publish --build --repository private
+          {%- else %}
+          poetry config pypi-token.pypi "{% raw %}${{ secrets.POETRY_PYPI_TOKEN_PYPI }}{% endraw %}"
+          poetry publish --build
+          {%- endif %}

@@ -13,20 +13,26 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Build and Push CI
-        id: build_push_ci
-        uses: ./.github/workflows/build_push
+      - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
+        uses: actions/setup-python@v3
         with:
-          DOCKER_REGISTRY: {% raw %}${{ env.REGISTRY }}{% endraw %}
-          DOCKER_USER: {% raw %}${{ github.actor }}{% endraw %}
-          DOCKER_PASSWORD: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
-          DOCKER_IMAGE: "{% raw %}${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.repository }}-ci{% endraw %}"
-          DOCKER_TARGET: "ci"
+          python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+
+      - name: Cache Python environment
+        uses: actions/cache@v3
+        with:
+          path: .venv/
+          key: {% raw %}venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}{% endraw %}
+
+      - name: Install Poetry
+        run: pip install --no-input poetry
+
+      - name: Install Python environment
+        run: |
           {%- if cookiecutter.private_package_repository_name %}
-          POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME: "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_USERNAME }}"
-          POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD: "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|upper }}_PASSWORD }}"
+          poetry config http-basic.{{ cookiecutter.private_package_repository_name|slugify }} "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}"
           {%- endif %}
 
       - name: Lint and Test
@@ -53,8 +59,8 @@ jobs:
         shell: bash
         run: echo "DOCKER_BASE_IMAGE={% raw %}${{ steps.build_push_ci.outputs.DOCKER_TAG_SHA }}{% endraw %}" > .ci_image_hash
 
-      - name: Persist CI hash as an artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
         with:
           name: ci-image-hash
           path: .ci_image_hash
