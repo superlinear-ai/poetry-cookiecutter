@@ -45,6 +45,7 @@ jobs:
           {%- endif %}
           poetry config virtualenvs.in-project true
           poetry install --no-interaction
+
       - name: Lint
         run: poetry run poe lint
 
