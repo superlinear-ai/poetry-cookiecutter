@@ -35,8 +35,6 @@ services:
     {%- endif %}
     volumes:
       - .:/app/:cached
-      - ~/.gitconfig:/etc/gitconfig:cached
-      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:cached
       - app-env:/opt/app-env/
   {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
   app:
