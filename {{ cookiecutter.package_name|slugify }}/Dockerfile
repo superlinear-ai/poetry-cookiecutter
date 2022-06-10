@@ -1,5 +1,4 @@
 # syntax=docker/dockerfile:experimental
-
 FROM python:{{ cookiecutter.python_version }}-slim AS base
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
@@ -33,7 +32,8 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
     echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
     echo 'antigen apply' >> ~/.zshrc && \
-    echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+    echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
+    zsh -c 'source ~/.zshrc'
 
 # Install the development Python environment.
 COPY .pre-commit-config.yaml poetry.lock* pyproject.toml /app/
