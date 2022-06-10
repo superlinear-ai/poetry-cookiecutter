@@ -37,8 +37,6 @@ services:
       - ~/.gitconfig:/etc/gitconfig
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts
       - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
-    profiles:
-      - dev
   {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
   app:
     build:
@@ -53,6 +51,8 @@ services:
     ports:
       - "8000:8000"
     {%- endif %}
+    profiles:
+      - app
   {%- endif %}
 {%- if cookiecutter.private_package_repository_name %}
 
