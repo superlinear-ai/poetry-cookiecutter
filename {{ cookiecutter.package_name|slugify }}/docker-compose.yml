@@ -9,22 +9,20 @@ services:
       secrets:
         - poetry_auth
       {%- endif %}
+    stdin_open: true
     tty: true
     entrypoint: []
     command:
       [
         "sh",
         "-c",
-        {%- if cookiecutter.private_package_repository_name %}
-        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/ && ln -s /run/secrets/poetry_auth /root/.config/pypoetry/auth.toml && sleep infinity"
-        {%- else %}
-        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/ && sleep infinity"
-        {%- endif %}
+        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/{% if cookiecutter.private_package_repository_name %} && ln -s /run/secrets/poetry_auth /root/.config/pypoetry/auth.toml{% endif %} && zsh"
       ]
-    {%- if not cookiecutter.private_package_repository_name %}
     environment:
+      {%- if not cookiecutter.private_package_repository_name %}
       - POETRY_PYPI_TOKEN_PYPI
-    {%- endif %}
+      {%- endif %}
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
     {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
     ports:
       - "8000"
@@ -34,10 +32,13 @@ services:
       - poetry_auth
     {%- endif %}
     volumes:
-      - .:/app/:cached
-      - ~/.gitconfig:/etc/gitconfig:cached
-      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:cached
+      - .:/app/
       - app-env:/opt/app-env/
+      - ~/.gitconfig:/etc/gitconfig
+      - ~/.ssh/known_hosts:/root/.ssh/known_hosts
+      - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
+    profiles:
+      - dev
   {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
   app:
     build:
@@ -52,8 +53,6 @@ services:
     ports:
       - "8000:8000"
     {%- endif %}
-    profiles:
-      - app
   {%- endif %}
 {%- if cookiecutter.private_package_repository_name %}
 

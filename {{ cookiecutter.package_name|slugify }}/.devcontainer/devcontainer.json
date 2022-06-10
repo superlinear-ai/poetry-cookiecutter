@@ -4,6 +4,8 @@
     "service": "dev",
     "workspaceFolder": "/app/",
     "initializeCommand": "ssh-add --apple-load-keychain || true",
+    "overrideCommand": true,
+    "postStartCommand": "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/{% if cookiecutter.private_package_repository_name %} && ln -s /run/secrets/poetry_auth /root/.config/pypoetry/auth.toml{% endif %}",
     "extensions": [
         "bungcip.better-toml",
         "eamodio.gitlens",

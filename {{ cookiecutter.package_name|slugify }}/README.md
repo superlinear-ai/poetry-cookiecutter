@@ -89,7 +89,10 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
     POETRY_AUTH_TOML_PATH="$APPDATA/pypoetry/auth.toml"
     ```
 {%- endif %}
-1. Open the cloned repository in VS Code and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_ to start a [Dev Container](https://code.visualstudio.com/docs/remote/containers). Alternatively, open the cloned repository in PyCharm and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
+1. Start a [Dev Container](https://code.visualstudio.com/docs/remote/containers) in your preferred development environment:
+    - _VS Code_: open the cloned repository and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
+    - _PyCharm_: open the cloned repository and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
+    - _Terminal_: open the cloned repository and run `docker compose run --rm dev` to start an interactive Dev Container.
 
 </details>
 
