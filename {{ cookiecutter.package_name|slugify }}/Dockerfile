@@ -38,7 +38,6 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
-    mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
     poetry install --no-interaction
 
 FROM ci as dev
