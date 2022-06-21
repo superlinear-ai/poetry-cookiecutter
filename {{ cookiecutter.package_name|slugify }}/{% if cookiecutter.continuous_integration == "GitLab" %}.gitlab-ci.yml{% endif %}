@@ -47,7 +47,7 @@ Compute Image Hash:
         echo "password = \"$CI_JOB_TOKEN\"" >> auth.toml
         {%- endif %}
         DOCKER_BUILDKIT=1 docker build \
-          --cache-from "${DOCKER_BASE_IMAGE:-ci}" \
+          --cache-from "$CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA" \
           --build-arg SOURCE_BRANCH="$CI_COMMIT_REF_NAME" \
           --build-arg SOURCE_COMMIT="$CI_COMMIT_SHA" \
           --build-arg SOURCE_TIMESTAMP="$CI_COMMIT_TIMESTAMP" \
