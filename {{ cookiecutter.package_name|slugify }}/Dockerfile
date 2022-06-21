@@ -29,7 +29,6 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- endif %}
     mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
     poetry install --no-dev --no-interaction
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
 FROM deps as ci
 
@@ -63,6 +62,7 @@ RUN mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/
 
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 FROM deps AS app
 
 # Copy the package source code to the working directory.
