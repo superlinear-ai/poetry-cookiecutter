@@ -22,7 +22,6 @@ WORKDIR /app/
 FROM base as deps
 
 # Install the run time Python environment.
-# TODO: Replace `--no-dev` with `--without test` when Poetry 1.2.0 is released.
 COPY poetry.lock* pyproject.toml /app/
 RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
