@@ -35,7 +35,7 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
 FROM deps as ci
 
 # Install the development Python environment.
-COPY .pre-commit-config.yaml poetry.lock* pyproject.toml /app/
+COPY .pre-commit-config.yaml /app/
 RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
