@@ -59,6 +59,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 
+# Persist output generated during docker build so that we can restore it in the dev container.
 RUN mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /var/lib/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /var/lib/git/
