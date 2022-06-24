@@ -5,7 +5,18 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "ci(deps)"
+      prefix-development: "ci(deps)"
+      include: "scope"
   - package-ecosystem: pip
     directory: /
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps)"
+      include: "scope"
+    versioning-strategy: lockfile-only
+    allow:
+      - dependency-type: "all"
