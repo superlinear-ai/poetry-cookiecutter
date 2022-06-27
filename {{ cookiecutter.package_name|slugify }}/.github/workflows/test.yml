@@ -8,49 +8,33 @@ on:
   pull_request:
 
 jobs:
-
   test:
-
     runs-on: ubuntu-latest
 
-    strategy:
-
-      matrix:
-        python-version: ["{{ cookiecutter.python_version }}"]
-      fail-fast: false
-
     steps:
-
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
-        uses: actions/setup-python@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+          node-version: 16
 
-      - name: Cache Python environment
-        uses: actions/cache@v3
-        with:
-          path: .venv/
-          key: {% raw %}venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}{% endraw %}
+      - name: Install @devcontainers/cli
+        run: npm install --location=global @devcontainers/cli
 
-      - name: Install Poetry
-        run: pip install --no-input poetry
-
-      - name: Install Python environment
+      - name: Start Dev Container
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
-          {%- if cookiecutter.private_package_repository_name %}
-          poetry config http-basic.{{ cookiecutter.private_package_repository_name|slugify }} "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}"
-          {%- endif %}
-          poetry config virtualenvs.in-project true
-          poetry install --no-interaction
+          git config --global init.defaultBranch main
+          devcontainer up --workspace-folder .
 
-      - name: Lint
-        run: poetry run poe lint
+      - name: Lint package
+        run: devcontainer exec --workspace-folder . poe lint
 
-      - name: Test
-        run: poetry run poe test
+      - name: Test package
+        run: devcontainer exec --workspace-folder . poe test
 
       - name: Upload coverage
         uses: codecov/codecov-action@v3

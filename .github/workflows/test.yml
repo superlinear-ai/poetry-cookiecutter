@@ -7,71 +7,62 @@ on:
   pull_request:
 
 jobs:
-
   test:
-
     runs-on: ubuntu-latest
 
     strategy:
-
-      matrix:
-        python-version: ["3.8"]
       fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.10"]
+
+    name: Python ${{ matrix.python-version }}
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Cruft and Poetry
-        run: pip install --no-input cruft poetry
-
-      - name: Scaffold package
+      - name: Scaffold Python package
         run: |
+          pip install --no-input cruft
           cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "${{ matrix.python-version }}", "with_fastapi_api": "1", "with_typer_cli": "1"}' .
 
-      - name: Cache Python environment
-        uses: actions/cache@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          path: my-package/.venv/
-          key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('my-package/pyproject.toml') }}
+          node-version: 16
 
-      - name: Install Python environment
+      - name: Install @devcontainers/cli
+        run: npm install --location=global @devcontainers/cli
+
+      - name: Start Dev Container
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
+          git config --global init.defaultBranch main
           git init
           git add .
-          poetry config virtualenvs.in-project true
-          poetry install --no-interaction
-          poetry run pre-commit install
+          devcontainer up --workspace-folder .
         working-directory: ./my-package/
 
       - name: Lint package
-        run: poetry run poe lint
-        working-directory: ./my-package/
+        run: devcontainer exec --workspace-folder my-package poe lint
 
       - name: Test package
-        run: poetry run poe test
-        working-directory: ./my-package/
-
-      - name: Build dev Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./my-package/
-          target: dev
+        run: devcontainer exec --workspace-folder my-package poe test
 
       - name: Build ci Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./my-package/
           target: ci
 
       - name: Build app Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           build-args: |
             SOURCE_BRANCH=${{ env.GITHUB_REF }}
