@@ -12,6 +12,7 @@
   "with_streamlit_app": "0",
   "with_typer_cli": "0",
   "continuous_integration": ["GitHub", "GitLab"],
+  "docstring_style": ["NumPy", "Google"],
   "private_package_repository_name": "",
   "private_package_repository_url": ""
 }

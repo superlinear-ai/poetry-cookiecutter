@@ -153,7 +153,7 @@ warn_untyped_fields = true
 
 # http://www.pydocstyle.org/en/latest/usage.html#configuration-files
 [tool.pydocstyle]
-convention = "numpy"
+convention = "{{ cookiecutter.docstring_style|lower }}"
 
 # https://docs.pytest.org/en/latest/customize.html#adding-default-options
 [tool.pytest.ini_options]
@@ -192,10 +192,10 @@ testpaths = "tests"
     """
 
     [[tool.poe.tasks.docs.args]]
-    help = "The docstring flavor (default: numpy)"
+    help = "The docstring flavor (default: {{ cookiecutter.docstring_style|lower }})"
     name = "docformat"
     options = ["--docformat"]
-    default = "numpy"
+    default = "{{ cookiecutter.docstring_style|lower }}"
 
     [[tool.poe.tasks.docs.args]]
     help = "The output directory (default: docs)"
