@@ -192,7 +192,7 @@ testpaths = "tests"
     """
 
     [[tool.poe.tasks.docs.args]]
-    help = "The docstring flavor (default: {{ cookiecutter.docstring_style|lower }})"
+    help = "The docstring style (default: {{ cookiecutter.docstring_style|lower }})"
     name = "docformat"
     options = ["--docformat"]
     default = "{{ cookiecutter.docstring_style|lower }}"
