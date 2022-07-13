@@ -66,8 +66,8 @@ Compute Image Hash:
   rules:
     - changes:
         - Dockerfile
-        - pyproject.toml
         - poetry.lock
+        - pyproject.toml
 
 # Build CI Docker image.
 Build CI:
