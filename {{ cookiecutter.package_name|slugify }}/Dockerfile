@@ -38,7 +38,6 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
 FROM deps as ci
 
 # Install the development Python environment.
-COPY .pre-commit-config.yaml /app/
 RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
@@ -60,6 +59,8 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     echo 'antigen apply' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
+
+COPY .pre-commit-config.yaml /app/
 
 # Persist output generated during docker build so that we can restore it in the dev container.
 RUN mkdir -p /var/lib/poetry/ && cp poetry.lock /var/lib/poetry/ && \
