@@ -21,6 +21,12 @@ WORKDIR /app/
 
 FROM base as deps
 
+RUN rm /etc/apt/apt.conf.d/docker-clean
+RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
+    --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
+    apt-get update && \
+    apt-get install --no-install-recommends --yes build-essential
+
 # Install the run time Python environment.
 COPY poetry.lock* pyproject.toml /app/
 RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
