@@ -25,7 +25,6 @@ Compute Image Hash:
     - |
       echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin "$DOCKER_REGISTRY"
       DOCKER_PUSH=${DOCKER_PUSH:-$(timeout 2s docker pull "$DOCKER_IMAGE":"$DOCKER_IMAGE_SHA" >/dev/null 2>&1 && echo $? || echo $?)}
-
       if [ "$DOCKER_PUSH" -ne 1 ]; then
         echo "$DOCKER_IMAGE:$DOCKER_IMAGE_SHA exists, skipping this job..."
       else
