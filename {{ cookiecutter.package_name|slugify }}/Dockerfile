@@ -21,6 +21,7 @@ WORKDIR /app/
 
 FROM base as deps
 
+# Install compilers that may be required for certain packages or platforms.
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
     apt-get update && \
