@@ -21,7 +21,6 @@ WORKDIR /app/
 
 FROM base as deps
 
-RUN rm /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
     apt-get update && \
