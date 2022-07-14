@@ -3,6 +3,15 @@ stages:
   - test
   - {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}deploy{% else %}publish{% endif %}
 
+Compute Image Hash:
+  stage: build
+  script:
+    - export DOCKER_IMAGE_SHA="$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)"
+    - echo "CI_IMAGE_SHA=$DOCKER_IMAGE_SHA" >> .env
+  artifacts:
+    reports:
+      dotenv: .env
+
 # Base Docker build script.
 .docker:
   image: docker:stable
@@ -13,8 +22,6 @@ stages:
     DOCKER_REGISTRY_USER: $CI_REGISTRY_USER
     DOCKER_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
   script:
-    - DOCKER_IMAGE_SHA="${DOCKER_IMAGE_SHA:-$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)}"
-    - echo "CI_IMAGE_SHA=$DOCKER_IMAGE_SHA" >> .env
     - |
       echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin "$DOCKER_REGISTRY"
       DOCKER_PUSH=${DOCKER_PUSH:-$(timeout 2s docker pull "$DOCKER_IMAGE":"$DOCKER_IMAGE_SHA" >/dev/null 2>&1 && echo $? || echo $?)}
@@ -39,6 +46,7 @@ stages:
         echo "password = \"$CI_JOB_TOKEN\"" >> auth.toml
         {%- endif %}
         DOCKER_BUILDKIT=1 docker build \
+          --cache-from "$CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA" \
           --build-arg SOURCE_BRANCH="$CI_COMMIT_REF_NAME" \
           --build-arg SOURCE_COMMIT="$CI_COMMIT_SHA" \
           --build-arg SOURCE_TIMESTAMP="$CI_COMMIT_TIMESTAMP" \
@@ -55,6 +63,11 @@ stages:
           docker push "$DOCKER_IMAGE:$DOCKER_TAG"
         done
       fi
+  rules:
+    - changes:
+        - Dockerfile
+        - poetry.lock
+        - pyproject.toml
 
 # Build CI Docker image.
 Build CI:
