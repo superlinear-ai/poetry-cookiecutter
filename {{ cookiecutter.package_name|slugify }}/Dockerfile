@@ -22,6 +22,7 @@ WORKDIR /app/
 FROM base as deps
 
 # Install compilers that may be required for certain packages or platforms.
+RUN rm /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
     apt-get update && \
@@ -38,6 +39,12 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
 
 FROM deps as ci
 
+# Install git so we can run pre-commit.
+RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
+    --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
+    apt-get update && \
+    apt-get install --no-install-recommends --yes git
+
 # Install the development Python environment.
 RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
@@ -48,7 +55,6 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
 FROM ci as dev
 
 # Install development tools: compilers, curl, git, gpg, ssh, starship, vim, and zsh.
-RUN rm /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     --mount=type=cache,id=apt-lib,target=/var/lib/apt/ \
     apt-get update && \
