@@ -36,10 +36,10 @@ gunicorn = "^20.1.0"
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.14.0"
 {%- endif %}
-python = "^{{ cookiecutter.python_version }}"
 {%- if cookiecutter.with_pydantic_typing|int %}
 pydantic = "^1.9.1"
 {%- endif %}
+python = "^{{ cookiecutter.python_version }}"
 {%- if cookiecutter.with_sentry_logging|int %}
 sentry-sdk = "^1.6.0"
 {%- endif %}
