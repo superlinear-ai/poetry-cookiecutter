@@ -16,7 +16,7 @@ services:
       [
         "sh",
         "-c",
-        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/{% if cookiecutter.private_package_repository_name %} && ln -s /run/secrets/poetry_auth /root/.config/pypoetry/auth.toml{% endif %} && zsh"
+        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/ && zsh"
       ]
     environment:
       {%- if not cookiecutter.private_package_repository_name %}
@@ -58,7 +58,7 @@ services:
 
 secrets:
   poetry_auth:
-    file: $POETRY_AUTH_TOML_PATH
+    file: "${POETRY_AUTH_TOML_PATH:-~/Library/Application Support/pypoetry/auth.toml}"
 {%- endif %}
 
 volumes:
