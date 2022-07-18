@@ -68,6 +68,11 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     echo 'HISTFILE=/opt/app-env/.zsh_history' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
+{%- if cookiecutter.private_package_repository_name %}
+
+# Enable Poetry to read the private package repository credentials.
+RUN ln -s /run/secrets/poetry_auth /root/.config/pypoetry/auth.toml
+{%- endif %}
 
 # Persist output generated during docker build so that we can restore it in the dev container.
 COPY .pre-commit-config.yaml /app/
