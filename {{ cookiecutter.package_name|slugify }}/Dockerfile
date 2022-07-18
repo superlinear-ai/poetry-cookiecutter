@@ -62,9 +62,11 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
     chsh --shell /usr/bin/zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
+    echo 'antigen bundle zsh-users/zsh-syntax-highlighting' >> ~/.zshrc && \
     echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
     echo 'antigen apply' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
+    echo 'HISTFILE=/opt/app-env/.zsh_history' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 
 # Persist output generated during docker build so that we can restore it in the dev container.
