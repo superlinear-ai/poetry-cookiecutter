@@ -9,5 +9,5 @@ max_complexity = 10
 
 # https://github.com/terrencepreilly/darglint#flake8
 # TODO: https://github.com/terrencepreilly/darglint/issues/130
-docstring_style = numpy
+docstring_style = {{ cookiecutter.docstring_style|lower }}
 strictness = long
