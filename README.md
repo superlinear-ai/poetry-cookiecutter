@@ -27,7 +27,7 @@ Starting development in My Package is as easy as cloning the repository with `gi
 
 ## ✨ Using
 
-### 1. Creating a new Python project
+### Creating a new Python project
 
 To create a new Python project with this template:
 1. Install [Cruft](https://github.com/cruft/cruft) in your [Python environment](https://github.com/pyenv/pyenv-virtualenv) with:
@@ -40,7 +40,7 @@ To create a new Python project with this template:
    cruft create -f git@github.com:radix-ai/poetry-cookiecutter
    ```
 
-### 2. Updating your Python project
+### Updating your Python project
 
 To update your Python project with the latest template:
 1. Run `cruft update` to update your project with the latest template.
