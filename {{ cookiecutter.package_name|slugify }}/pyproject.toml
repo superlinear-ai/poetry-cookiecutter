@@ -247,6 +247,7 @@ testpaths = "tests"
       --workers 2
       {{ cookiecutter.package_name|slugify|replace('-', '_') }}.api:app
     """
+  use_exec = true
 
     [[tool.poe.tasks.serve.args]]
     help = "Bind socket to this port (default: 8000)"
@@ -266,6 +267,7 @@ testpaths = "tests"
       --theme.base light
       streamlit_app.py
     """
+  use_exec = true
 
     [[tool.poe.tasks.streamlit.args]]
     help = "Bind socket to this port (default: 8000)"
