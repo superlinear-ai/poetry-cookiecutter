@@ -59,7 +59,7 @@ uvicorn = { extras = ["standard"], version = "^0.18.2" }
 black = "^22.6.0"
 commitizen = "^2.27.1"
 coverage = { extras = ["toml"], version = "^6.4.1" }
-cruft = "^2.10.2"
+cruft = "^2.11.0"
 darglint = "^1.8.1"
 flake8 = "^4.0.1"
 flake8-bandit = "^3.0.0"
