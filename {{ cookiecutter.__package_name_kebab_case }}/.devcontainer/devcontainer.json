@@ -1,5 +1,5 @@
 {
-    "name": "{{ cookiecutter.package_name|slugify }}",
+    "name": "{{ cookiecutter.__package_name_kebab_case }}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "dev",
     "workspaceFolder": "/app/",

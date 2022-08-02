@@ -12,6 +12,6 @@ def configure_sentry() -> None:
     sentry_sdk.init(
         dsn=os.environ["SENTRY_DSN"],
         traces_sample_rate=0.1 if environment != "production" else 0.001,
-        release=f"{{ cookiecutter.package_name|slugify }}@{version('{{ cookiecutter.package_name|slugify }}')}",
+        release=f"{{ cookiecutter.__package_name_kebab_case }}@{version('{{ cookiecutter.__package_name_kebab_case }}')}",
         environment=environment,
     )

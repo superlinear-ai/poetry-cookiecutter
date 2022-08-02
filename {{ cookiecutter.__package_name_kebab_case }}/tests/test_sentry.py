@@ -2,7 +2,7 @@
 
 import sentry_sdk
 
-from {{ cookiecutter.package_name|slugify|replace("-", "_") }}.sentry import configure_sentry
+from {{ cookiecutter.__package_name_snake_case }}.sentry import configure_sentry
 
 
 def test_configure_sentry() -> None:

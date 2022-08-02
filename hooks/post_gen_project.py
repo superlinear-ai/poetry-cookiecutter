@@ -2,7 +2,7 @@ import os
 import shutil
 
 # Read Cookiecutter configuration.
-package_name = "{{ cookiecutter.package_name|slugify|replace('-', '_') }}"
+package_name = "{{ cookiecutter.__package_name_snake_case }}"
 with_fastapi_api = int("{{ cookiecutter.with_fastapi_api }}")
 with_sentry_logging = int("{{ cookiecutter.with_sentry_logging }}")
 with_streamlit_app = int("{{ cookiecutter.with_streamlit_app }}")

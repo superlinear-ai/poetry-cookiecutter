@@ -25,7 +25,7 @@ jobs:
         run: |
           {%- if cookiecutter.private_package_repository_name %}
           poetry config repositories.private "{{ cookiecutter.private_package_repository_url.replace('simple/', '').replace('simple', '') }}"
-          poetry config http-basic.private "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}"
+          poetry config http-basic.private "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify(separator="_")|upper }}_USERNAME }}" "{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify(separator="_")|upper }}_PASSWORD }}"
           poetry publish --build --repository private
           {%- else %}
           poetry config pypi-token.pypi "{% raw %}${{ secrets.POETRY_PYPI_TOKEN_PYPI }}{% endraw %}"
