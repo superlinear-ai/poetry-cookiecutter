@@ -2,6 +2,7 @@ import os
 import shutil
 
 # Read Cookiecutter configuration.
+package_name = "{{ cookiecutter.package_name|slugify|replace('-', '_') }}"
 with_fastapi_api = int("{{ cookiecutter.with_fastapi_api }}")
 with_sentry_logging = int("{{ cookiecutter.with_sentry_logging }}")
 with_streamlit_app = int("{{ cookiecutter.with_streamlit_app }}")
@@ -12,12 +13,12 @@ is_publishable_package = "{{ not cookiecutter.with_fastapi_api|int and not cooki
 
 # Remove FastAPI if not selected.
 if not with_fastapi_api:
-    os.remove("src/api.py")
+    os.remove(f"src/{package_name}/api.py")
     os.remove("tests/test_api.py")
 
 # Remove Sentry if not selected.
 if not with_sentry_logging:
-    os.remove("src/sentry.py")
+    os.remove(f"src/{package_name}/sentry.py")
     os.remove("tests/test_sentry.py")
 
 # Remove Streamlit if not selected.
@@ -26,7 +27,7 @@ if not with_streamlit_app:
 
 # Remove Typer if not selected.
 if not with_typer_cli:
-    os.remove("src/cli.py")
+    os.remove(f"src/{package_name}/cli.py")
     os.remove("tests/test_cli.py")
 
 # Remove the continuous integration provider that is not selected.
