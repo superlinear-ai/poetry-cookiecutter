@@ -32,9 +32,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
 COPY poetry.lock* pyproject.toml /app/
 RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
---mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
-mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md && \
+    mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md && \
     poetry install --no-dev --no-interaction
 
 FROM deps as ci
@@ -48,9 +48,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt/ \
 # Install the development Python environment.
 RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
---mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
-poetry install --no-interaction
+    poetry install --no-interaction
 
 FROM ci as dev
 
