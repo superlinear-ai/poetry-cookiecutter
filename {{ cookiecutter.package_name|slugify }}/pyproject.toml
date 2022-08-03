@@ -112,7 +112,7 @@ skip_covered = true
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
 branch = true
-command_line = "--module pytest src tests"
+command_line = "--module pytest"
 data_file = "reports/.coverage"
 source = ["src"]
 
@@ -157,9 +157,10 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 
 # https://docs.pytest.org/en/latest/customize.html#adding-default-options
 [tool.pytest.ini_options]
-addopts = "-W error -W ignore::DeprecationWarning --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
-junit_family = "xunit2"
-testpaths = "tests"
+addopts = "--doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
+filterwarnings = ["error", "ignore::DeprecationWarning"]
+testpaths = ["src", "tests"]
+xfail_strict = "True"
 
 # https://github.com/nat-n/poethepoet
 [tool.poe.tasks]
