@@ -37,8 +37,8 @@ RUN --mount=type=cache,target=/root/.cache/ \
     poetry install --no-dev --no-interaction
 
 # Create a non-root user.
-ARG UID 1000
-ARG GID $UID
+ARG UID=1000
+ARG GID=$UID
 RUN groupadd --gid $GID app && \
     useradd --create-home --gid $GID --uid $UID app
 
