@@ -122,7 +122,7 @@ output = "reports/coverage.xml"
 
 # https://pycqa.github.io/isort/docs/configuration/options.html
 [tool.isort]
-color = true
+color_output = true
 line_length = 100
 profile = "black"
 src_paths = ["src", "tests"]
