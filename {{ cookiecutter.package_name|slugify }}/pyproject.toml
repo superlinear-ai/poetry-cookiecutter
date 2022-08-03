@@ -161,7 +161,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
-xfail_strict = "True"
+xfail_strict = true
 
 # https://github.com/nat-n/poethepoet
 [tool.poe.tasks]
