@@ -120,11 +120,12 @@ source = ["src"]
 [tool.coverage.xml]
 output = "reports/coverage.xml"
 
-# https://pycqa.github.io/isort/docs/configuration/profiles/
+# https://pycqa.github.io/isort/docs/configuration/options.html
 [tool.isort]
-known_first_party = "tests"
+color = true
 line_length = 100
 profile = "black"
+src_paths = ["src", "tests"]
 
 # https://mypy.readthedocs.io/en/latest/config_file.html
 [tool.mypy]
@@ -155,9 +156,9 @@ warn_untyped_fields = true
 [tool.pydocstyle]
 convention = "{{ cookiecutter.docstring_style|lower }}"
 
-# https://docs.pytest.org/en/latest/customize.html#adding-default-options
+# https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 [tool.pytest.ini_options]
-addopts = "--doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
 xfail_strict = "True"
