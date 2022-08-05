@@ -105,14 +105,14 @@ line-length = 100
 # https://coverage.readthedocs.io/en/latest/config.html#report
 [tool.coverage.report]
 fail_under = 50
-precision = 2
+precision = 1
 show_missing = true
 skip_covered = true
 
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
 branch = true
-command_line = "--module pytest src tests"
+command_line = "--module pytest"
 data_file = "reports/.coverage"
 source = ["src"]
 
@@ -120,11 +120,12 @@ source = ["src"]
 [tool.coverage.xml]
 output = "reports/coverage.xml"
 
-# https://pycqa.github.io/isort/docs/configuration/profiles/
+# https://pycqa.github.io/isort/docs/configuration/options.html
 [tool.isort]
-known_first_party = "tests"
+color_output = true
 line_length = 100
 profile = "black"
+src_paths = ["src", "tests"]
 
 # https://mypy.readthedocs.io/en/latest/config_file.html
 [tool.mypy]
@@ -155,11 +156,12 @@ warn_untyped_fields = true
 [tool.pydocstyle]
 convention = "{{ cookiecutter.docstring_style|lower }}"
 
-# https://docs.pytest.org/en/latest/customize.html#adding-default-options
+# https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 [tool.pytest.ini_options]
-addopts = "-W error -W ignore::DeprecationWarning --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
-junit_family = "xunit2"
-testpaths = "tests"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
+filterwarnings = ["error", "ignore::DeprecationWarning"]
+testpaths = ["src", "tests"]
+xfail_strict = true
 
 # https://github.com/nat-n/poethepoet
 [tool.poe.tasks]
