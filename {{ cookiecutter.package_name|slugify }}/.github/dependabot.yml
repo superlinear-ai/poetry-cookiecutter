@@ -6,16 +6,16 @@ updates:
     schedule:
       interval: monthly
     commit-message:
-      prefix: "ci(deps)"
-      prefix-development: "ci(deps)"
+      prefix: "ci"
+      prefix-development: "ci"
       include: "scope"
   - package-ecosystem: pip
     directory: /
     schedule:
       interval: monthly
     commit-message:
-      prefix: "build(deps)"
-      prefix-development: "build(deps)"
+      prefix: "build"
+      prefix-development: "build"
       include: "scope"
     versioning-strategy: lockfile-only
     allow:
