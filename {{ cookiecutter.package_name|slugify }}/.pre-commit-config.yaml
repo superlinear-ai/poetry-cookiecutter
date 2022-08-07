@@ -72,14 +72,19 @@ repos:
         entry: shellcheck --check-sourced
         language: system
         types: [shell]
-      - id: flake8
-        name: flake8
-        entry: flake8
+      - id: bandit
+        name: bandit
+        entry: bandit --configfile pyproject.toml
         language: system
         types: [python]
       - id: pydocstyle
         name: pydocstyle
         entry: pydocstyle
+        language: system
+        types: [python]
+      - id: flake8
+        name: flake8
+        entry: flake8
         language: system
         types: [python]
       - id: poetry-check
