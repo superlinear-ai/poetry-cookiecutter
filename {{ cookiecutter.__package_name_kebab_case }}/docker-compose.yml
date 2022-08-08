@@ -9,6 +9,9 @@ services:
       secrets:
         - poetry_auth
       {%- endif %}
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     stdin_open: true
     tty: true
     entrypoint: []
@@ -16,7 +19,7 @@ services:
       [
         "sh",
         "-c",
-        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/ && zsh"
+        "cp --update /opt/build/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /opt/build/git/* /app/.git/hooks/ && zsh"
       ]
     environment:
       {%- if not cookiecutter.private_package_repository_name %}
@@ -33,9 +36,8 @@ services:
     {%- endif %}
     volumes:
       - .:/app/
-      - app-env:/opt/app-env/
       - ~/.gitconfig:/etc/gitconfig
-      - ~/.ssh/known_hosts:/root/.ssh/known_hosts
+      - ~/.ssh/known_hosts:/home/app/.ssh/known_hosts
       - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
   {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
   app:
@@ -60,6 +62,3 @@ secrets:
   poetry_auth:
     file: "${POETRY_AUTH_TOML_PATH:-~/Library/Application Support/pypoetry/auth.toml}"
 {%- endif %}
-
-volumes:
-  app-env:
