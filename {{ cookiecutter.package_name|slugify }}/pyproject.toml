@@ -56,13 +56,13 @@ uvicorn = { extras = ["standard"], version = "^0.18.2" }
 # https://python-poetry.org/docs/master/managing-dependencies/
 # TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.test` when Poetry 1.2.0 is released.
 [tool.poetry.dev-dependencies]
+bandit = { extras = ["toml"], version = "^1.7.4" }
 black = "^22.6.0"
 commitizen = "^2.27.1"
 coverage = { extras = ["toml"], version = "^6.4.1" }
 cruft = "^2.11.0"
 darglint = "^1.8.1"
-flake8 = "^4.0.1"
-flake8-bandit = "^3.0.0"
+flake8 = "^5.0.4"
 flake8-bugbear = "^22.6.22"
 flake8-comprehensions = "^3.10.0"
 flake8-mutable = "^1.2.0"
@@ -70,7 +70,6 @@ flake8-print = "^5.0.0"
 flake8-pytest-style = "^1.6.0"
 flake8-rst-docstrings = "^0.2.6"
 flake8-tidy-imports = "^4.8.0"
-flake8-use-fstring = "^1.3"
 isort = "^5.10.1"
 {%- if cookiecutter.with_jupyter_lab|int %}
 jupyterlab = "^3.4.3"
@@ -88,7 +87,7 @@ pytest-clarity = "^1.0.1"
 pytest-mock = "^3.8.1"
 pytest-xdist = "^2.5.0"
 pyupgrade = "^2.34.0"
-safety = "^1.10.3"
+safety = "^2.1.1"
 shellcheck-py = "^0.8.0"
 {%- if cookiecutter.private_package_repository_name %}
 
@@ -97,6 +96,10 @@ shellcheck-py = "^0.8.0"
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
 {%- endif %}
+
+# https://bandit.readthedocs.io/en/latest/config.html
+[tool.bandit]
+skips = ["B101"]
 
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 [tool.black]
@@ -231,7 +234,7 @@ xfail_strict = true
       """
 
     [[tool.poe.tasks.lint.sequence]]
-    shell = "safety check --full-report || true"
+    shell = "safety check --continue-on-error --full-report"
 {%- if cookiecutter.with_fastapi_api|int %}
 
   [tool.poe.tasks.serve]

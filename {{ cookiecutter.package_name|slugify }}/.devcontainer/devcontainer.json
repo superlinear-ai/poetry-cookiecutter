@@ -31,10 +31,14 @@
                 "files.autoSave": "onFocusChange",
                 "python.defaultInterpreterPath": "/opt/app-env/bin/python",
                 "python.formatting.provider": "black",
+                "python.linting.banditArgs": [
+                    "--configfile",
+                    "pyproject.toml"
+                ],
+                "python.linting.banditEnabled": true,
                 "python.linting.flake8Enabled": true,
                 "python.linting.mypyEnabled": true,
                 "python.linting.pydocstyleEnabled": true,
-                "python.linting.pylintEnabled": false,
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,
                 "terminal.integrated.defaultProfile.linux": "zsh",
