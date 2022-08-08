@@ -61,6 +61,12 @@ repos:
         require_serial: true
         language: system
         types: [python]
+      - id: yesqa
+        name: yesqa
+        entry: yesqa
+        require_serial: true
+        language: system
+        types: [python]
       - id: isort
         name: isort
         entry: isort
