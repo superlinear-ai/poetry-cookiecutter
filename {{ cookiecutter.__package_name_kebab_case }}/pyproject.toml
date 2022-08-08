@@ -91,6 +91,7 @@ pyupgrade = "^2.34.0"
 safety = "^2.1.1"
 shellcheck-py = "^0.8.0"
 typeguard = "^2.13.3"
+yesqa = "^1.4.0"
 {%- if cookiecutter.private_package_repository_name %}
 
 # https://python-poetry.org/docs/repositories/#using-a-private-repository
