@@ -55,6 +55,12 @@ repos:
         require_serial: true
         language: system
         types: [python]
+      - id: absolufy-imports
+        name: absolufy-imports
+        entry: absolufy-imports --application-directories src
+        require_serial: true
+        language: system
+        types: [python]
       - id: isort
         name: isort
         entry: isort
