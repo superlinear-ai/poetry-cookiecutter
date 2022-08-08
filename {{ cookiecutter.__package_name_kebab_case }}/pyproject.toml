@@ -90,6 +90,7 @@ pytest-xdist = "^2.5.0"
 pyupgrade = "^2.34.0"
 safety = "^2.1.1"
 shellcheck-py = "^0.8.0"
+typeguard = "^2.13.3"
 {%- if cookiecutter.private_package_repository_name %}
 
 # https://python-poetry.org/docs/repositories/#using-a-private-repository
@@ -162,7 +163,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 
 # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 [tool.pytest.ini_options]
-addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --typeguard-packages={{ cookiecutter.package_name|slugify(separator='_') }} --verbosity=2 --junitxml=reports/pytest.xml"
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
 xfail_strict = true
