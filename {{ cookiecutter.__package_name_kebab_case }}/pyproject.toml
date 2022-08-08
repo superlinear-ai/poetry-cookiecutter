@@ -163,7 +163,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 
 # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 [tool.pytest.ini_options]
-addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --typeguard-packages={{ cookiecutter.package_name|slugify(separator='_') }} --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__package_name_snake_case }} --verbosity=2 --junitxml=reports/pytest.xml"
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
 xfail_strict = true
