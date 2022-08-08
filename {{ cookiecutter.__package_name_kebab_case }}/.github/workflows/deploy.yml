@@ -53,8 +53,8 @@ jobs:
           {%- if cookiecutter.private_package_repository_name %}
           secrets: |
             "poetry_auth=[http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
-            username = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_USERNAME }}""
-            password = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify|upper|replace("-", "_") }}_PASSWORD }}""
+            username = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify(separator="_")|upper }}_USERNAME }}""
+            password = ""{% raw %}${{{% endraw %} secrets.POETRY_HTTP_BASIC_{{ cookiecutter.private_package_repository_name|slugify(separator="_")|upper }}_PASSWORD }}""
             "
           {%- endif %}
           tags: |

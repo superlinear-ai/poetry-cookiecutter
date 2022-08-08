@@ -34,7 +34,7 @@ RUN --mount=type=cache,id=poetry,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
-    mkdir -p src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/ && touch src/{{ cookiecutter.package_name|slugify|replace("-", "_") }}/__init__.py && touch README.md && \
+    mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md && \
     poetry install --no-dev --no-interaction
 
 FROM deps as ci
@@ -91,7 +91,7 @@ COPY src/ *.py /app/
 ENTRYPOINT ["/opt/app-env/bin/poe"]
 CMD [{% if cookiecutter.with_fastapi_api|int %}"serve"{% else %}"streamlit"{% endif %}]
 {%- else %}
-ENTRYPOINT ["/opt/app-env/bin/{{ cookiecutter.package_name|slugify }}"]
+ENTRYPOINT ["/opt/app-env/bin/{{ cookiecutter.__package_name_kebab_case }}"]
 CMD []
 {%- endif %}
 

@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 
 # https://python-poetry.org/docs/pyproject/
 [tool.poetry]
-name = "{{ cookiecutter.package_name|slugify }}"
+name = "{{ cookiecutter.__package_name_kebab_case }}"
 version = "0.0.0"
 description = "{{ cookiecutter.package_description }}"
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
@@ -23,7 +23,7 @@ version_files = ["pyproject.toml:version"]
 
 # https://python-poetry.org/docs/pyproject/#scripts
 [tool.poetry.scripts]
-{{ cookiecutter.package_name|slugify }} = "{{ cookiecutter.package_name|slugify|replace('-', '_') }}.cli:app"
+{{ cookiecutter.__package_name_kebab_case }} = "{{ cookiecutter.__package_name_snake_case }}.cli:app"
 {%- endif %}
 
 # https://python-poetry.org/docs/dependency-specification/
@@ -177,7 +177,7 @@ xfail_strict = true
       --host 0.0.0.0
       --port $port
       --reload
-      {{ cookiecutter.package_name|slugify|replace('-', '_') }}.api:app
+      {{ cookiecutter.__package_name_snake_case }}.api:app
     """
 
     [[tool.poe.tasks.dev.args]]
@@ -193,7 +193,7 @@ xfail_strict = true
     pdoc
       --docformat $docformat
       --output-directory $outputdirectory
-      {{ cookiecutter.package_name|slugify|replace('-', '_') }}
+      {{ cookiecutter.__package_name_snake_case }}
     """
 
     [[tool.poe.tasks.docs.args]]
@@ -250,7 +250,7 @@ xfail_strict = true
       --worker-class uvicorn.workers.UvicornWorker
       --worker-tmp-dir /dev/shm
       --workers 2
-      {{ cookiecutter.package_name|slugify|replace('-', '_') }}.api:app
+      {{ cookiecutter.__package_name_snake_case }}.api:app
     """
   use_exec = true
 

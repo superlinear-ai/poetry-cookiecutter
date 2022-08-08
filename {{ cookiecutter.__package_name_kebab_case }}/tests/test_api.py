@@ -2,7 +2,7 @@
 
 from fastapi.testclient import TestClient
 
-from {{ cookiecutter.package_name|slugify|replace("-", "_") }}.api import app
+from {{ cookiecutter.__package_name_snake_case }}.api import app
 
 client = TestClient(app)
 

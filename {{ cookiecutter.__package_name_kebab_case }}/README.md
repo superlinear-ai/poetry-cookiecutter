@@ -4,10 +4,10 @@
 
 ## Using
 
-To add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.package_name|slugify }}`.
+To add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.__package_name_kebab_case }}`.
 {%- if cookiecutter.with_typer_cli|int %}
 
-To view this app's commands once it's installed, run `{{ cookiecutter.package_name|slugify }} --help`. Alternatively, you can also use `docker compose run --rm app --help`.
+To view this app's commands once it's installed, run `{{ cookiecutter.__package_name_kebab_case }} --help`. Alternatively, you can also use `docker compose run --rm app --help`.
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
 
@@ -90,7 +90,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
     ```
 {%- endif %}
 1. Start a [Dev Container](https://code.visualstudio.com/docs/remote/containers) in your preferred development environment:
-    - _VS Code_: open the cloned repository and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
+    - _VS Code_: open the cloned repository and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
     - _PyCharm_: open the cloned repository and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
     - _Terminal_: open the cloned repository and run `docker compose run --rm dev` to start an interactive Dev Container.
 

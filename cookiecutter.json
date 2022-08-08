@@ -14,5 +14,7 @@
   "continuous_integration": ["GitHub", "GitLab"],
   "docstring_style": ["NumPy", "Google"],
   "private_package_repository_name": "",
-  "private_package_repository_url": ""
+  "private_package_repository_url": "",
+  "__package_name_kebab_case": "{{ cookiecutter.package_name|slugify }}",
+  "__package_name_snake_case": "{{ cookiecutter.package_name|slugify(separator='_') }}"
 }
