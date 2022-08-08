@@ -57,7 +57,7 @@ repos:
         types: [python]
       - id: absolufy-imports
         name: absolufy-imports
-        entry: absolufy-imports --application-directories src
+        entry: absolufy-imports
         require_serial: true
         language: system
         types: [python]
