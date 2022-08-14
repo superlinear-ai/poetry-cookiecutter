@@ -11,6 +11,7 @@ description = "{{ cookiecutter.package_description }}"
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 readme = "README.md"
 repository = "{{ cookiecutter.package_url }}"
+{%- if cookiecutter.with_commitizen %}
 
 # https://commitizen-tools.github.io/commitizen/config/
 [tool.commitizen]
@@ -19,6 +20,7 @@ tag_format = "v$version"
 update_changelog_on_bump = true
 version = "0.0.0"
 version_files = ["pyproject.toml:version"]
+{%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
 
 # https://python-poetry.org/docs/pyproject/#scripts
@@ -59,7 +61,9 @@ uvicorn = { extras = ["standard"], version = "^0.18.2" }
 absolufy-imports = "^0.3.1"
 bandit = { extras = ["toml"], version = "^1.7.4" }
 black = "^22.6.0"
+{%- if cookiecutter.with_commitizen %}
 commitizen = "^2.27.1"
+{%- endif %}
 coverage = { extras = ["toml"], version = "^6.4.1" }
 cruft = "^2.11.0"
 darglint = "^1.8.1"
@@ -85,6 +89,7 @@ pre-commit = "^2.19.0"
 pydocstyle = { extras = ["toml"], version = "^6.1.1" }
 pytest = "^7.1.2"
 pytest-clarity = "^1.0.1"
+pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.1"
 pytest-xdist = "^2.5.0"
 pyupgrade = "^2.34.0"

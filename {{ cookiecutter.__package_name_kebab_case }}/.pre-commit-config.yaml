@@ -43,12 +43,14 @@ repos:
         types: [python]
   - repo: local
     hooks:
+      {%- if cookiecutter.with_commitizen %}
       - id: commitizen
         name: commitizen
         entry: cz check --commit-msg-file
         require_serial: true
         language: system
         stages: [commit-msg]
+      {%- endif %}
       - id: pyupgrade
         name: pyupgrade
         entry: pyupgrade --py{{ cookiecutter.python_version|replace(".", "") }}-plus
