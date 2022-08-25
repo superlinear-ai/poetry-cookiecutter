@@ -22,6 +22,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
 1. Configure SSH to automatically load your SSH keys:
+    
     ```sh
     cat << EOF >> ~/.ssh/config
     Host *
@@ -30,6 +31,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
       UseKeychain yes
     EOF
     ```
+    
 {%- if cookiecutter.private_package_repository_name %}
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
@@ -69,6 +71,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
     - _Linux only_:
         - [Configure Docker and Docker Compose to use the BuildKit build system](https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
         - Export your user's user id and group id so that [files created in the Dev Container are owned by your user](https://github.com/moby/moby/issues/3206):
+
             ```sh
             cat << EOF >> ~/.bashrc
             export UID=$(id --user)
@@ -78,6 +81,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
             {%- endif %}
             EOF
             ```
+
     {%- if cookiecutter.private_package_repository_name %}
     - _Windows only_:
         - Export the location of your private package repository credentials so that Docker Compose can load these as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
