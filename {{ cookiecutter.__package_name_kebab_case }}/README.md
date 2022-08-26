@@ -22,48 +22,52 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
 1. Configure SSH to automatically load your SSH keys:
-    
-    ```sh
-    cat << EOF >> ~/.ssh/config
-    Host *
-      AddKeysToAgent yes
-      IgnoreUnknown UseKeychain
-      UseKeychain yes
-    EOF
-    ```
+
+        ```sh
+        cat << EOF >> ~/.ssh/config
+        Host *
+          AddKeysToAgent yes
+          IgnoreUnknown UseKeychain
+          UseKeychain yes
+        EOF
+        ```
 {%- if cookiecutter.private_package_repository_name %}
 
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
-    ```toml
-    # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
-    # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
-    [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
-    username = "{personal access token name}"
-    password = "{personal access token}"
-    ```
+
+        ```toml
+        # Linux:   ~/.config/pypoetry/auth.toml
+        # macOS:   ~/Library/Application Support/pypoetry/auth.toml
+        # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
+        [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
+        username = "{personal access token name}"
+        password = "{personal access token}"
+        ```
 {%- endif %}
 {%- else -%}
 1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 1. Configure SSH to automatically load your SSH keys:
-    ```sh
-    cat << EOF >> ~/.ssh/config
-    Host *
-      AddKeysToAgent yes
-      IgnoreUnknown UseKeychain
-      UseKeychain yes
-    EOF
-    ```
+
+        ```sh
+        cat << EOF >> ~/.ssh/config
+        Host *
+          AddKeysToAgent yes
+          IgnoreUnknown UseKeychain
+          UseKeychain yes
+        EOF
+        ```
+
 {%- if cookiecutter.private_package_repository_name %}
 1. [Add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
-    ```toml
-    # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
-    # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
-    [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
-    username = "{username}"
-    password = "{password}"
-    ```
+
+        ```toml
+        # Linux:   ~/.config/pypoetry/auth.toml
+        # macOS:   ~/Library/Application Support/pypoetry/auth.toml
+        # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
+        [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
+        username = "{username}"
+        password = "{password}"
+        ```
 {%- endif %}
 {%- endif %}
 1. [Install Docker Desktop](https://www.docker.com/get-started).
@@ -85,6 +89,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 
     - _Windows only_:
         - Export the location of your private package repository credentials so that Docker Compose can load these as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
+
             ```bat
             setx POETRY_AUTH_TOML_PATH %APPDATA%\pypoetry\auth.toml
             ```
