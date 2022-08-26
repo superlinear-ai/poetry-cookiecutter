@@ -31,8 +31,8 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
       UseKeychain yes
     EOF
     ```
-    
 {%- if cookiecutter.private_package_repository_name %}
+
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
     # Linux:   ~/.config/pypoetry/auth.toml
@@ -81,8 +81,8 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
             {%- endif %}
             EOF
             ```
-
     {%- if cookiecutter.private_package_repository_name %}
+
     - _Windows only_:
         - Export the location of your private package repository credentials so that Docker Compose can load these as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
             ```bat
