@@ -8,9 +8,9 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
 # Install Poetry.
-ENV POETRY_VERSION 1.1.13
+ENV POETRY_VERSION 1.1.15
 RUN --mount=type=cache,target=/root/.cache/ \
-    pip install poetry==$POETRY_VERSION
+    pip install poetry~=$POETRY_VERSION
 
 # Create and activate a virtual environment.
 RUN python -m venv /opt/app-env
