@@ -107,6 +107,7 @@ skips = ["B101"]
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 [tool.black]
 line-length = 100
+target-version = ["py{{ cookiecutter.python_version|replace('.', '') }}"]
 
 # https://coverage.readthedocs.io/en/latest/config.html#report
 [tool.coverage.report]
