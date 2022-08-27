@@ -21,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -39,7 +39,7 @@ jobs:
       - name: Install @devcontainers/cli
         run: npm install --location=global @devcontainers/cli
 
-      - name: Start Dev Container
+      - name: Start Dev Container with Python ${{ matrix.python-version }}
         env:
           DOCKER_BUILDKIT: 1
         run: |
