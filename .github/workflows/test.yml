@@ -24,17 +24,17 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.8"
 
       - name: Scaffold Python package
         run: |
           pip install --no-input cruft
-          cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "${{ matrix.python-version }}", "with_fastapi_api": "1", "with_typer_cli": "1"}' .
+          cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "3.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' .
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16"
 
       - name: Install @devcontainers/cli
         run: npm install --location=global @devcontainers/cli
@@ -46,7 +46,7 @@ jobs:
           git config --global init.defaultBranch main
           git init
           git add .
-          devcontainer up --workspace-folder .
+          PYTHON_VERSION=${{ matrix.python-version }} devcontainer up --workspace-folder .
         working-directory: ./my-package/
 
       - name: Lint package

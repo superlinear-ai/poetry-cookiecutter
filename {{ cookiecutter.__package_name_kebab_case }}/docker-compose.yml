@@ -10,6 +10,7 @@ services:
         - poetry_auth
       {%- endif %}
       args:
+        PYTHON_VERSION: ${PYTHON_VERSION:-{{ cookiecutter.python_version }}}
         UID: ${UID:-1000}
         GID: ${GID:-1000}
     stdin_open: true
