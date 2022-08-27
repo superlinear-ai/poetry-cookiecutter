@@ -5,7 +5,6 @@ fail_fast: true
 repos:
   - repo: meta
     hooks:
-      - id: check-hooks-apply
       - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.9.0
