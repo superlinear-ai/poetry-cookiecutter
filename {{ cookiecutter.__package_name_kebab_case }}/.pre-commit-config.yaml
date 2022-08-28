@@ -46,8 +46,6 @@ repos:
       - id: name-tests-test
         args: [--pytest-test-first]
       - id: no-commit-to-branch
-      - id: pretty-format-json
-        args: [--autofix, --indent 4, --no-ensure-ascii, --no-sort-keys]
       - id: trailing-whitespace
         types: [python]
   - repo: local
