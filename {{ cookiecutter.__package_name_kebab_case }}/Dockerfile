@@ -8,9 +8,9 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
 # Install Poetry.
-ENV POETRY_VERSION 1.1.13
+ENV POETRY_VERSION 1.2.0
 RUN --mount=type=cache,target=/root/.cache/ \
-    pip install poetry==$POETRY_VERSION
+    pip install poetry~=$POETRY_VERSION
 
 # Create and activate a virtual environment.
 RUN python -m venv /opt/app-env
@@ -34,7 +34,7 @@ RUN --mount=type=cache,target=/root/.cache/ \
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md && \
-    poetry install --no-dev --no-interaction
+    poetry install --only main --no-interaction
 
 # Create a non-root user.
 ARG UID=1000
@@ -50,12 +50,12 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes git
 
-# Install the development Python environment.
+# Install the CI Python environment.
 RUN --mount=type=cache,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
-    poetry install --no-interaction
+    poetry install --only main,test --no-interaction
 
 # Give the non-root user ownership and switch to the non-root user.
 RUN chown --recursive app /app/ /opt/
