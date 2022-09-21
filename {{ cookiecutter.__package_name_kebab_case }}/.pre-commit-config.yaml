@@ -52,13 +52,15 @@ repos:
     hooks:
       - id: commitizen
         name: commitizen
-        entry: cz check --commit-msg-file
+        entry: cz check
+        args: [--commit-msg-file]
         require_serial: true
         language: system
         stages: [commit-msg]
       - id: pyupgrade
         name: pyupgrade
-        entry: pyupgrade --py{{ cookiecutter.python_version|replace(".", "") }}-plus
+        entry: pyupgrade
+        args: [--py{{ cookiecutter.python_version|replace(".", "") }}-plus]
         require_serial: true
         language: system
         types: [python]
@@ -88,12 +90,14 @@ repos:
         types: [python]
       - id: shellcheck
         name: shellcheck
-        entry: shellcheck --check-sourced
+        entry: shellcheck
+        args: [--check-sourced]
         language: system
         types: [shell]
       - id: bandit
         name: bandit
-        entry: bandit --configfile pyproject.toml
+        entry: bandit
+        args: [--configfile, pyproject.toml]
         language: system
         types: [python]
       - id: pydocstyle
