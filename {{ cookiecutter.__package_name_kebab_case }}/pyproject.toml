@@ -54,14 +54,12 @@ uvicorn = { extras = ["standard"], version = "^0.18.2" }
 {%- endif %}
 
 # https://python-poetry.org/docs/master/managing-dependencies/
-# TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.test` when Poetry 1.2.0 is released.
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.test.dependencies]
 absolufy-imports = "^0.3.1"
 bandit = { extras = ["toml"], version = "^1.7.4" }
 black = "^22.6.0"
 commitizen = "^2.27.1"
 coverage = { extras = ["toml"], version = "^6.4.1" }
-cruft = "^2.11.0"
 darglint = "^1.8.1"
 flake8 = "^5.0.4"
 flake8-bugbear = "^22.6.22"
@@ -72,11 +70,7 @@ flake8-pytest-style = "^1.6.0"
 flake8-rst-docstrings = "^0.2.6"
 flake8-tidy-imports = "^4.8.0"
 isort = "^5.10.1"
-{%- if cookiecutter.with_jupyter_lab|int %}
-jupyterlab = "^3.4.3"
-{%- endif %}
 mypy = "^0.961"
-pdoc = "^12.0.2"
 pep8-naming = "^0.13.0"
 {%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.16.0"
@@ -92,6 +86,14 @@ safety = "^2.1.1"
 shellcheck-py = "^0.8.0"
 typeguard = "^2.13.3"
 yesqa = "^1.4.0"
+
+# https://python-poetry.org/docs/master/managing-dependencies/
+[tool.poetry.group.dev.dependencies]
+cruft = "^2.11.0"
+{%- if cookiecutter.with_jupyter_lab|int %}
+jupyterlab = "^3.4.3"
+{%- endif %}
+pdoc = "^12.0.2"
 {%- if cookiecutter.private_package_repository_name %}
 
 # https://python-poetry.org/docs/repositories/#using-a-private-repository
