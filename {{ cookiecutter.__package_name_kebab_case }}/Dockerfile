@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM python:{{ cookiecutter.python_version }}-slim AS base
+ARG PYTHON_VERSION={{ cookiecutter.python_version }}
+FROM python:$PYTHON_VERSION-slim AS base
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
 # [1] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONFAULTHANDLER
