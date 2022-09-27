@@ -45,9 +45,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          build-args: |
-            SOURCE_BRANCH={% raw %}${{ env.GITHUB_REF }}{% endraw %}
-            SOURCE_COMMIT={% raw %}${{ env.GITHUB_SHA }}{% endraw %}
           context: .
           push: true
           {%- if cookiecutter.private_package_repository_name %}

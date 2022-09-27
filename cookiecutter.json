@@ -5,10 +5,7 @@
   "author_name": "John Smith",
   "author_email": "john@example.com",
   "python_version": "3.8",
-  "development_environment": [
-    "simple",
-    "strict"
-  ],
+  "development_environment": ["simple", "strict"],
   "with_commitizen": "{% if cookiecutter.development_environment == 'simple' %}0{% else %}1{% endif %}",
   "with_fastapi_api": "0",
   "with_jupyter_lab": "0",
@@ -16,14 +13,8 @@
   "with_sentry_logging": "0",
   "with_streamlit_app": "0",
   "with_typer_cli": "0",
-  "continuous_integration": [
-    "GitHub",
-    "GitLab"
-  ],
-  "docstring_style": [
-    "NumPy",
-    "Google"
-  ],
+  "continuous_integration": ["GitHub", "GitLab"],
+  "docstring_style": ["NumPy", "Google"],
   "private_package_repository_name": "",
   "private_package_repository_url": "",
   "__package_name_kebab_case": "{{ cookiecutter.package_name|slugify }}",

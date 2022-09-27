@@ -1,12 +1,14 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION={{ cookiecutter.python_version }}
 FROM python:$PYTHON_VERSION-slim AS base
+{%- if cookiecutter.development_environment == "strict" %}
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
 # [1] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONFAULTHANDLER
 # [2] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUNBUFFERED
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
+{%- endif %}
 
 # Install Poetry.
 ENV POETRY_VERSION 1.2.0
@@ -43,6 +45,8 @@ ARG GID=$UID
 RUN groupadd --gid $GID app && \
     useradd --create-home --gid $GID --uid $UID app
 
+
+
 FROM base as ci
 
 # Install git so we can run pre-commit.
@@ -61,6 +65,8 @@ RUN --mount=type=cache,target=/root/.cache/ \
 # Give the non-root user ownership and switch to the non-root user.
 RUN chown --recursive app /app/ /opt/
 USER app
+
+
 
 FROM base as dev
 
@@ -106,6 +112,8 @@ RUN mkdir -p ~/.config/pypoetry/ && ln -s /run/secrets/poetry_auth ~/.config/pyp
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
+
+
 FROM base AS app
 
 # Copy the package source code to the working directory.
@@ -123,13 +131,4 @@ CMD [{% if cookiecutter.with_fastapi_api|int %}"serve"{% else %}"streamlit"{% en
 ENTRYPOINT ["/opt/app-env/bin/{{ cookiecutter.__package_name_kebab_case }}"]
 CMD []
 {%- endif %}
-
-# The following variables are supplied as build args at build time and made available at run time as
-# environment variables.
-ARG SOURCE_BRANCH
-ENV SOURCE_BRANCH $SOURCE_BRANCH
-ARG SOURCE_COMMIT
-ENV SOURCE_COMMIT $SOURCE_COMMIT
-ARG SOURCE_TIMESTAMP
-ENV SOURCE_TIMESTAMP $SOURCE_TIMESTAMP
 {%- endif %}
