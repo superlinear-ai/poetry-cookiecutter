@@ -53,7 +53,7 @@ repos:
         types: [python]
   - repo: local
     hooks:
-      {%- if cookiecutter.with_commitizen|int %}
+      {%- if cookiecutter.with_conventional_commits|int %}
       - id: commitizen
         name: commitizen
         entry: cz check

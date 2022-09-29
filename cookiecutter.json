@@ -6,7 +6,7 @@
   "author_email": "john@example.com",
   "python_version": "3.8",
   "development_environment": ["simple", "strict"],
-  "with_commitizen": "{% if cookiecutter.development_environment == 'simple' %}0{% else %}1{% endif %}",
+  "with_conventional_commits": "{% if cookiecutter.development_environment == 'simple' %}0{% else %}1{% endif %}",
   "with_fastapi_api": "0",
   "with_jupyter_lab": "0",
   "with_pydantic_typing": "0",
