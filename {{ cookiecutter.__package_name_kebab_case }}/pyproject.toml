@@ -11,6 +11,7 @@ description = "{{ cookiecutter.package_description }}"
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 readme = "README.md"
 repository = "{{ cookiecutter.package_url }}"
+{%- if cookiecutter.with_commitizen|int %}
 
 # https://commitizen-tools.github.io/commitizen/config/
 [tool.commitizen]
@@ -19,6 +20,7 @@ tag_format = "v$version"
 update_changelog_on_bump = true
 version = "0.0.0"
 version_files = ["pyproject.toml:version"]
+{%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
 
 # https://python-poetry.org/docs/pyproject/#scripts
@@ -56,16 +58,22 @@ uvicorn = { extras = ["standard"], version = "^0.18.2" }
 # https://python-poetry.org/docs/master/managing-dependencies/
 [tool.poetry.group.test.dependencies]
 absolufy-imports = "^0.3.1"
+{%- if cookiecutter.development_environment == "strict" %}
 bandit = { extras = ["toml"], version = "^1.7.4" }
+{%- endif %}
 black = "^22.6.0"
+{%- if cookiecutter.with_commitizen|int %}
 commitizen = "^2.27.1"
+{%- endif %}
 coverage = { extras = ["toml"], version = "^6.4.1" }
 darglint = "^1.8.1"
 flake8 = "^5.0.4"
 flake8-bugbear = "^22.6.22"
 flake8-comprehensions = "^3.10.0"
 flake8-mutable = "^1.2.0"
+{%- if cookiecutter.development_environment == "strict" %}
 flake8-print = "^5.0.0"
+{%- endif %}
 flake8-pytest-style = "^1.6.0"
 flake8-rst-docstrings = "^0.2.6"
 flake8-tidy-imports = "^4.8.0"
@@ -82,9 +90,11 @@ pytest-clarity = "^1.0.1"
 pytest-mock = "^3.8.1"
 pytest-xdist = "^2.5.0"
 pyupgrade = "^2.34.0"
+{%- if cookiecutter.development_environment == "strict" %}
 safety = "^2.1.1"
 shellcheck-py = "^0.8.0"
 typeguard = "^2.13.3"
+{%- endif %}
 yesqa = "^1.4.0"
 
 # https://python-poetry.org/docs/master/managing-dependencies/
@@ -101,10 +111,12 @@ pdoc = "^12.0.2"
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
 {%- endif %}
+{%- if cookiecutter.development_environment == "strict" %}
 
 # https://bandit.readthedocs.io/en/latest/config.html
 [tool.bandit]
 skips = ["B101"]
+{%- endif %}
 
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 [tool.black]
@@ -113,7 +125,9 @@ target-version = ["py{{ cookiecutter.python_version|replace('.', '') }}"]
 
 # https://coverage.readthedocs.io/en/latest/config.html#report
 [tool.coverage.report]
+{%- if cookiecutter.development_environment == "strict" %}
 fail_under = 50
+{%- endif %}
 precision = 1
 show_missing = true
 skip_covered = true
@@ -142,16 +156,18 @@ junit_xml = "reports/mypy.xml"
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int %}
 plugins = "pydantic.mypy"
 {%- endif %}
+{%- if cookiecutter.development_environment == "strict" %}
 strict = true
 disallow_subclassing_any = false
 disallow_untyped_decorators = false
+{% endif %}
 ignore_missing_imports = true
 pretty = true
 show_column_numbers = true
 show_error_codes = true
 show_error_context = true
 warn_unreachable = true
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int %}
+{%- if cookiecutter.development_environment == "strict" and (cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int) %}
 
 # https://pydantic-docs.helpmanual.io/mypy_plugin/#configuring-the-plugin
 [tool.pydantic-mypy]
@@ -167,8 +183,10 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 
 # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 [tool.pytest.ini_options]
-addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__package_name_snake_case }} --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiecutter.development_environment == 'strict' %} --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__package_name_snake_case }}{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
+{%- if cookiecutter.development_environment == "strict" %}
 filterwarnings = ["error", "ignore::DeprecationWarning"]
+{%- endif %}
 testpaths = ["src", "tests"]
 xfail_strict = true
 
@@ -238,9 +256,11 @@ xfail_strict = true
         --all-files
         --color always
       """
+{%- if cookiecutter.development_environment == "strict" %}
 
     [[tool.poe.tasks.lint.sequence]]
     shell = "safety check --continue-on-error --full-report"
+{%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
 
   [tool.poe.tasks.serve]
