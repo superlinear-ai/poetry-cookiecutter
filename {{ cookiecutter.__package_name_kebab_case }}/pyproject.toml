@@ -296,7 +296,7 @@ xfail_strict = true
       --server.address 0.0.0.0
       --server.port $port
       --theme.base light
-      streamlit_app.py
+      src/{{ cookiecutter.__package_name_snake_case }}/app.py
     """
   use_exec = true
 
