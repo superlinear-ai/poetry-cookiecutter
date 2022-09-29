@@ -11,7 +11,7 @@ description = "{{ cookiecutter.package_description }}"
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 readme = "README.md"
 repository = "{{ cookiecutter.package_url }}"
-{%- if cookiecutter.with_commitizen|int %}
+{%- if cookiecutter.with_conventional_commits|int %}
 
 # https://commitizen-tools.github.io/commitizen/config/
 [tool.commitizen]
@@ -62,7 +62,7 @@ absolufy-imports = "^0.3.1"
 bandit = { extras = ["toml"], version = "^1.7.4" }
 {%- endif %}
 black = "^22.6.0"
-{%- if cookiecutter.with_commitizen|int %}
+{%- if cookiecutter.with_conventional_commits|int %}
 commitizen = "^2.27.1"
 {%- endif %}
 coverage = { extras = ["toml"], version = "^6.4.1" }
