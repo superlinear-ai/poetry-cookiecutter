@@ -23,7 +23,7 @@ if not with_sentry_logging:
 
 # Remove Streamlit if not selected.
 if not with_streamlit_app:
-    os.remove("streamlit_app.py")
+    os.remove(f"src/{package_name}/app.py")
 
 # Remove Typer if not selected.
 if not with_typer_cli:
