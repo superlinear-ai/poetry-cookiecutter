@@ -74,6 +74,7 @@ flake8-mutable = "^1.2.0"
 {%- if cookiecutter.development_environment == "strict" %}
 flake8-print = "^5.0.0"
 {%- endif %}
+Flake8-pyproject = "^1.1.0"
 flake8-pytest-style = "^1.6.0"
 flake8-rst-docstrings = "^0.2.6"
 flake8-tidy-imports = "^4.8.0"
@@ -142,6 +143,17 @@ source = ["src"]
 # https://coverage.readthedocs.io/en/latest/config.html#xml
 [tool.coverage.xml]
 output = "reports/coverage.xml"
+
+# https://flake8.pycqa.org/en/latest/user/options.html#options-and-their-descriptions
+# https://github.com/terrencepreilly/darglint#flake8
+[tool.flake8]
+color = "always"
+docstring_style = "{{ cookiecutter.docstring_style|lower }}"
+doctests = true
+ignore = ["DAR103", "E203", "E501", "W503"]
+max_line_length = 100
+max_complexity = 10
+strictness = "{% if cookiecutter.development_environment == 'strict' %}short{% else %}long{% endif %}"
 
 # https://pycqa.github.io/isort/docs/configuration/options.html
 [tool.isort]
