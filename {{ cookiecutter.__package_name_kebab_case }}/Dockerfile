@@ -74,7 +74,7 @@ FROM base as dev
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
+    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     usermod --shell /usr/bin/zsh app
 
@@ -98,12 +98,17 @@ RUN chown --recursive app /app/ /opt/ && \
 USER app
 
 # Configure the non-root user's shell.
-RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-syntax-highlighting' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
-    echo 'antigen apply' >> ~/.zshrc && \
+ENV ANTIDOTE_VERSION 1.6.4
+RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \
+    echo 'source ~/.antidote/antidote.zsh' >> ~/.zshrc && \
+    echo 'source <(antidote init)' >> ~/.zshrc && \
+    echo 'antidote bundle zsh-users/zsh-syntax-highlighting' >> ~/.zshrc && \
+    echo 'antidote bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
+    echo 'antidote bundle zsh-users/zsh-completions' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     echo 'HISTFILE=~/.zsh_history' >> ~/.zshrc && \
+    echo 'HISTSIZE=1000' >> ~/.zshrc && \
+    echo 'SAVEHIST=1000' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 {%- if cookiecutter.private_package_repository_name %}
 
