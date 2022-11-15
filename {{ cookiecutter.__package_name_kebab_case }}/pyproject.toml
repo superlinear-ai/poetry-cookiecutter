@@ -1,10 +1,8 @@
-# https://python-poetry.org/docs/pyproject/#poetry-and-pep-517
-[build-system]
+[build-system]  # https://python-poetry.org/docs/pyproject/#poetry-and-pep-517
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-# https://python-poetry.org/docs/pyproject/
-[tool.poetry]
+[tool.poetry]  # https://python-poetry.org/docs/pyproject/
 name = "{{ cookiecutter.__package_name_kebab_case }}"
 version = "0.0.0"
 description = "{{ cookiecutter.package_description }}"
@@ -13,8 +11,7 @@ readme = "README.md"
 repository = "{{ cookiecutter.package_url }}"
 {%- if cookiecutter.with_conventional_commits|int %}
 
-# https://commitizen-tools.github.io/commitizen/config/
-[tool.commitizen]
+[tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
 bump_message = "bump(release): v$current_version → v$new_version"
 tag_format = "v$version"
 update_changelog_on_bump = true
@@ -23,13 +20,11 @@ version_files = ["pyproject.toml:version"]
 {%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
 
-# https://python-poetry.org/docs/pyproject/#scripts
-[tool.poetry.scripts]
+[tool.poetry.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
 {{ cookiecutter.__package_name_kebab_case }} = "{{ cookiecutter.__package_name_snake_case }}.cli:app"
 {%- endif %}
 
-# https://python-poetry.org/docs/dependency-specification/
-[tool.poetry.dependencies]
+[tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 {%- if cookiecutter.with_fastapi_api|int %}
 coloredlogs = "^15.0.1"
 fastapi = "^0.78.0"
@@ -55,8 +50,7 @@ typer = { extras = ["all"], version = "^0.6.1" }
 uvicorn = { extras = ["standard"], version = "^0.18.2" }
 {%- endif %}
 
-# https://python-poetry.org/docs/master/managing-dependencies/
-[tool.poetry.group.test.dependencies]
+[tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 absolufy-imports = "^0.3.1"
 {%- if cookiecutter.development_environment == "strict" %}
 bandit = { extras = ["toml"], version = "^1.7.4" }
@@ -98,8 +92,7 @@ typeguard = "^2.13.3"
 {%- endif %}
 yesqa = "^1.4.0"
 
-# https://python-poetry.org/docs/master/managing-dependencies/
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 cruft = "^2.11.0"
 {%- if cookiecutter.with_jupyter_lab|int %}
 jupyterlab = "^3.4.3"
@@ -107,25 +100,21 @@ jupyterlab = "^3.4.3"
 pdoc = "^12.0.2"
 {%- if cookiecutter.private_package_repository_name %}
 
-# https://python-poetry.org/docs/repositories/#using-a-private-repository
-[[tool.poetry.source]]
+[[tool.poetry.source]]  # https://python-poetry.org/docs/repositories/#using-a-private-repository
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
 {%- endif %}
 {%- if cookiecutter.development_environment == "strict" %}
 
-# https://bandit.readthedocs.io/en/latest/config.html
-[tool.bandit]
+[tool.bandit]  # https://bandit.readthedocs.io/en/latest/config.html
 skips = ["B101"]
 {%- endif %}
 
-# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
-[tool.black]
+[tool.black]  # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 line-length = 100
 target-version = ["py{{ cookiecutter.python_version|replace('.', '') }}"]
 
-# https://coverage.readthedocs.io/en/latest/config.html#report
-[tool.coverage.report]
+[tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
 {%- if cookiecutter.development_environment == "strict" %}
 fail_under = 50
 {%- endif %}
@@ -133,20 +122,16 @@ precision = 1
 show_missing = true
 skip_covered = true
 
-# https://coverage.readthedocs.io/en/latest/config.html#run
-[tool.coverage.run]
+[tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
 branch = true
 command_line = "--module pytest"
 data_file = "reports/.coverage"
 source = ["src"]
 
-# https://coverage.readthedocs.io/en/latest/config.html#xml
-[tool.coverage.xml]
+[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
 output = "reports/coverage.xml"
 
-# https://flake8.pycqa.org/en/latest/user/options.html#options-and-their-descriptions
-# https://github.com/terrencepreilly/darglint#flake8
-[tool.flake8]
+[tool.flake8]  # https://flake8.pycqa.org/en/latest/user/options.html#options-and-their-descriptions
 color = "always"
 docstring_style = "{{ cookiecutter.docstring_style|lower }}"
 doctests = true
@@ -155,15 +140,13 @@ max_line_length = 100
 max_complexity = 10
 strictness = "{% if cookiecutter.development_environment == 'strict' %}short{% else %}long{% endif %}"
 
-# https://pycqa.github.io/isort/docs/configuration/options.html
-[tool.isort]
+[tool.isort]  # https://pycqa.github.io/isort/docs/configuration/options.html
 color_output = true
 line_length = 100
 profile = "black"
 src_paths = ["src", "tests"]
 
-# https://mypy.readthedocs.io/en/latest/config_file.html
-[tool.mypy]
+[tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int %}
 plugins = "pydantic.mypy"
@@ -181,20 +164,17 @@ show_error_context = true
 warn_unreachable = true
 {%- if cookiecutter.development_environment == "strict" and (cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int) %}
 
-# https://pydantic-docs.helpmanual.io/mypy_plugin/#configuring-the-plugin
-[tool.pydantic-mypy]
+[tool.pydantic-mypy]  # https://pydantic-docs.helpmanual.io/mypy_plugin/#configuring-the-plugin
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
 {%- endif %}
 
-# http://www.pydocstyle.org/en/latest/usage.html#configuration-files
-[tool.pydocstyle]
+[tool.pydocstyle]  # http://www.pydocstyle.org/en/latest/usage.html#configuration-files
 convention = "{{ cookiecutter.docstring_style|lower }}"
 
-# https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
-[tool.pytest.ini_options]
+[tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiecutter.development_environment == 'strict' %} --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__package_name_snake_case }}{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
 {%- if cookiecutter.development_environment == "strict" %}
 filterwarnings = ["error", "ignore::DeprecationWarning"]
@@ -202,8 +182,7 @@ filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
 xfail_strict = true
 
-# https://github.com/nat-n/poethepoet
-[tool.poe.tasks]
+[tool.poe.tasks]  # https://github.com/nat-n/poethepoet
 {%- if cookiecutter.with_fastapi_api|int %}
 
   [tool.poe.tasks.dev]
