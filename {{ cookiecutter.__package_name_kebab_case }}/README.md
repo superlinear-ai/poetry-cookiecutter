@@ -23,7 +23,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
-2. Configure SSH to automatically load your SSH keys:
+1. Configure SSH to automatically load your SSH keys:
     ```sh
     cat << EOF >> ~/.ssh/config
     Host *
