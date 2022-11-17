@@ -96,7 +96,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 1. Clone this repository.
 2. Start a [Dev Container](https://code.visualstudio.com/docs/remote/containers) in your preferred development environment:
     - _VS Code_: open the cloned repository and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
-    - _PyCharm_: open the cloned repository and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
+    - _PyCharm_: open the cloned repository and select the `dev` service when [configuring Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
     - _Terminal_: open the cloned repository and run `docker compose run --rm dev` to start an interactive Dev Container.
 
 </details>

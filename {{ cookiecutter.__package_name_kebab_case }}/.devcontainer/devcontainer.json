@@ -1,7 +1,7 @@
 {
     "name": "{{ cookiecutter.__package_name_kebab_case }}",
     "dockerComposeFile": "../docker-compose.yml",
-    "service": "dev",
+    "service": "devcontainer",
     "workspaceFolder": "/app/",
     "overrideCommand": true,
     "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /opt/build/git/* /app/.git/hooks/",
