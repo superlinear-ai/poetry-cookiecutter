@@ -6,11 +6,13 @@ A modern [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template f
 
 See [My Package](https://github.com/radix-ai/my-package) for an example of a Python package and app that is scaffolded with this template.
 
-Starting development in My Package is as easy as cloning the repository with `git clone git@github.com:radix-ai/my-package`, opening the cloned repository in [VS Code](https://code.visualstudio.com/) and then running <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_ with VS Code's [Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to start a [Dev Container](https://code.visualstudio.com/docs/remote/containers).
+Starting development in My Package is as easy as cloning the repository with `git clone git@github.com:radix-ai/my-package`, opening the cloned repository in [VS Code](https://code.visualstudio.com/) and running <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_ with VS Code's [Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to start a [Dev Container](https://code.visualstudio.com/docs/remote/containers).
+
+Alternatively, you can start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces) in your browser by going to [My Package](https://github.com/radix-ai/my-package), clicking on _Code_, and selecting _Create codespace_.
 
 ## 🎁 Features
 
-- 🧑‍💻 Quick and reproducible development environments with VS Code's [Dev Containers](https://code.visualstudio.com/docs/remote/containers) and PyCharm's [Docker Compose interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote)
+- 🧑‍💻 Quick and reproducible development environments with VS Code's [Dev Containers](https://code.visualstudio.com/docs/remote/containers), PyCharm's [Docker Compose interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote), and [GitHub Codespaces](https://github.com/features/codespaces)
 - 🌈 Cross-platform support for Linux, macOS (Apple silicon and Intel), and Windows
 - 🐚 Modern shell prompt with [Starship](https://github.com/starship/starship)
 - 📦 Packaging and dependency management with [Poetry](https://github.com/python-poetry/poetry)
@@ -30,14 +32,18 @@ Starting development in My Package is as easy as cloning the repository with `gi
 ### Creating a new Python project
 
 To create a new Python project with this template:
-1. Install [Cruft](https://github.com/cruft/cruft) in your [Python environment](https://github.com/pyenv/pyenv-virtualenv) with:
+1. Install the latest [Cruft](https://github.com/cruft/cruft) and [Cookiecutter](https://github.com/cookiecutter/cookiecutter) in your [Python environment](https://github.com/pyenv/pyenv-virtualenv) with:
    ```sh
-   pip install cruft
+   pip install --upgrade cruft>=2.11.1 cookiecutter>=2.1.1
    ```
 2. Create a new repository and clone it locally.
-3. In the repository's parent directory, run:
+3. In the directory that contains the cloned repository, run:
    ```sh
    cruft create -f git@github.com:radix-ai/poetry-cookiecutter
+   ```
+4. _Optional:_ if your repository name differs from your project's slugified name, you will need to copy the scaffolded project into the repository with:
+   ```sh
+   cp -r {package-name}/ {repository-name}/
    ```
 
 ### Updating your Python project

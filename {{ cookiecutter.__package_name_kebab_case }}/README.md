@@ -7,7 +7,7 @@
 To add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.__package_name_kebab_case }}`.
 {%- if cookiecutter.with_typer_cli|int %}
 
-To view this app's commands once it's installed, run `{{ cookiecutter.__package_name_kebab_case }} --help`. Alternatively, you can also use `docker compose run --rm app --help`.
+To view this app's CLI commands once it's installed, run `{{ cookiecutter.__package_name_kebab_case }} --help`.
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
 
@@ -16,8 +16,10 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 
 ## Contributing
 
+### Local development setup
+
 <details>
-<summary>Setup: once per device</summary>
+<summary>One-time device setup</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
@@ -86,30 +88,37 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
             ```
     {%- endif %}
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
-    - _Optional:_ Install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) with `brew tap homebrew/cask-fonts && brew install --cask font-fira-code-nerd-font` and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use `'FiraCode Nerd Font'`.
+    - _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) with `brew tap homebrew/cask-fonts && brew install --cask font-fira-code-nerd-font` and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use `'FiraCode Nerd Font'`.
 
 </details>
 
 <details open>
-<summary>Setup: once per project</summary>
+<summary>One-time project setup</summary>
 
 1. Clone this repository.
 2. Start a [Dev Container](https://code.visualstudio.com/docs/remote/containers) in your preferred development environment:
     - _VS Code_: open the cloned repository and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
     - _PyCharm_: open the cloned repository and select the `dev` service when [configuring Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
-    - _Terminal_: open the cloned repository and run `docker compose run --rm dev` to start an interactive Dev Container.
+    - _Terminal_: open the cloned repository and run `docker compose up --detach dev` to start the Dev Container in the background, and then run `docker compose exec dev zsh` to open a shell prompt in the Dev Container.
 
 </details>
+{%- if cookiecutter.continuous_integration == "GitHub" %}
 
-<details>
-<summary>Developing</summary>
+### Browser development setup
+
+1. Open [{{ cookiecutter.package_url }}]({{ cookiecutter.package_url }}) in your browser.
+2. Click on _Code_ and select _Create codespace_ to start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces).
+{%- endif %}
+
+### Developing
 {% if cookiecutter.with_conventional_commits|int %}
 - This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
 {%- endif %}
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
 - Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `pyproject.toml` and `poetry.lock`. Add `--group test` or `--group dev` to install a CI or development dependency, respectively.
-- Run `poetry remove {package}` from within the development environment to uninstall a run time dependency and remove it from `pyproject.toml` and `poetry.lock`. Add `--group test` or `--group dev` to uninstall a CI or development dependency, respectively.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
+{%- if cookiecutter.with_conventional_commits|int %}
 - Run `cz bump` to bump the package's version, update the `CHANGELOG.md`, and create a git tag.
+{%- endif %}
 
 </details>

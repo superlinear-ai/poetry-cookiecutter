@@ -155,7 +155,7 @@ plugins = "pydantic.mypy"
 strict = true
 disallow_subclassing_any = false
 disallow_untyped_decorators = false
-{% endif %}
+{%- endif %}
 ignore_missing_imports = true
 pretty = true
 show_column_numbers = true
