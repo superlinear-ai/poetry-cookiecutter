@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  dev:
+  devcontainer:
     build:
       context: .
       target: dev
@@ -13,6 +13,17 @@ services:
         PYTHON_VERSION: ${PYTHON_VERSION:-{{ cookiecutter.python_version }}}
         UID: ${UID:-1000}
         GID: ${GID:-1000}
+    {%- if not cookiecutter.private_package_repository_name %}
+    environment:
+      - POETRY_PYPI_TOKEN_PYPI
+    {%- else %}
+    secrets:
+      - poetry_auth
+    {%- endif %}
+    volumes:
+      - .:/app/
+  dev:
+    extends: devcontainer
     stdin_open: true
     tty: true
     entrypoint: []
@@ -30,10 +41,6 @@ services:
     {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
     ports:
       - "8000"
-    {%- endif %}
-    {%- if cookiecutter.private_package_repository_name %}
-    secrets:
-      - poetry_auth
     {%- endif %}
     volumes:
       - .:/app/
