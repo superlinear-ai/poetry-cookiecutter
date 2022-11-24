@@ -165,7 +165,7 @@ src_paths = ["src", "tests"]
 # https://mypy.readthedocs.io/en/latest/config_file.html
 [tool.mypy]
 junit_xml = "reports/mypy.xml"
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int %}
+{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int %}
 plugins = "pydantic.mypy"
 {%- endif %}
 {%- if cookiecutter.development_environment == "strict" %}
@@ -179,7 +179,7 @@ show_column_numbers = true
 show_error_codes = true
 show_error_context = true
 warn_unreachable = true
-{%- if cookiecutter.development_environment == "strict" and (cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int or cookiecutter.with_typer_cli|int) %}
+{%- if cookiecutter.development_environment == "strict" and (cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int) %}
 
 # https://pydantic-docs.helpmanual.io/mypy_plugin/#configuring-the-plugin
 [tool.pydantic-mypy]
