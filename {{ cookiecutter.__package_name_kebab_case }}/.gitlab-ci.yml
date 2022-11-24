@@ -1,10 +1,11 @@
 stages:
+  - prebuild
   - build
   - test
   - {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}deploy{% else %}publish{% endif %}
 
-Compute Image Hash:
-  stage: build
+Compute CI image hash:
+  stage: prebuild
   script:
     - export DOCKER_IMAGE_SHA="$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)"
     - echo "CI_IMAGE_SHA=$DOCKER_IMAGE_SHA" >> .env
@@ -67,16 +68,14 @@ Compute Image Hash:
         - pyproject.toml
 
 # Build CI Docker image.
-Build CI:
+Build CI image:
   extends:
     - .docker
   stage: build
   variables:
     DOCKER_IMAGE: $CI_REGISTRY_IMAGE/ci
+    DOCKER_IMAGE_SHA: $CI_IMAGE_SHA
     DOCKER_TARGET: ci
-  artifacts:
-    reports:
-      dotenv: .env
 
 # Lint and test the package.
 Test:
