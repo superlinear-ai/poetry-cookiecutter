@@ -1,6 +1,6 @@
 {
     "name": "Poetry Cookiecutter",
-    "image": "3.11-slim",
+    "image": "python:3.11-slim",
     "overrideCommand": true,
     "postStartCommand": "pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
     "customizations": {
