@@ -1,0 +1,22 @@
+{
+    "name": "Poetry Cookiecutter",
+    "image": "3.11-slim",
+    "overrideCommand": true,
+    "postStartCommand": "pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "tamasfe.even-better-toml",
+                "visualstudioexptteam.vscodeintellicode"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.rulers": [
+                    100
+                ],
+                "files.autoSave": "onFocusChange"
+            }
+        }
+    }
+}
