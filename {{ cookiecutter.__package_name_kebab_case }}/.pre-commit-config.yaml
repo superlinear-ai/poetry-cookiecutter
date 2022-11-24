@@ -14,7 +14,6 @@ repos:
       - id: python-check-blanket-type-ignore
       {%- endif %}
       - id: python-check-mock-methods
-      - id: python-no-eval
       - id: python-no-log-warn
       - id: python-use-type-annotations
       - id: rst-backticks
