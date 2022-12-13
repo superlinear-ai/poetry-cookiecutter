@@ -1,0 +1,14 @@
+# https://pre-commit.com
+default_install_hook_types: [commit-msg, pre-commit]
+default_stages: [commit, manual]
+fail_fast: true
+repos:
+  - repo: local
+    hooks:
+      - id: commitizen
+        name: commitizen
+        entry: cz check
+        args: [--commit-msg-file]
+        require_serial: true
+        language: system
+        stages: [commit-msg]
