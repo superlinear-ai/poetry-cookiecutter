@@ -27,7 +27,8 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 ARG UID=1000
 ARG GID=$UID
 RUN groupadd --gid $GID app && \
-    useradd --create-home --gid $GID --uid $UID app
+    useradd --create-home --gid $GID --uid $UID app && \
+    chown app /opt/
 USER app
 
 # Create and activate a virtual environment.
