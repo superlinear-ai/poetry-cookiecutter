@@ -1,8 +1,8 @@
 {
     "name": "Poetry Cookiecutter",
-    "image": "python:3.11-slim",
-    "onCreateCommand": "apt-get update && apt-get install --yes git gnupg && pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
-    "overrideCommand": true,
+    "image": "mcr.microsoft.com/vscode/devcontainers/python:3.10",
+    "onCreateCommand": "pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
+    "remoteUser": "vscode",
     "customizations": {
         "vscode": {
             "extensions": [
