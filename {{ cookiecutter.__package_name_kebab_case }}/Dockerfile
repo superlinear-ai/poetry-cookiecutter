@@ -39,7 +39,7 @@ ENV VIRTUAL_ENV /opt/app-env
 # Set the working directory.
 WORKDIR /app/
 
-# Install the run time Python environment.
+# Install the run time Python dependencies in the virtual environment.
 COPY poetry.lock* pyproject.toml /app/
 RUN --mount=type=cache,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
@@ -60,7 +60,7 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
     apt-get install --no-install-recommends --yes git
 USER app
 
-# Install the CI Python environment.
+# Install the CI/CD Python dependencies in the virtual environment.
 RUN --mount=type=cache,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
@@ -70,20 +70,18 @@ RUN --mount=type=cache,target=/root/.cache/ \
 
 FROM base as dev
 
-# Enable passwordless sudo for the non-root user.
-USER root
-RUN echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && chmod 0440 /etc/sudoers.d/app
-USER app
-
 # Install development tools: compilers, curl, git, gpg, ssh, starship, sudo, vim, and zsh.
+USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
-    sudo apt-get update && \
-    sudo apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
-    sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    sudo usermod --shell /usr/bin/zsh app
+    apt-get update && \
+    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
+    usermod --shell /usr/bin/zsh app && \
+    echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && chmod 0440 /etc/sudoers.d/app
+USER app
 
-# Install the development Python environment.
+# Install the development Python dependencies in the virtual environment.
 RUN --mount=type=cache,target=/root/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
