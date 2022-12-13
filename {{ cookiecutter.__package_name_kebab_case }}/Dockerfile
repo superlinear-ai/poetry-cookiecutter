@@ -52,15 +52,13 @@ RUN --mount=type=cache,target=/root/.cache/ \
 
 FROM base as ci
 
-# Enable passwordless sudo for the non-root user.
-RUN echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && \
-    chmod 0440 /etc/sudoers.d/app
-
 # Install git so we can run pre-commit.
+USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
-    sudo apt-get update && \
-    sudo apt-get install --no-install-recommends --yes git
+    apt-get update && \
+    apt-get install --no-install-recommends --yes git
+USER app
 
 # Install the CI Python environment.
 RUN --mount=type=cache,target=/root/.cache/ \
@@ -73,8 +71,9 @@ RUN --mount=type=cache,target=/root/.cache/ \
 FROM base as dev
 
 # Enable passwordless sudo for the non-root user.
-RUN echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && \
-    chmod 0440 /etc/sudoers.d/app
+USER root
+RUN echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && chmod 0440 /etc/sudoers.d/app
+USER app
 
 # Install development tools: compilers, curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 RUN --mount=type=cache,target=/var/cache/apt/ \
