@@ -15,17 +15,25 @@ ENV POETRY_VERSION 1.3.1
 RUN --mount=type=cache,target=/root/.cache/ \
     pip install poetry~=$POETRY_VERSION
 
-# Create and activate a virtual environment.
-RUN python -m venv /opt/app-env
-ENV PATH /opt/app-env/bin:$PATH
-ENV VIRTUAL_ENV /opt/app-env
-
 # Install compilers that may be required for certain packages or platforms.
 RUN rm /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes build-essential
+
+# Create a non-root user and switch to it [1].
+# [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+ARG UID=1000
+ARG GID=$UID
+RUN groupadd --gid $GID app && \
+    useradd --create-home --gid $GID --uid $UID app
+USER app
+
+# Create and activate a virtual environment.
+RUN python -m venv /opt/app-env
+ENV PATH /opt/app-env/bin:$PATH
+ENV VIRTUAL_ENV /opt/app-env
 
 # Set the working directory.
 WORKDIR /app/
@@ -39,21 +47,19 @@ RUN --mount=type=cache,target=/root/.cache/ \
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md && \
     poetry install --only main --no-interaction
 
-# Create a non-root user.
-ARG UID=1000
-ARG GID=$UID
-RUN groupadd --gid $GID app && \
-    useradd --create-home --gid $GID --uid $UID app
-
 
 
 FROM base as ci
 
+# Enable passwordless sudo for the non-root user.
+RUN echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && \
+    chmod 0440 /etc/sudoers.d/app
+
 # Install git so we can run pre-commit.
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
-    apt-get update && \
-    apt-get install --no-install-recommends --yes git
+    sudo apt-get update && \
+    sudo apt-get install --no-install-recommends --yes git
 
 # Install the CI Python environment.
 RUN --mount=type=cache,target=/root/.cache/ \
@@ -62,21 +68,20 @@ RUN --mount=type=cache,target=/root/.cache/ \
     {%- endif %}
     poetry install --only main,test --no-interaction
 
-# Give the non-root user ownership and switch to the non-root user.
-RUN chown --recursive app /app/ /opt/
-USER app
-
-
 
 FROM base as dev
+
+# Enable passwordless sudo for the non-root user.
+RUN echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && \
+    chmod 0440 /etc/sudoers.d/app
 
 # Install development tools: compilers, curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
-    apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
-    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    usermod --shell /usr/bin/zsh app
+    sudo apt-get update && \
+    sudo apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
+    sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
+    sudo usermod --shell /usr/bin/zsh app
 
 # Install the development Python environment.
 RUN --mount=type=cache,target=/root/.cache/ \
@@ -90,12 +95,6 @@ COPY .pre-commit-config.yaml /app/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
-
-# Give the non-root user ownership and switch to the non-root user.
-RUN chown --recursive app /app/ /opt/ && \
-    echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && \
-    chmod 0440 /etc/sudoers.d/app
-USER app
 
 # Configure the non-root user's shell.
 RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
@@ -120,10 +119,6 @@ FROM base AS app
 
 # Copy the package source code to the working directory.
 COPY . .
-
-# Give the non-root user ownership and switch to the non-root user.
-RUN chown --recursive app /app/ /opt/
-USER app
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
