@@ -32,7 +32,7 @@ RUN groupadd --gid $GID app && \
 USER app
 
 # Create and activate a virtual environment.
-RUN python -m venv /opt/app-env
+RUN python -m venv /opt/app-env && mkdir -p /home/app/.cache/
 ENV PATH /opt/app-env/bin:$PATH
 ENV VIRTUAL_ENV /opt/app-env
 
