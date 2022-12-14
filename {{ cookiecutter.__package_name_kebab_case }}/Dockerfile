@@ -41,7 +41,7 @@ WORKDIR /app/
 
 # Install the run time Python dependencies in the virtual environment.
 COPY poetry.lock* pyproject.toml /app/
-RUN --mount=type=cache,target=/root/.cache/ \
+RUN --mount=type=cache,target=/home/app/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
@@ -61,7 +61,7 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 USER app
 
 # Install the CI/CD Python dependencies in the virtual environment.
-RUN --mount=type=cache,target=/root/.cache/ \
+RUN --mount=type=cache,target=/home/app/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
@@ -82,7 +82,7 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 USER app
 
 # Install the development Python dependencies in the virtual environment.
-RUN --mount=type=cache,target=/root/.cache/ \
+RUN --mount=type=cache,target=/home/app/.cache/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
     {%- endif %}
