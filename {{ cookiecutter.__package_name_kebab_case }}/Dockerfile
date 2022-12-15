@@ -43,7 +43,7 @@ WORKDIR /app/
 COPY poetry.lock* pyproject.toml /app/
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md && \
     poetry install --only main --no-interaction
@@ -63,7 +63,7 @@ USER app
 # Install the CI/CD Python dependencies in the virtual environment.
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --only main,test --no-interaction
 
@@ -84,7 +84,7 @@ USER app
 # Install the development Python dependencies in the virtual environment.
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry_auth,target=/root/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --no-interaction
 
