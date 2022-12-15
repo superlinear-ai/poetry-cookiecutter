@@ -3,6 +3,7 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "devcontainer",
     "workspaceFolder": "/app/",
+    "remoteUser": "app",
     "overrideCommand": true,
     "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /opt/build/git/* /app/.git/hooks/",
     "customizations": {
