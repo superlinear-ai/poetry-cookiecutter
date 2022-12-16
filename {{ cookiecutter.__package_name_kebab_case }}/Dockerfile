@@ -32,7 +32,7 @@ RUN groupadd --gid $GID app && \
 USER app
 
 # Create and activate a virtual environment.
-RUN python -m venv /opt/app-env && mkdir /home/app/.cache/
+RUN python -m venv /opt/app-env
 ENV PATH /opt/app-env/bin:$PATH
 ENV VIRTUAL_ENV /opt/app-env
 
@@ -41,11 +41,12 @@ WORKDIR /app/
 
 # Install the run time Python dependencies in the virtual environment.
 COPY poetry.lock* pyproject.toml /app/
+RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ && \
+    mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
-    mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md && \
     poetry install --only main --no-interaction
 
 
@@ -66,6 +67,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --only main,test --no-interaction
+
 
 
 FROM base as dev
@@ -107,7 +109,7 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
 {%- if cookiecutter.private_package_repository_name %}
 
 # Enable Poetry to read the private package repository credentials.
-RUN mkdir -p ~/.config/pypoetry/ && ln -s /run/secrets/poetry_auth ~/.config/pypoetry/auth.toml
+RUN ln -s /run/secrets/poetry_auth /home/app/.config/pypoetry/auth.toml
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
