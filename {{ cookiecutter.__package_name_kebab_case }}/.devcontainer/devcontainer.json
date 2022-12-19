@@ -9,6 +9,7 @@
     "customizations": {
         "vscode": {
             "extensions": [
+                "charliermarsh.ruff",
                 "ms-python.python",
                 "ryanluker.vscode-coverage-gutters",
                 "tamasfe.even-better-toml",
@@ -19,6 +20,7 @@
                     "reports/coverage.xml"
                 ],
                 "editor.codeActionsOnSave": {
+                    "source.fixAll": true,
                     "source.organizeImports": true
                 },
                 "editor.formatOnSave": true,
@@ -32,12 +34,10 @@
                     "--configfile",
                     "pyproject.toml"
                 ],
-                "python.linting.banditEnabled": true,
-                "python.linting.flake8Enabled": true,
                 "python.linting.mypyEnabled": true,
-                "python.linting.pydocstyleEnabled": true,
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,
+                "ruff.importStrategy": "fromEnvironment",
                 "terminal.integrated.defaultProfile.linux": "zsh",
                 "terminal.integrated.profiles.linux": {
                     "zsh": {

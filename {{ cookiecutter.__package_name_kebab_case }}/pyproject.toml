@@ -52,45 +52,28 @@ uvicorn = { extras = ["standard"], version = "^0.18.2" }
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 absolufy-imports = "^0.3.1"
-{%- if cookiecutter.development_environment == "strict" %}
-bandit = { extras = ["toml"], version = "^1.7.4" }
-{%- endif %}
 black = "^22.6.0"
 {%- if cookiecutter.with_conventional_commits|int %}
 commitizen = "^2.27.1"
 {%- endif %}
 coverage = { extras = ["toml"], version = "^6.4.1" }
 darglint = "^1.8.1"
-flake8 = "^5.0.4"
-flake8-bugbear = "^22.6.22"
-flake8-comprehensions = "^3.10.0"
-flake8-mutable = "^1.2.0"
-{%- if cookiecutter.development_environment == "strict" %}
-flake8-print = "^5.0.0"
-{%- endif %}
 Flake8-pyproject = "^1.1.0"
-flake8-pytest-style = "^1.6.0"
-flake8-rst-docstrings = "^0.2.6"
-flake8-tidy-imports = "^4.8.0"
-isort = "^5.10.1"
 mypy = "^0.961"
-pep8-naming = "^0.13.0"
 {%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.16.0"
 {%- endif %}
 pre-commit = "^2.19.0"
-pydocstyle = { extras = ["toml"], version = "^6.1.1" }
 pytest = "^7.1.2"
 pytest-clarity = "^1.0.1"
 pytest-mock = "^3.8.1"
 pytest-xdist = "^2.5.0"
-pyupgrade = "^2.34.0"
+ruff = "^0.0.187"
 {%- if cookiecutter.development_environment == "strict" %}
 safety = "^2.1.1"
 shellcheck-py = "^0.8.0"
 typeguard = "^2.13.3"
 {%- endif %}
-yesqa = "^1.4.0"
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 cruft = "^2.11.0"
@@ -103,11 +86,6 @@ pdoc = "^12.0.2"
 [[tool.poetry.source]]  # https://python-poetry.org/docs/repositories/#using-a-private-repository
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
-{%- endif %}
-{%- if cookiecutter.development_environment == "strict" %}
-
-[tool.bandit]  # https://bandit.readthedocs.io/en/latest/config.html
-skips = ["B101"]
 {%- endif %}
 
 [tool.black]  # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
@@ -131,20 +109,10 @@ source = ["src"]
 [tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
 output = "reports/coverage.xml"
 
-[tool.flake8]  # https://flake8.pycqa.org/en/latest/user/options.html#options-and-their-descriptions
-color = "always"
+[tool.flake8]  # https://github.com/terrencepreilly/darglint#configuration
 docstring_style = "{{ cookiecutter.docstring_style|lower }}"
-doctests = true
-ignore = ["DAR103", "E203", "E501", "W503"]
-max_line_length = 100
-max_complexity = 10
+ignore = ["DAR103"]
 strictness = "{% if cookiecutter.development_environment == 'strict' %}short{% else %}long{% endif %}"
-
-[tool.isort]  # https://pycqa.github.io/isort/docs/configuration/options.html
-color_output = true
-line_length = 100
-profile = "black"
-src_paths = ["src", "tests"]
 
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
@@ -171,9 +139,6 @@ warn_required_dynamic_aliases = true
 warn_untyped_fields = true
 {%- endif %}
 
-[tool.pydocstyle]  # http://www.pydocstyle.org/en/latest/usage.html#configuration-files
-convention = "{{ cookiecutter.docstring_style|lower }}"
-
 [tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiecutter.development_environment == 'strict' %} --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__package_name_snake_case }}{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
 {%- if cookiecutter.development_environment == "strict" %}
@@ -181,6 +146,27 @@ filterwarnings = ["error", "ignore::DeprecationWarning"]
 {%- endif %}
 testpaths = ["src", "tests"]
 xfail_strict = true
+
+[tool.ruff]  # https://github.com/charliermarsh/ruff
+fix = true
+ignore-init-module-imports = true
+line-length = 100
+{%- if cookiecutter.development_environment == "strict" %}
+select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "I", "N", "PGH", "PLC", "PLE", "PLR", "PLW", "RET", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
+ignore = ["E203", "E501", "PGH001", "S101", "W503"]
+{%- else %}
+select = ["A", "B", "C4", "C90", "D", "DTZ", "E", "F", "I", "N", "PGH", "PLC", "PLE", "PLR", "PLW", "RET", "RUF", "SIM", "TID", "UP", "W", "YTT"]
+ignore = ["E203", "E501", "PGH001", "W503"]
+{%- endif %}
+{%- if {{ cookiecutter.docstring_style|lower }} == "numpy" %}
+extend-ignore = ["D107", "D203", "D212", "D213", "D402", "D413", "D415", "D416", "D417"]
+{%- elif {{ cookiecutter.docstring_style|lower }} == "google" %}
+extend-ignore = ["D203", "D204", "D213", "D215", "D400", "D404", "D406", "D407", "D408", "D409", "D413"]
+{%- else %}
+extend-ignore = ["D203", "D212", "D213", "D214", "D215", "D404", "D405", "D406", "D407", "D408", "D409", "D410", "D411", "D413", "D415", "D416", "D417"]
+{%- endif %}
+src = ["src", "tests"]
+target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
 
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
 {%- if cookiecutter.with_fastapi_api|int %}
