@@ -57,8 +57,6 @@ black = "^22.6.0"
 commitizen = "^2.27.1"
 {%- endif %}
 coverage = { extras = ["toml"], version = "^6.4.1" }
-darglint = "^1.8.1"
-Flake8-pyproject = "^1.1.0"
 mypy = "^0.961"
 {%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
 poethepoet = "^0.16.0"
@@ -108,11 +106,6 @@ source = ["src"]
 
 [tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
 output = "reports/coverage.xml"
-
-[tool.flake8]  # https://github.com/terrencepreilly/darglint#configuration
-docstring_style = "{{ cookiecutter.docstring_style|lower }}"
-ignore = ["DAR103"]
-strictness = "{% if cookiecutter.development_environment == 'strict' %}short{% else %}long{% endif %}"
 
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
