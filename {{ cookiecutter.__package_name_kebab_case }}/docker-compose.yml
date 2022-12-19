@@ -8,7 +8,7 @@ services:
       target: dev
       {%- if cookiecutter.private_package_repository_name %}
       secrets:
-        - poetry_auth
+        - poetry-auth
       {%- endif %}
       args:
         PYTHON_VERSION: ${PYTHON_VERSION:-{{ cookiecutter.python_version }}}
@@ -19,7 +19,7 @@ services:
       - POETRY_PYPI_TOKEN_PYPI
     {%- else %}
     secrets:
-      - poetry_auth
+      - poetry-auth
     {%- endif %}
     volumes:
       - .:/app/
@@ -58,7 +58,7 @@ services:
       target: app
       {%- if cookiecutter.private_package_repository_name %}
       secrets:
-        - poetry_auth
+        - poetry-auth
       {%- endif %}
     tty: true
     {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
@@ -71,6 +71,9 @@ services:
 {%- if cookiecutter.private_package_repository_name %}
 
 secrets:
-  poetry_auth:
+  poetry-auth:
     file: "${POETRY_AUTH_TOML_PATH:-~/Library/Application Support/pypoetry/auth.toml}"
 {%- endif %}
+
+volumes:
+  command-history:
