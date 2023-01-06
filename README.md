@@ -8,7 +8,7 @@ See [My Package](https://github.com/radix-ai/my-package) for an example of a Pyt
 
 Starting development in My Package is as easy as cloning the repository with `git clone git@github.com:radix-ai/my-package`, opening the cloned repository in [VS Code](https://code.visualstudio.com/) and running <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_ with VS Code's [Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to start a [Dev Container](https://code.visualstudio.com/docs/remote/containers).
 
-Alternatively, you can start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces) in your browser by going to [My Package](https://github.com/radix-ai/my-package), clicking on _Code_, and selecting _Create codespace_.
+Alternatively, you can start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces) in your browser by going to [My Package](https://github.com/radix-ai/my-package), clicking on _Code_, then _Codespaces_, and selecting _Create codespace_.
 
 ## 🎁 Features
 
@@ -18,8 +18,8 @@ Alternatively, you can start a Dev Container with [GitHub Codespaces](https://gi
 - 📦 Packaging and dependency management with [Poetry](https://github.com/python-poetry/poetry)
 - 🚚 Installing from and publishing to private package repositories and [PyPI](https://pypi.org/)
 - ⚡️ Task running with [Poe the Poet](https://github.com/nat-n/poethepoet)
-- ✍️ Code formatting with [absolufy-imports](https://github.com/MarcoGorelli/absolufy-imports), [black](https://github.com/psf/black), [isort](https://github.com/PyCQA/isort), [pyupgrade](https://github.com/asottile/pyupgrade), and [yesqa](https://github.com/asottile/yesqa)
-- ✅ Code linting with [pre-commit](https://pre-commit.com/): [bandit](https://github.com/PyCQA/bandit), [flake8](https://github.com/PyCQA/flake8), [mypy](https://github.com/python/mypy), [pre-commit-hooks](https://github.com/pre-commit/pre-commit-hooks), [pydocstyle](https://github.com/PyCQA/pydocstyle), [pygrep-hooks](https://github.com/pre-commit/pygrep-hooks), [safety](https://github.com/pyupio/safety), [shellcheck](https://github.com/koalaman/shellcheck), and [typeguard](https://github.com/agronholm/typeguard)
+- ✍️ Code formatting with [absolufy-imports](https://github.com/MarcoGorelli/absolufy-imports), [black](https://github.com/psf/black), and [ruff](https://github.com/charliermarsh/ruff)
+- ✅ Code linting with [pre-commit](https://pre-commit.com/), [mypy](https://github.com/python/mypy), and [ruff](https://github.com/charliermarsh/ruff)
 - 🏷 Optionally follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen)
 - 💌 Verified commits with [GPG](https://gnupg.org/)
 - ♻️ Continuous integration with [GitHub Actions](https://docs.github.com/en/actions) or [GitLab CI/CD](https://docs.gitlab.com/ee/ci/)
@@ -34,7 +34,7 @@ Alternatively, you can start a Dev Container with [GitHub Codespaces](https://gi
 To create a new Python project with this template:
 1. Install the latest [Cruft](https://github.com/cruft/cruft) and [Cookiecutter](https://github.com/cookiecutter/cookiecutter) in your [Python environment](https://github.com/pyenv/pyenv-virtualenv) with:
    ```sh
-   pip install --upgrade cruft>=2.11.1 cookiecutter>=2.1.1
+   pip install --upgrade cruft>=2.12.0 cookiecutter>=2.1.1
    ```
 2. Create a new repository and clone it locally.
 3. In the directory that contains the cloned repository, run:
