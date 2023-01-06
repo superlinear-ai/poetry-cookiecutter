@@ -45,7 +45,7 @@ RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ 
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --only main --no-interaction
 
@@ -64,7 +64,7 @@ USER app
 # Install the CI/CD Python dependencies in the virtual environment.
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --only main,test --no-interaction
 
@@ -86,7 +86,7 @@ USER app
 # Install the development Python dependencies in the virtual environment.
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry_auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --no-interaction
 
@@ -102,14 +102,15 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
     echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
     echo 'antigen apply' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
-    echo 'HISTFILE=~/.zsh_history' >> ~/.zshrc && \
+    echo 'HISTFILE=~/.history/.zsh_history' >> ~/.zshrc && \
     echo 'HISTSIZE=1000' >> ~/.zshrc && \
     echo 'SAVEHIST=1000' >> ~/.zshrc && \
+    echo 'setopt share_history' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 {%- if cookiecutter.private_package_repository_name %}
 
 # Enable Poetry to read the private package repository credentials.
-RUN ln -s /run/secrets/poetry_auth /home/app/.config/pypoetry/auth.toml
+RUN ln -s /run/secrets/poetry-auth /home/app/.config/pypoetry/auth.toml
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
