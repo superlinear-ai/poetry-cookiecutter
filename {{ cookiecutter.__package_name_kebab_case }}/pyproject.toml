@@ -27,58 +27,58 @@ version_files = ["pyproject.toml:version"]
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 {%- if cookiecutter.with_fastapi_api|int %}
 coloredlogs = "^15.0.1"
-fastapi = "^0.78.0"
+fastapi = "^0.88.0"
 gunicorn = "^20.1.0"
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-poethepoet = "^0.16.0"
+poethepoet = "^0.17.1"
 {%- endif %}
 {%- if cookiecutter.with_pydantic_typing|int %}
-pydantic = "^1.9.1"
+pydantic = "^1.10.4"
 {%- endif %}
 python = "^{{ cookiecutter.python_version }}"
 {%- if cookiecutter.with_sentry_logging|int %}
-sentry-sdk = "^1.6.0"
+sentry-sdk = "^1.12.1"
 {%- endif %}
 {%- if cookiecutter.with_streamlit_app|int %}
-streamlit = "^1.10.0"
+streamlit = "^1.16.0"
 {%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
-typer = { extras = ["all"], version = "^0.6.1" }
+typer = { extras = ["all"], version = "^0.7.0" }
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
-uvicorn = { extras = ["standard"], version = "^0.18.2" }
+uvicorn = { extras = ["standard"], version = "^0.20.0" }
 {%- endif %}
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 absolufy-imports = "^0.3.1"
-black = "^22.6.0"
+black = "^22.12.0"
 {%- if cookiecutter.with_conventional_commits|int %}
-commitizen = "^2.27.1"
+commitizen = "^2.39.1"
 {%- endif %}
-coverage = { extras = ["toml"], version = "^6.4.1" }
-mypy = "^0.961"
+coverage = { extras = ["toml"], version = "^7.0.3" }
+mypy = "^0.991"
 {%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
-poethepoet = "^0.16.0"
+poethepoet = "^0.17.1"
 {%- endif %}
-pre-commit = "^2.19.0"
-pytest = "^7.1.2"
+pre-commit = "^2.21.0"
+pytest = "^7.2.0"
 pytest-clarity = "^1.0.1"
-pytest-mock = "^3.8.1"
-pytest-xdist = "^2.5.0"
-ruff = "^0.0.209"
+pytest-mock = "^3.10.0"
+pytest-xdist = "^3.1.0"
+ruff = "^0.0.212"
 {%- if cookiecutter.development_environment == "strict" %}
-safety = "^2.1.1"
-shellcheck-py = "^0.8.0"
+safety = "^2.3.5"
+shellcheck-py = "^0.9.0"
 typeguard = "^2.13.3"
 {%- endif %}
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
-cruft = "^2.11.0"
+cruft = "^2.12.0"
 {%- if cookiecutter.with_jupyter_lab|int %}
-jupyterlab = "^3.4.3"
+jupyterlab = "^3.5.2"
 {%- endif %}
-pdoc = "^12.0.2"
+pdoc = "^12.3.0"
 {%- if cookiecutter.private_package_repository_name %}
 
 [[tool.poetry.source]]  # https://python-poetry.org/docs/repositories/#using-a-private-repository
