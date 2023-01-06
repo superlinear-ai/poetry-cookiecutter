@@ -12,6 +12,9 @@
             ],
             "settings": {
                 "editor.formatOnSave": true,
+                "[toml]": {
+                    "editor.formatOnSave": false
+                },
                 "editor.rulers": [
                     100
                 ],
