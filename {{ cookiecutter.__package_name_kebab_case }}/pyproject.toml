@@ -27,7 +27,7 @@ version_files = ["pyproject.toml:version"]
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 {%- if cookiecutter.with_fastapi_api|int %}
 coloredlogs = "^15.0.1"
-fastapi = "^0.88.0"
+fastapi = { extras = ["all"], version = "^0.88.0" }
 gunicorn = "^20.1.0"
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
@@ -52,7 +52,11 @@ uvicorn = { extras = ["standard"], version = "^0.20.0" }
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 absolufy-imports = "^0.3.1"
+{%- if cookiecutter.with_jupyter_lab|int %}
+black = { extras = ["jupyter"], version = "^22.12.0" }
+{%- else %}
 black = "^22.12.0"
+{%- endif %}
 {%- if cookiecutter.with_conventional_commits|int %}
 commitizen = "^2.39.1"
 {%- endif %}
