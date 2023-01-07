@@ -70,6 +70,9 @@ repos:
       - id: ruff
         name: ruff
         entry: ruff
+        {%- if cookiecutter.development_environment == "simple" %}
+        args: [--fix-only]
+        {%- endif %}
         require_serial: true
         language: system
         types: [python]
