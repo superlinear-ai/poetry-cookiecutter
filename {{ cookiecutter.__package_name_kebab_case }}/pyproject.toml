@@ -70,7 +70,7 @@ pytest = "^7.2.0"
 pytest-clarity = "^1.0.1"
 pytest-mock = "^3.10.0"
 pytest-xdist = "^3.1.0"
-ruff = "^0.0.212"
+ruff = "^0.0.213"
 {%- if cookiecutter.development_environment == "strict" %}
 safety = "^2.3.5"
 shellcheck-py = "^0.9.0"
@@ -153,7 +153,7 @@ select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "I", "ISC",
 ignore = ["E501", "PGH001", "S101"]
 {%- else %}
 select = ["A", "B", "C4", "C90", "D", "DTZ", "E", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "SIM", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001"]
+ignore = ["E501", "PGH001", "PGH002", "PGH003", "S101"]
 {%- endif %}
 {%- if cookiecutter.docstring_style|lower == "numpy" %}
 extend-ignore = ["D107", "D203", "D212", "D213", "D402", "D413", "D415", "D416", "D417"]

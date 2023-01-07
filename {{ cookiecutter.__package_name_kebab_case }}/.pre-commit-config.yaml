@@ -9,12 +9,7 @@ repos:
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.9.0
     hooks:
-      {%- if cookiecutter.development_environment == "strict" %}
-      - id: python-check-blanket-noqa
-      - id: python-check-blanket-type-ignore
-      {%- endif %}
       - id: python-check-mock-methods
-      - id: python-no-log-warn
       - id: python-use-type-annotations
       - id: rst-backticks
       - id: rst-directive-colons
