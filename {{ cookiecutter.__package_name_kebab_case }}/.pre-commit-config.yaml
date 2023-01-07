@@ -9,12 +9,7 @@ repos:
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.9.0
     hooks:
-      {%- if cookiecutter.development_environment == "strict" %}
-      - id: python-check-blanket-noqa
-      - id: python-check-blanket-type-ignore
-      {%- endif %}
       - id: python-check-mock-methods
-      - id: python-no-log-warn
       - id: python-use-type-annotations
       - id: rst-backticks
       - id: rst-directive-colons
@@ -61,28 +56,18 @@ repos:
         language: system
         stages: [commit-msg]
       {%- endif %}
-      - id: pyupgrade
-        name: pyupgrade
-        entry: pyupgrade
-        args: [--py{{ cookiecutter.python_version|replace(".", "") }}-plus]
-        require_serial: true
-        language: system
-        types: [python]
       - id: absolufy-imports
         name: absolufy-imports
         entry: absolufy-imports
         require_serial: true
         language: system
         types: [python]
-      - id: yesqa
-        name: yesqa
-        entry: yesqa
-        require_serial: true
-        language: system
-        types: [python]
-      - id: isort
-        name: isort
-        entry: isort
+      - id: ruff
+        name: ruff
+        entry: ruff
+        {%- if cookiecutter.development_environment == "simple" %}
+        args: [--fix-only]
+        {%- endif %}
         require_serial: true
         language: system
         types: [python]
@@ -99,23 +84,7 @@ repos:
         args: [--check-sourced]
         language: system
         types: [shell]
-      - id: bandit
-        name: bandit
-        entry: bandit
-        args: [--configfile, pyproject.toml]
-        language: system
-        types: [python]
       {%- endif %}
-      - id: pydocstyle
-        name: pydocstyle
-        entry: pydocstyle
-        language: system
-        types: [python]
-      - id: flake8
-        name: flake8
-        entry: flake8
-        language: system
-        types: [python]
       - id: poetry-check
         name: poetry check
         entry: poetry check
