@@ -65,7 +65,7 @@ repos:
       - id: ruff
         name: ruff
         entry: ruff
-        args: [--fixable F401{% if cookiecutter.development_environment == "simple" %}, --fix-only{% endif %}]
+        args: [--fixable=F401{% if cookiecutter.development_environment == "simple" %}, --fix-only{% endif %}]
         require_serial: true
         language: system
         types: [python]
