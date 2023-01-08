@@ -106,6 +106,8 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
     echo 'HISTSIZE=1000' >> ~/.zshrc && \
     echo 'SAVEHIST=1000' >> ~/.zshrc && \
     echo 'setopt share_history' >> ~/.zshrc && \
+    echo 'bindkey "^[[A" history-beginning-search-backward' >> ~/.zshrc && \
+    echo 'bindkey "^[[B" history-beginning-search-forward' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 {%- if cookiecutter.private_package_repository_name %}
 
