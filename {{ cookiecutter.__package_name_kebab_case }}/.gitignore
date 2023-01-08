@@ -54,6 +54,9 @@ dist/
 __pycache__/
 *.py[cdo]
 
+# Ruff
+.ruff_cache/
+
 # Terraform
 .terraform/
 
