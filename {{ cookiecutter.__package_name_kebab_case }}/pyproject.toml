@@ -212,6 +212,32 @@ target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
     name = "dev"
     options = ["--dev"]
 {%- endif %}
+{%- if cookiecutter.with_streamlit_app|int %}
+
+  [tool.poe.tasks.app]
+  help = "Serve a Streamlit app"
+  cmd = """
+    streamlit run
+      --browser.gatherUsageStats false
+      --server.address $host
+      --server.port $port
+      --theme.base light
+      src/{{ cookiecutter.__package_name_snake_case }}/app.py
+    """
+  use_exec = true
+
+    [[tool.poe.tasks.app.args]]
+    help = "Bind socket to this host (default: 0.0.0.0)"
+    name = "host"
+    options = ["--host"]
+    default = "0.0.0.0"
+
+    [[tool.poe.tasks.app.args]]
+    help = "Bind socket to this port (default: 8000)"
+    name = "port"
+    options = ["--port"]
+    default = "8000"
+{%- endif %}
 
   [tool.poe.tasks.docs]
   help = "Generate this package's docs"
@@ -262,32 +288,6 @@ target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
 
     [[tool.poe.tasks.lint.sequence]]
     shell = "safety check --continue-on-error --full-report"
-{%- endif %}
-{%- if cookiecutter.with_streamlit_app|int %}
-
-  [tool.poe.tasks.app]
-  help = "Serve a Streamlit app"
-  cmd = """
-    streamlit run
-      --browser.gatherUsageStats false
-      --server.address $host
-      --server.port $port
-      --theme.base light
-      src/{{ cookiecutter.__package_name_snake_case }}/app.py
-    """
-  use_exec = true
-
-    [[tool.poe.tasks.app.args]]
-    help = "Bind socket to this host (default: 0.0.0.0)"
-    name = "host"
-    options = ["--host"]
-    default = "0.0.0.0"
-
-    [[tool.poe.tasks.app.args]]
-    help = "Bind socket to this port (default: 8000)"
-    name = "port"
-    options = ["--port"]
-    default = "8000"
 {%- endif %}
 
   [tool.poe.tasks.test]
