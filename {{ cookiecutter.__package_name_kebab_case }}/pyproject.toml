@@ -150,10 +150,10 @@ ignore-init-module-imports = true
 line-length = 100
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "RET504", "S101"]
+ignore = ["E501", "F841", "PGH001", "RET504", "S101"]
 {%- else %}
 select = ["A", "B", "C4", "C90", "D", "DTZ", "E", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "SIM", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
+ignore = ["E501", "F841", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
 {%- endif %}
 {%- if cookiecutter.docstring_style|lower == "numpy" %}
 extend-ignore = ["D107", "D203", "D212", "D213", "D402", "D413", "D415", "D416", "D417"]
