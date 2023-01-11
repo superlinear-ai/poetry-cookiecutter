@@ -70,7 +70,7 @@ pytest = "^7.2.0"
 pytest-clarity = "^1.0.1"
 pytest-mock = "^3.10.0"
 pytest-xdist = "^3.1.0"
-ruff = "^0.0.215"
+ruff = "^0.0.218"
 {%- if cookiecutter.development_environment == "strict" %}
 safety = "^2.3.5"
 shellcheck-py = "^0.9.0"
@@ -151,9 +151,11 @@ line-length = 100
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
 ignore = ["E501", "PGH001", "RET504", "S101"]
+unfixable = ["ERA001", "F401", "F841"]
 {%- else %}
 select = ["A", "B", "C4", "C90", "D", "DTZ", "E", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "SIM", "TID", "UP", "W", "YTT"]
 ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
+unfixable = ["F401", "F841"]
 {%- endif %}
 {%- if cookiecutter.docstring_style|lower == "numpy" %}
 extend-ignore = ["D107", "D203", "D212", "D213", "D402", "D413", "D415", "D416", "D417"]
@@ -162,7 +164,6 @@ extend-ignore = ["D203", "D204", "D213", "D215", "D400", "D404", "D406", "D407",
 {%- else %}
 extend-ignore = ["D203", "D212", "D213", "D214", "D215", "D404", "D405", "D406", "D407", "D408", "D409", "D410", "D411", "D413", "D415", "D416", "D417"]
 {%- endif %}
-unfixable = ["F401", "F841"]
 src = ["src", "tests"]
 target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
 
