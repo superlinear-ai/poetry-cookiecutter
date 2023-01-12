@@ -23,6 +23,7 @@ services:
     {%- endif %}
     volumes:
       - .:/app/
+      - command-history:/home/app/.history/
 
   dev:
     extends: devcontainer
