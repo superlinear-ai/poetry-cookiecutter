@@ -65,7 +65,7 @@ repos:
       - id: ruff
         name: ruff
         entry: ruff
-        args: ["--fixable={% if cookiecutter.development_environment == "strict" %}ERA001,{% endif %}F401,F841"{% if cookiecutter.development_environment == "simple" %}, "--fix-only"{% endif %}]
+        args: ["--fixable={% if cookiecutter.development_environment == "strict" %}ERA001,F401,F841,T201,T203{% else %}F401,F841{% endif %}"{% if cookiecutter.development_environment == "simple" %}, "--fix-only"{% endif %}]
         require_serial: true
         language: system
         types: [python]
