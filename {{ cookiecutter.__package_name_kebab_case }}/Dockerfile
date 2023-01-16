@@ -99,15 +99,15 @@ RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
 # Configure the non-root user's shell.
 RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
     echo 'antigen bundle zsh-users/zsh-syntax-highlighting' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
+    echo 'antigen bundle zsh-users/zsh-history-substring-search' >> ~/.zshrc && \
     echo 'antigen apply' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     echo 'HISTFILE=~/.history/.zsh_history' >> ~/.zshrc && \
     echo 'HISTSIZE=1000' >> ~/.zshrc && \
     echo 'SAVEHIST=1000' >> ~/.zshrc && \
     echo 'setopt share_history' >> ~/.zshrc && \
-    echo 'bindkey "^[[A" history-beginning-search-backward' >> ~/.zshrc && \
-    echo 'bindkey "^[[B" history-beginning-search-forward' >> ~/.zshrc && \
+    echo 'bindkey "^[[A" history-substring-search-up' >> ~/.zshrc && \
+    echo 'bindkey "^[[B" history-substring-search-down' >> ~/.zshrc && \
     mkdir ~/.history/ && \
     zsh -c 'source ~/.zshrc'
 {%- if cookiecutter.private_package_repository_name %}
