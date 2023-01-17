@@ -180,17 +180,17 @@ target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
         --reload \
         {{ cookiecutter.__package_name_snake_case }}.api:app
     } else {
-    gunicorn \
-      --access-logfile - \
-      --bind $host:$port \
-      --graceful-timeout 10 \
-      --keep-alive 10 \
-      --log-file - \
-      --timeout 30 \
-      --worker-class uvicorn.workers.UvicornWorker \
-      --worker-tmp-dir /dev/shm \
-      --workers 2 \
-      {{ cookiecutter.__package_name_snake_case }}.api:app
+      gunicorn \
+        --access-logfile - \
+        --bind $host:$port \
+        --graceful-timeout 10 \
+        --keep-alive 10 \
+        --log-file - \
+        --timeout 30 \
+        --worker-class uvicorn.workers.UvicornWorker \
+        --worker-tmp-dir /dev/shm \
+        --workers 2 \
+        {{ cookiecutter.__package_name_snake_case }}.api:app
     } fi
     """
 
