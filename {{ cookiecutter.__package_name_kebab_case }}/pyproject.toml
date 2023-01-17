@@ -207,7 +207,7 @@ target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
     default = "8000"
 
     [[tool.poe.tasks.api.args]]
-    help = "Run in development mode"
+    help = "Enable development mode"
     type = "boolean"
     name = "dev"
     options = ["--dev"]
