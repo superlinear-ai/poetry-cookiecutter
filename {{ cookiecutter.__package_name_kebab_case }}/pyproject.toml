@@ -170,7 +170,7 @@ target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
 {%- if cookiecutter.with_fastapi_api|int %}
 
   [tool.poe.tasks.api]
-  help = "Run a REST API"
+  help = "Serve a REST API"
   shell = """
     if [ $dev ]
     then {
