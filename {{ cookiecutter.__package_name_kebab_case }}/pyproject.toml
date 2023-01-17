@@ -178,7 +178,7 @@ target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
         --host $host \
         --port $port \
         --reload \
-        minifigures_api.api:app
+        {{ cookiecutter.__package_name_snake_case }}.api:app
     } else {
     gunicorn \
       --access-logfile - \
