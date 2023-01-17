@@ -190,7 +190,7 @@ target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
       --worker-class uvicorn.workers.UvicornWorker \
       --worker-tmp-dir /dev/shm \
       --workers 2 \
-      minifigures_api.api:app
+      {{ cookiecutter.__package_name_snake_case }}.api:app
     } fi
     """
 
