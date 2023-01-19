@@ -166,17 +166,70 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
 {%- if cookiecutter.with_fastapi_api|int %}
 
-  [tool.poe.tasks.dev]
-  help = "Serve a REST API in development"
-  cmd = """
-    uvicorn
-      --host 0.0.0.0
-      --port $port
-      --reload
-      {{ cookiecutter.__package_name_snake_case }}.api:app
+  [tool.poe.tasks.api]
+  help = "Serve a REST API"
+  shell = """
+    if [ $dev ]
+    then {
+      uvicorn \
+        --host $host \
+        --port $port \
+        --reload \
+        {{ cookiecutter.__package_name_snake_case }}.api:app
+    } else {
+      gunicorn \
+        --access-logfile - \
+        --bind $host:$port \
+        --graceful-timeout 10 \
+        --keep-alive 10 \
+        --log-file - \
+        --timeout 30 \
+        --worker-class uvicorn.workers.UvicornWorker \
+        --worker-tmp-dir /dev/shm \
+        --workers 2 \
+        {{ cookiecutter.__package_name_snake_case }}.api:app
+    } fi
     """
 
-    [[tool.poe.tasks.dev.args]]
+    [[tool.poe.tasks.api.args]]
+    help = "Bind socket to this host (default: 0.0.0.0)"
+    name = "host"
+    options = ["--host"]
+    default = "0.0.0.0"
+
+    [[tool.poe.tasks.api.args]]
+    help = "Bind socket to this port (default: 8000)"
+    name = "port"
+    options = ["--port"]
+    default = "8000"
+
+    [[tool.poe.tasks.api.args]]
+    help = "Enable development mode"
+    type = "boolean"
+    name = "dev"
+    options = ["--dev"]
+{%- endif %}
+{%- if cookiecutter.with_streamlit_app|int %}
+
+  [tool.poe.tasks.app]
+  help = "Serve a Streamlit app"
+  cmd = """
+    streamlit run
+      --browser.gatherUsageStats false
+      --server.address $host
+      --server.port $port
+      --theme.base light
+      src/{{ cookiecutter.__package_name_snake_case }}/app.py
+    """
+  use_exec = true
+
+    [[tool.poe.tasks.app.args]]
+    help = "Bind socket to this host (default: 0.0.0.0)"
+    name = "host"
+    options = ["--host"]
+    default = "0.0.0.0"
+
+    [[tool.poe.tasks.app.args]]
     help = "Bind socket to this port (default: 8000)"
     name = "port"
     options = ["--port"]
@@ -232,51 +285,6 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 
     [[tool.poe.tasks.lint.sequence]]
     shell = "safety check --continue-on-error --full-report"
-{%- endif %}
-{%- if cookiecutter.with_fastapi_api|int %}
-
-  [tool.poe.tasks.serve]
-  help = "Serve a REST API in production"
-  cmd = """
-    gunicorn
-      --access-logfile -
-      --bind 0.0.0.0:$port
-      --graceful-timeout 10
-      --keep-alive 10
-      --log-file -
-      --timeout 30
-      --worker-class uvicorn.workers.UvicornWorker
-      --worker-tmp-dir /dev/shm
-      --workers 2
-      {{ cookiecutter.__package_name_snake_case }}.api:app
-    """
-  use_exec = true
-
-    [[tool.poe.tasks.serve.args]]
-    help = "Bind socket to this port (default: 8000)"
-    name = "port"
-    options = ["--port"]
-    default = "8000"
-{%- endif %}
-{%- if cookiecutter.with_streamlit_app|int %}
-
-  [tool.poe.tasks.streamlit]
-  help = "Serve a Streamlit app"
-  cmd = """
-    streamlit run
-      --browser.gatherUsageStats false
-      --server.address 0.0.0.0
-      --server.port $port
-      --theme.base light
-      src/{{ cookiecutter.__package_name_snake_case }}/app.py
-    """
-  use_exec = true
-
-    [[tool.poe.tasks.streamlit.args]]
-    help = "Bind socket to this port (default: 8000)"
-    name = "port"
-    options = ["--port"]
-    default = "8000"
 {%- endif %}
 
   [tool.poe.tasks.test]
