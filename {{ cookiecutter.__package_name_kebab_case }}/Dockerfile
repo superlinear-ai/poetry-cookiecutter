@@ -119,7 +119,7 @@ RUN ln -s /run/secrets/poetry-auth /home/app/.config/pypoetry/auth.toml
 FROM base AS app
 
 # Copy the package source code to the working directory.
-COPY . .
+COPY --chown=app:app . .
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
