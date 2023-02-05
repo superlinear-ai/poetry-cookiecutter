@@ -40,7 +40,7 @@ ENV VIRTUAL_ENV /opt/app-env
 WORKDIR /app/
 
 # Install the run time Python dependencies in the virtual environment.
-COPY poetry.lock* pyproject.toml /app/
+COPY --chown=app:app poetry.lock* pyproject.toml /app/
 RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ && \
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
@@ -91,7 +91,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
-COPY .pre-commit-config.yaml /app/
+COPY --chown=app:app .pre-commit-config.yaml /app/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
