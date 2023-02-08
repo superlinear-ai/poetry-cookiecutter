@@ -53,13 +53,14 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
 
 FROM base as ci
 
-# Install git so we can run pre-commit.
+# Allow CI to run as root.
 USER root
+
+# Install git so we can run pre-commit.
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes git
-USER app
 
 # Install the CI/CD Python dependencies in the virtual environment.
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
