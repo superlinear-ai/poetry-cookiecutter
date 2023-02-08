@@ -22,7 +22,7 @@ services:
       - poetry-auth
     {%- endif %}
     volumes:
-      - .:/app/
+      - command-history:/home/app/.history/
 
   dev:
     extends: devcontainer
@@ -45,6 +45,7 @@ services:
       - "8000"
     {%- endif %}
     volumes:
+      - .:/app/
       - ~/.gitconfig:/etc/gitconfig
       - ~/.ssh/known_hosts:/home/app/.ssh/known_hosts
       - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
