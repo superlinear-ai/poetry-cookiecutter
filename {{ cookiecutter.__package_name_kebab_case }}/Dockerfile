@@ -63,9 +63,9 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
     apt-get install --no-install-recommends --yes git
 
 # Install the CI/CD Python dependencies in the virtual environment.
-RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+RUN --mount=type=cache,target=/home/app/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry-auth,target=/home/app/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --only main,test --no-interaction
 
