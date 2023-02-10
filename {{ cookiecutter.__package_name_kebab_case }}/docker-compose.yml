@@ -72,7 +72,7 @@ services:
 
 secrets:
   poetry-auth:
-    file: "${POETRY_AUTH_TOML_PATH:-~/Library/Application Support/pypoetry/auth.toml}"
+    file: "${POETRY_AUTH_TOML_PATH:-~/Library/Preferences/pypoetry/auth.toml}"
 {%- endif %}
 
 volumes:

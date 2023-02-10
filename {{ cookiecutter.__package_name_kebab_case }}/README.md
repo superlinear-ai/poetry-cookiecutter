@@ -38,7 +38,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
     # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
+    # macOS:   ~/Library/Preferences/pypoetry/auth.toml
     # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
     [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
     username = "{personal access token name}"
@@ -60,7 +60,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 1. [Add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
     # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
+    # macOS:   ~/Library/Preferences/pypoetry/auth.toml
     # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
     [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
     username = "{username}"
