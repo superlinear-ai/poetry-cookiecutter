@@ -92,7 +92,8 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
 
 # Persist output generated during docker build so that we can restore it in the dev container.
 COPY --chown=app:app .pre-commit-config.yaml /app/
-RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
+RUN chown app:app opt/ && \
+    mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
 
