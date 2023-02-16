@@ -62,7 +62,9 @@ Compute CI image hash:
         done
       fi
   rules:
-    - changes:
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
         - Dockerfile
         - poetry.lock
         - pyproject.toml
@@ -137,9 +139,5 @@ Deploy ({{ environment }}):
   extends:
     - .deploy
   environment: {{ environment }}
-  {%- if environment in ["acceptance", "production"] %}
-  only:
-    - tags
-  {%- endif %}
 {% endfor %}
 {%- endif %}
