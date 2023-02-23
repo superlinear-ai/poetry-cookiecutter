@@ -22,7 +22,7 @@ services:
       - poetry-auth
     {%- endif %}
     volumes:
-      - .:/app/
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/app/
 
   dev:
     extends: devcontainer
