@@ -22,7 +22,8 @@ services:
       - poetry-auth
     {%- endif %}
     volumes:
-      - ${LOCAL_WORKSPACE_FOLDER:-.}:/app/
+      - ${WORKSPACE_SOURCE:-.}:${WORKSPACE_TARGET:-/app/{{ cookiecutter.__package_name_kebab_case }}/}
+      - command-history-volume:/home/app/.history/
 
   dev:
     extends: devcontainer
@@ -33,7 +34,7 @@ services:
       [
         "sh",
         "-c",
-        "sudo chown app $$SSH_AUTH_SOCK && cp --update /opt/build/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /opt/build/git/* /app/.git/hooks/ && zsh"
+        "sudo chown app $$SSH_AUTH_SOCK && cp --update /opt/build/poetry/poetry.lock /app/{{ cookiecutter.__package_name_kebab_case }}/ && mkdir -p /app/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/ && cp --update /opt/build/git/* /app/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/ && zsh"
       ]
     environment:
       {%- if not cookiecutter.private_package_repository_name %}
@@ -76,4 +77,7 @@ secrets:
 {%- endif %}
 
 volumes:
-  command-history:
+  command-history-volume:
+  devcontainer-volume:
+    name: ${WORKSPACE_CONTAINER_VOLUME_SOURCE:-not-used-in-bind-mount-workspace}
+    external: ${WORKSPACE_IS_CONTAINER_VOLUME:-false}

@@ -32,15 +32,15 @@ RUN groupadd --gid $GID app && \
 USER app
 
 # Create and activate a virtual environment.
-RUN python -m venv /opt/app-env
-ENV PATH /opt/app-env/bin:$PATH
-ENV VIRTUAL_ENV /opt/app-env
+RUN python -m venv /opt/{{ cookiecutter.__package_name_kebab_case }}-env
+ENV PATH /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin:$PATH
+ENV VIRTUAL_ENV /opt/{{ cookiecutter.__package_name_kebab_case }}-env
 
 # Set the working directory.
-WORKDIR /app/
+WORKDIR /app/{{ cookiecutter.__package_name_kebab_case }}/
 
 # Install the run time Python dependencies in the virtual environment.
-COPY --chown=app:app poetry.lock* pyproject.toml /app/
+COPY --chown=app:app poetry.lock* pyproject.toml /app/{{ cookiecutter.__package_name_kebab_case }}/
 RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ && \
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
@@ -92,7 +92,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
-COPY --chown=app:app .pre-commit-config.yaml /app/
+COPY --chown=app:app .pre-commit-config.yaml /app/{{ cookiecutter.__package_name_kebab_case }}/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
@@ -124,10 +124,10 @@ COPY --chown=app:app . .
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-ENTRYPOINT ["/opt/app-env/bin/poe"]
+ENTRYPOINT ["/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/poe"]
 CMD [{% if cookiecutter.with_fastapi_api|int %}"serve"{% else %}"streamlit"{% endif %}]
 {%- else %}
-ENTRYPOINT ["/opt/app-env/bin/{{ cookiecutter.__package_name_kebab_case }}"]
+ENTRYPOINT ["/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/{{ cookiecutter.__package_name_kebab_case }}"]
 CMD []
 {%- endif %}
 {%- endif %}
