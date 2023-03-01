@@ -26,10 +26,10 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 ARG UID=1000
 ARG GID=$UID
-RUN groupadd --gid $GID app && \
-    useradd --create-home --gid $GID --uid $UID app && \
-    chown app /opt/
-USER app
+RUN groupadd --gid $GID user && \
+    useradd --create-home --gid $GID --uid $UID user && \
+    chown user /opt/
+USER user
 
 # Create and activate a virtual environment.
 RUN python -m venv /opt/{{ cookiecutter.__package_name_kebab_case }}-env
@@ -40,12 +40,12 @@ ENV VIRTUAL_ENV /opt/{{ cookiecutter.__package_name_kebab_case }}-env
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 # Install the run time Python dependencies in the virtual environment.
-COPY --chown=app:app poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ && \
+COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+RUN mkdir -p /home/user/.cache/pypoetry/ && mkdir -p /home/user/.config/pypoetry/ && \
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
-RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --only main --no-interaction
 
@@ -80,19 +80,19 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    usermod --shell /usr/bin/zsh app && \
-    echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && chmod 0440 /etc/sudoers.d/app
-USER app
+    usermod --shell /usr/bin/zsh user && \
+    echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
+USER user
 
 # Install the development Python dependencies in the virtual environment.
-RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/app/.config/pypoetry/auth.toml \
+    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
     {%- endif %}
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
-COPY --chown=app:app .pre-commit-config.yaml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+COPY --chown=user:user .pre-commit-config.yaml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
@@ -111,7 +111,7 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
 {%- if cookiecutter.private_package_repository_name %}
 
 # Enable Poetry to read the private package repository credentials.
-RUN ln -s /run/secrets/poetry-auth /home/app/.config/pypoetry/auth.toml
+RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
@@ -120,7 +120,7 @@ RUN ln -s /run/secrets/poetry-auth /home/app/.config/pypoetry/auth.toml
 FROM base AS app
 
 # Copy the package source code to the working directory.
-COPY --chown=app:app . .
+COPY --chown=user:user . .
 
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
