@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # This script runs on the host before the Dev Container is created to support both bind mount and
-# volume mount workspaces [2]. If a volume mount workspace is detected, a .env file is generated
+# volume mount workspaces [1]. If a volume mount workspace is detected, a .env file is generated
 # that tells docker-compose.yml to use the container volume as the workspace source.
 #
 # [1] https://github.com/microsoft/vscode-remote-release/issues/6561
