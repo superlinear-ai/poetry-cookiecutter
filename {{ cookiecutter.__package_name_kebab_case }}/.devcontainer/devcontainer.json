@@ -2,11 +2,11 @@
     "name": "{{ cookiecutter.__package_name_kebab_case }}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "devcontainer",
-    "workspaceFolder": "/app/{{ cookiecutter.__package_name_kebab_case }}/",
+    "workspaceFolder": "/workspaces/{{ cookiecutter.__package_name_kebab_case }}/",
     "remoteUser": "app",
     "overrideCommand": true,
     "initializeCommand": ".devcontainer/init",
-    "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /app/{{ cookiecutter.__package_name_kebab_case }}/ && mkdir -p /app/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/ && cp --update /opt/build/git/* /app/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/",
+    "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/{{ cookiecutter.__package_name_kebab_case }}/ && mkdir -p /workspaces/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/",
     "customizations": {
         "vscode": {
             "extensions": [
