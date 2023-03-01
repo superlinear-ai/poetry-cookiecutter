@@ -16,10 +16,10 @@ if "%WORKSPACE_CONTAINER_VOLUME_SOURCE%"=="" exit /b
 
 (
 echo WORKSPACE_SOURCE=devcontainer-volume
-echo WORKSPACE_TARGET=/app/
+echo WORKSPACE_TARGET=/workspaces/
 echo WORKSPACE_CONTAINER_VOLUME_SOURCE=%WORKSPACE_CONTAINER_VOLUME_SOURCE%
 echo WORKSPACE_IS_CONTAINER_VOLUME=true
-) > .devcontainer\.env
-type .devcontainer\.env
+) > .env
+type .env
 
 endlocal

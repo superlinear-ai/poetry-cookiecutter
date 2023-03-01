@@ -15,10 +15,10 @@ if [ -z "$WORKSPACE_CONTAINER_VOLUME_SOURCE" ]; then
   exit
 fi
 
-cat << EOF > .devcontainer/.env
+cat << EOF > .env
 WORKSPACE_SOURCE=devcontainer-volume
-WORKSPACE_TARGET=/app/
+WORKSPACE_TARGET=/workspaces/
 WORKSPACE_CONTAINER_VOLUME_SOURCE=$WORKSPACE_CONTAINER_VOLUME_SOURCE
 WORKSPACE_IS_CONTAINER_VOLUME=true
 EOF
-cat .devcontainer/.env
+cat .env
