@@ -15,6 +15,7 @@ set WORKSPACE_CONTAINER_VOLUME_SOURCE=`docker container inspect "%CONTAINER_ID%"
 if "%WORKSPACE_CONTAINER_VOLUME_SOURCE%"=="" exit /b
 
 (
+echo # The following variables are used by docker-compose.yml to mount the workspace from a Docker volume.
 echo WORKSPACE_SOURCE=devcontainer-volume
 echo WORKSPACE_TARGET=/workspaces/
 echo WORKSPACE_CONTAINER_VOLUME_SOURCE=%WORKSPACE_CONTAINER_VOLUME_SOURCE%

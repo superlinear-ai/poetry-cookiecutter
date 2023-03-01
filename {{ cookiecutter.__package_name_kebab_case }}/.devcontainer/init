@@ -16,6 +16,7 @@ if [ -z "$WORKSPACE_CONTAINER_VOLUME_SOURCE" ]; then
 fi
 
 cat << EOF > .env
+# The following variables are used by docker-compose.yml to mount the workspace from a Docker volume.
 WORKSPACE_SOURCE=devcontainer-volume
 WORKSPACE_TARGET=/workspaces/
 WORKSPACE_CONTAINER_VOLUME_SOURCE=$WORKSPACE_CONTAINER_VOLUME_SOURCE
