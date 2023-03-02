@@ -130,7 +130,7 @@ COPY --chown=user:user . .
 # Expose the application.
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
 ENTRYPOINT ["/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/poe"]
-CMD [{% if cookiecutter.with_fastapi_api|int %}"serve"{% else %}"streamlit"{% endif %}]
+CMD [{% if cookiecutter.with_fastapi_api|int %}"api"{% else %}"app"{% endif %}]
 {%- else %}
 ENTRYPOINT ["/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/{{ cookiecutter.__package_name_kebab_case }}"]
 CMD []
