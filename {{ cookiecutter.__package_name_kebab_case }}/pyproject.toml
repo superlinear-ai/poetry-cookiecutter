@@ -92,7 +92,7 @@ url = "{{ cookiecutter.private_package_repository_url }}"
 
 [tool.black]  # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 line-length = 100
-target-version = ["py{{ cookiecutter.python_version|replace('.', '') }}"]
+target-version = ["py{{ cookiecutter.python_version.split('.')[:2]|join }}"]
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
 {%- if cookiecutter.development_environment == "strict" %}
@@ -158,7 +158,7 @@ ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
 unfixable = ["F401", "F841"]
 {%- endif %}
 src = ["src", "tests"]
-target-version = "py{{ cookiecutter.python_version|replace('.', '') }}"
+target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
 
 [tool.ruff.pydocstyle]
 convention = "{{ cookiecutter.docstring_style|lower }}"
