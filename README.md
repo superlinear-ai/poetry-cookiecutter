@@ -8,13 +8,13 @@ A modern [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template f
 
 See [My Package](https://github.com/radix-ai/my-package) for an example of a Python package and app that is scaffolded with this template.
 
-Starting development in My Package is as easy as cloning the repository with `git clone git@github.com:radix-ai/my-package`, opening the cloned repository in [VS Code](https://code.visualstudio.com/) and running <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_ with VS Code's [Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to start a [Dev Container](https://code.visualstudio.com/docs/remote/containers).
+Starting development in My Package is as easy as cloning the repository with `git clone git@github.com:radix-ai/my-package`, opening the cloned repository in [VS Code](https://code.visualstudio.com/) and running <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_ with VS Code's [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to start a [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers).
 
 Alternatively, you can start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces) in your browser by going to [My Package](https://github.com/radix-ai/my-package), clicking on _Code_, then _Codespaces_, and selecting _Create codespace_.
 
 ## 🎁 Features
 
-- 🧑‍💻 Quick and reproducible development environments with VS Code's [Dev Containers](https://code.visualstudio.com/docs/remote/containers), PyCharm's [Docker Compose interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote), and [GitHub Codespaces](https://github.com/features/codespaces)
+- 🧑‍💻 Quick and reproducible development environments with VS Code's [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), PyCharm's [Docker Compose interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote), and [GitHub Codespaces](https://github.com/features/codespaces)
 - 🌈 Cross-platform support for Linux, macOS (Apple silicon and Intel), and Windows
 - 🐚 Modern shell prompt with [Starship](https://github.com/starship/starship)
 - 📦 Packaging and dependency management with [Poetry](https://github.com/python-poetry/poetry)
