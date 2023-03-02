@@ -2,13 +2,11 @@
     "name": "{{ cookiecutter.__package_name_kebab_case }}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "devcontainer",
-    "workspaceFolder": "/app/",
-    "remoteEnv": {
-        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
-    },
-    "remoteUser": "app",
+    "workspaceFolder": "/workspaces/{{ cookiecutter.__package_name_kebab_case }}/",
+    "remoteUser": "user",
     "overrideCommand": true,
-    "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /opt/build/git/* /app/.git/hooks/",
+    "initializeCommand": ".devcontainer/init",
+    "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/{{ cookiecutter.__package_name_kebab_case }}/ && mkdir -p /workspaces/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -34,12 +32,8 @@
                     100
                 ],
                 "files.autoSave": "onFocusChange",
-                "python.defaultInterpreterPath": "/opt/app-env/bin/python",
+                "python.defaultInterpreterPath": "/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/python",
                 "python.formatting.provider": "black",
-                "python.linting.banditArgs": [
-                    "--configfile",
-                    "pyproject.toml"
-                ],
                 "python.linting.mypyEnabled": true,
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,

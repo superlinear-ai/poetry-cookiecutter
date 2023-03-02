@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# This script runs on the host before the Dev Container is created to support both bind mount and
+# volume mount workspaces [1]. If a volume mount workspace is detected, a .env file is generated
+# that tells docker-compose.yml to use the container volume as the workspace source.
+#
+# [1] https://github.com/microsoft/vscode-remote-release/issues/6561
+
+CONTAINER_ID="$(hostname)"
+# shellcheck disable=SC2016
+WORKSPACE_MOUNT_SOURCE_FMT={% raw %}'{{- $source := "" }}{{- range .HostConfig.Mounts }}{{- if (and (eq .Type "volume") (eq .Target "/workspaces")) }}{{- $source = .Source }}{{- end }}{{- end }}{{- $source }}'{% endraw %}
+WORKSPACE_CONTAINER_VOLUME_SOURCE=$(docker container inspect "$CONTAINER_ID" --format="$WORKSPACE_MOUNT_SOURCE_FMT" 2>/dev/null)
+
+if [ -z "$WORKSPACE_CONTAINER_VOLUME_SOURCE" ]; then
+  exit
+fi
+
+cat << EOF > .env
+# The following variables are used by docker-compose.yml to mount the workspace from a Docker volume.
+WORKSPACE_SOURCE=devcontainer-volume
+WORKSPACE_TARGET=/workspaces/
+WORKSPACE_CONTAINER_VOLUME_SOURCE=$WORKSPACE_CONTAINER_VOLUME_SOURCE
+WORKSPACE_IS_CONTAINER_VOLUME=true
+EOF
+cat .env
