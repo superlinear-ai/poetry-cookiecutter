@@ -78,7 +78,7 @@ USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
+    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     usermod --shell /usr/bin/zsh user && \
     echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
@@ -98,15 +98,20 @@ RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
 
 # Configure the non-root user's shell.
-RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-syntax-highlighting' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
-    echo 'antigen apply' >> ~/.zshrc && \
+ENV ANTIDOTE_VERSION 1.8.1
+RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \
+    echo 'zsh-users/zsh-syntax-highlighting' >> ~/.zsh_plugins.txt && \
+    echo 'zsh-users/zsh-autosuggestions' >> ~/.zsh_plugins.txt && \
+    echo 'source ~/.antidote/antidote.zsh' >> ~/.zshrc && \
+    echo 'antidote load' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     echo 'HISTFILE=~/.history/.zsh_history' >> ~/.zshrc && \
     echo 'HISTSIZE=1000' >> ~/.zshrc && \
     echo 'SAVEHIST=1000' >> ~/.zshrc && \
     echo 'setopt share_history' >> ~/.zshrc && \
+    echo 'bindkey "^[[A" history-beginning-search-backward' >> ~/.zshrc && \
+    echo 'bindkey "^[[B" history-beginning-search-forward' >> ~/.zshrc && \
+    mkdir ~/.history/ && \
     zsh -c 'source ~/.zshrc'
 {%- if cookiecutter.private_package_repository_name %}
 
