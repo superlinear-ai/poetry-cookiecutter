@@ -8,9 +8,7 @@ A modern [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template f
 
 See [My Package](https://github.com/radix-ai/my-package) for an example of a Python package and app that is scaffolded with this template.
 
-Starting development in My Package is as easy as cloning the repository with `git clone git@github.com:radix-ai/my-package`, opening the cloned repository in [VS Code](https://code.visualstudio.com/) and running <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_ with VS Code's [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to start a [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers).
-
-Alternatively, you can start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces) in your browser by going to [My Package](https://github.com/radix-ai/my-package), clicking on _Code_, then _Codespaces_, and selecting _Create codespace_.
+Starting development in My Package can be done with a single click by [opening My Package in GitHub Codespaces](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=450509735), or [opening My Package in a Dev Container](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/radix-ai/my-package).
 
 ## 🎁 Features
 
