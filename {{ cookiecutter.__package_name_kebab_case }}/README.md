@@ -18,8 +18,6 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 
 ## Contributing
 
-### Setting up your development environment
-
 <details>
 <summary>Prerequisites</summary>
 
@@ -123,7 +121,8 @@ The following development environments are supported:
 
 </details>
 
-### Developing
+<details>
+<summary>Developing</summary>
 {% if cookiecutter.with_conventional_commits|int %}
 - This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
 {%- endif %}
