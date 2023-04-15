@@ -27,7 +27,7 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 ARG UID=1000
 ARG GID=$UID
 RUN groupadd --gid $GID user && \
-    useradd --create-home --gid $GID --uid $UID user && \
+    useradd --create-home --gid $GID --uid $UID user --no-log-init && \
     chown user /opt/
 USER user
 
