@@ -22,7 +22,7 @@ services:
       - poetry-auth
     {%- endif %}
     volumes:
-      - ${WORKSPACE_SOURCE:-.}:${WORKSPACE_TARGET:-/workspaces/{{ cookiecutter.__package_name_kebab_case }}/}
+      - ..:/workspaces
       - command-history-volume:/home/user/.history/
 
   dev:
@@ -78,6 +78,3 @@ secrets:
 
 volumes:
   command-history-volume:
-  devcontainer-volume:
-    name: ${WORKSPACE_CONTAINER_VOLUME_SOURCE:-not-used-in-bind-mount-workspace}
-    external: ${WORKSPACE_IS_CONTAINER_VOLUME:-false}

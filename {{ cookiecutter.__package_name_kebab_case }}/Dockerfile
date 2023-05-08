@@ -73,12 +73,12 @@ RUN --mount=type=cache,target=/root/.cache/pypoetry/ \
 
 FROM base as dev
 
-# Install development tools: compilers, curl, git, gpg, ssh, starship, sudo, vim, and zsh.
+# Install development tools: curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh && \
+    apt-get install --no-install-recommends --yes curl git gnupg ssh sudo vim zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     usermod --shell /usr/bin/zsh user && \
     echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
