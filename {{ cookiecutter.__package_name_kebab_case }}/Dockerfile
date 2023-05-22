@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 {%- endif %}
 
 # Install Poetry.
-ENV POETRY_VERSION 1.3.1
+ENV POETRY_VERSION 1.4.2
 RUN --mount=type=cache,target=/root/.cache/pip/ \
     pip install poetry~=$POETRY_VERSION
 
@@ -98,7 +98,7 @@ RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
 
 # Configure the non-root user's shell.
-ENV ANTIDOTE_VERSION 1.8.1
+ENV ANTIDOTE_VERSION 1.8.6
 RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \
     echo 'zsh-users/zsh-syntax-highlighting' >> ~/.zsh_plugins.txt && \
     echo 'zsh-users/zsh-autosuggestions' >> ~/.zsh_plugins.txt && \
