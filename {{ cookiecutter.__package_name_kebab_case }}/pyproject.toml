@@ -36,7 +36,7 @@ poethepoet = ">=0.20.0"
 {%- if cookiecutter.with_pydantic_typing|int %}
 pydantic = ">=1.10.7"
 {%- endif %}
-python = ">={{ cookiecutter.python_version }}"
+python = ">={{ cookiecutter.python_version }},<4.0"
 {%- if cookiecutter.with_sentry_logging|int %}
 sentry-sdk = ">=1.16.0"
 {%- endif %}
@@ -72,7 +72,7 @@ pytest-mock = ">=3.10.0"
 pytest-xdist = ">=3.2.1"
 ruff = ">=0.0.265"
 {%- if cookiecutter.development_environment == "strict" %}
-safety = ">=2.3.5"
+safety = ">=2.3.4,!=2.3.5"
 shellcheck-py = ">=0.9.0"
 typeguard = ">=3.0.2"
 {%- endif %}
