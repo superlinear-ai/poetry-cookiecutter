@@ -18,7 +18,7 @@ Starting development in My Package can be done with a single click by [opening M
 - 📦 Packaging and dependency management with [Poetry](https://github.com/python-poetry/poetry)
 - 🚚 Installing from and publishing to private package repositories and [PyPI](https://pypi.org/)
 - ⚡️ Task running with [Poe the Poet](https://github.com/nat-n/poethepoet)
-- ✍️ Code formatting with [Absolufy-imports](https://github.com/MarcoGorelli/absolufy-imports), [Black](https://github.com/psf/black), and [Ruff](https://github.com/charliermarsh/ruff)
+- ✍️ Code formatting with [Black](https://github.com/psf/black) and [Ruff](https://github.com/charliermarsh/ruff)
 - ✅ Code linting with [Pre-commit](https://pre-commit.com/), [Mypy](https://github.com/python/mypy), and [Ruff](https://github.com/charliermarsh/ruff)
 - 🏷 Optionally follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen)
 - 💌 Verified commits with [GPG](https://gnupg.org/)
