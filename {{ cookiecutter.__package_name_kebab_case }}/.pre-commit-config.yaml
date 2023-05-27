@@ -56,16 +56,10 @@ repos:
         language: system
         stages: [commit-msg]
       {%- endif %}
-      - id: absolufy-imports
-        name: absolufy-imports
-        entry: absolufy-imports
-        require_serial: true
-        language: system
-        types: [python]
       - id: ruff
         name: ruff
         entry: ruff
-        args: ["--fixable=ALL,{% if cookiecutter.development_environment == "strict" %}ERA001,F401,F841,T201,T203{% else %}F401,F841{% endif %}"{% if cookiecutter.development_environment == "simple" %}, "--fix-only"{% endif %}]
+        args: ["--extend-fixable={% if cookiecutter.development_environment == "strict" %}ERA001,F401,F841,T201,T203{% else %}F401,F841{% endif %}"{% if cookiecutter.development_environment == "simple" %}, "--fix-only"{% endif %}]
         require_serial: true
         language: system
         types: [python]
