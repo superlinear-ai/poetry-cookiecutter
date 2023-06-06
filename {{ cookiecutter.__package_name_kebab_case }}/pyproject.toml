@@ -90,7 +90,7 @@ url = "{{ cookiecutter.private_package_repository_url }}"
 {%- endif %}
 
 [tool.black]  # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
-line-length = 100
+line-length = 99
 target-version = ["py{{ cookiecutter.python_version.split('.')[:2]|join }}"]
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
@@ -146,7 +146,7 @@ xfail_strict = true
 [tool.ruff]  # https://github.com/charliermarsh/ruff
 fix = true
 ignore-init-module-imports = true
-line-length = 100
+line-length = 99
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FLY", "G", "I", "ICN", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "SLF", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
 ignore = ["E501", "PGH001", "RET504", "S101"]
@@ -164,7 +164,7 @@ ban-relative-imports = "all"
 {%- if cookiecutter.development_environment == "strict" %}
 
 [tool.ruff.pycodestyle]
-max-doc-length = 100
+max-doc-length = 99
 {%- endif %}
 
 [tool.ruff.pydocstyle]

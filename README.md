@@ -39,7 +39,7 @@ To create a new Python project with this template:
 2. Create a new repository and clone it locally.
 3. In the directory that contains the cloned repository, run:
    ```sh
-   cruft create -f https://github.com/radix-ai/poetry-cookiecutter
+   cruft create -f https://github.com/Baseline-quebec/baseline-app-cookiecutter
    ```
 4. _Optional:_ if your repository name differs from your project's slugified name, you will need to copy the scaffolded project into the repository with:
    ```sh
