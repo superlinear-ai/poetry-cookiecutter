@@ -26,6 +26,7 @@ Starting development in My Package can be done with a single click by [opening M
 - 🧪 Test coverage with [Coverage.py](https://github.com/nedbat/coveragepy)
 - 🏗 Scaffolding updates with [Cookiecutter](https://github.com/cookiecutter/cookiecutter) and [Cruft](https://github.com/cruft/cruft)
 - 🧰 Dependency updates with [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/about-dependabot-version-updates)
+- 🤹 Task management made easy with references to PR and Issues with [Teamwork](https://baseline6.teamwork.com/app/home/activity?from=homepage)  
 
 ## ✨ Using
 
