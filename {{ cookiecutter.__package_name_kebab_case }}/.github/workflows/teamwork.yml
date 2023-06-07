@@ -1,7 +1,3 @@
-#${{ secrets.GITHUB_TOKEN }}
-#${{ secrets.TEAMWORK_URI }}
-#${{ secrets.TEAMWORK_API_TOKEN }}
-
 name: teamwork
 
 on:
