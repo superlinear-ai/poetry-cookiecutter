@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: teamwork/github-sync@master
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: "GITHUB_TOKEN"
           TEAMWORK_URI: "TEAMWORK_URI"
           TEAMWORK_API_TOKEN: "TEAMWORK_API_TOKEN"
           AUTOMATIC_TAGGING: false
