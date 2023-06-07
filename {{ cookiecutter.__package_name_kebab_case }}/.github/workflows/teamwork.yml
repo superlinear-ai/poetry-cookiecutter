@@ -1,7 +1,7 @@
-#name: teamwork
-#
-#on:
-#  pull_request:
+name: teamwork
+
+on:
+  pull_request:
     types: [opened, closed]
   pull_request_review:
     types: [submitted]
@@ -13,9 +13,9 @@ jobs:
     steps:
       - uses: teamwork/github-sync@master
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
-          TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          #TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
+          #TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
           AUTOMATIC_TAGGING: false
           BOARD_COLUMN_OPENED: 'PR Open'
           BOARD_COLUMN_MERGED: 'Ready to Test'
