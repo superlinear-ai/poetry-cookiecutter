@@ -1,3 +1,5 @@
+# Follow this link for documentation on how to set the secrets needed: https://github.com/Teamwork/github-sync
+
 name: teamwork
 
 on:
@@ -13,9 +15,9 @@ jobs:
     steps:
       - uses: teamwork/github-sync@master
         with:
-          GITHUB_TOKEN: "GITHUB_TOKEN"
-          TEAMWORK_URI: "TEAMWORK_URI"
-          TEAMWORK_API_TOKEN: "TEAMWORK_API_TOKEN"
+          GITHUB_TOKEN: "YOUR SECRET GITHUB_TOKEN"
+          TEAMWORK_URI: "YOUR SECRET TEAMWORK_URI"
+          TEAMWORK_API_TOKEN: "YOUR SECRET TEAMWORK_API_TOKEN"
           AUTOMATIC_TAGGING: false
           BOARD_COLUMN_OPENED: 'PR Open'
           BOARD_COLUMN_MERGED: 'Ready to Test'
