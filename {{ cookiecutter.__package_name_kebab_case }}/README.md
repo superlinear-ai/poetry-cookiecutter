@@ -84,7 +84,7 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
     # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Preferences/pypoetry/auth.toml
+    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
     # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
     [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
     username = "{personal access token name}"
@@ -94,7 +94,7 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 1. [Add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
     # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Preferences/pypoetry/auth.toml
+    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
     # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
     [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
     username = "{username}"
