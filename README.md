@@ -37,12 +37,11 @@ To create a new Python project with this template:
    ```sh
    pip install --upgrade cruft>=2.12.0 cookiecutter>=2.1.1
    ```
-2. Create a new repository and clone it locally.
-3. In the directory that contains the cloned repository, run:
+2. In the directory that contains the cloned repository, run:
    ```sh
    cruft create -f https://github.com/Baseline-quebec/baseline-app-cookiecutter
    ```
-4. Add the required Secrets to the Teamwork Integration inside Github Workflow using this documentation: https://github.com/Teamwork/github-sync
+3. _Optional:_ Add the required Secrets to the Teamwork Integration inside Github Workflow using this documentation: https://github.com/Teamwork/github-sync
 
 There are the lines to update:
 ```yaml
@@ -50,7 +49,7 @@ There are the lines to update:
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
 ```
-5. _Optional:_ if your repository name differs from your project's slugified name, you will need to copy the scaffolded project into the repository with:
+4. _Optional:_ if your repository name differs from your project's slugified name, you will need to copy the scaffolded project into the repository with:
    ```sh
    cp -r {package-name}/ {repository-name}/
    ```

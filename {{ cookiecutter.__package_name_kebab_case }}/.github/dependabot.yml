@@ -17,6 +17,6 @@ updates:
       prefix: "build"
       prefix-development: "build"
       include: "scope"
-    versioning-strategy: lockfile-only
+    versioning-strategy: increase
     allow:
       - dependency-type: "all"
