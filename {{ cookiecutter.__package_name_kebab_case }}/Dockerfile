@@ -1,6 +1,10 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION={{ cookiecutter.python_version }}
+{%- if cookiecutter.processing_unit == "GPU"%}
+FROM cuda11.8-python{{ cookiecutter.python_version }}:latest AS base
+{%- else %}
 FROM python:$PYTHON_VERSION-slim AS base
+{%- endif %}
 {%- if cookiecutter.development_environment == "strict" %}
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
