@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 {%- if cookiecutter.processing_unit == "GPU"%}
-FROM radixai/python-gpu:cuda11.8-python{{ cookiecutter.python_version }} AS base
+FROM radixai/python-gpu:cuda11.8-python$PYTHON_VERSION AS base
 {%- else %}
 ARG PYTHON_VERSION={{ cookiecutter.python_version }}
 FROM python:$PYTHON_VERSION-slim AS base
