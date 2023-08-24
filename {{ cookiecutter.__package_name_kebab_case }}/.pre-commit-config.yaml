@@ -81,13 +81,6 @@ repos:
         name: poetry check
         entry: poetry check
         language: system
-        files: pyproject.toml
-        pass_filenames: false
-      - id: poetry-lock-check
-        name: poetry lock check
-        entry: poetry lock
-        args: [--check]
-        language: system
         pass_filenames: false
       - id: mypy
         name: mypy
