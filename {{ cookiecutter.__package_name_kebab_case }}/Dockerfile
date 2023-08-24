@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 {%- endif %}
 
 # Install Poetry.
-ENV POETRY_VERSION 1.4.2
+ENV POETRY_VERSION 1.6.1
 RUN --mount=type=cache,target=/root/.cache/pip/ \
     pip install poetry~=$POETRY_VERSION
 
