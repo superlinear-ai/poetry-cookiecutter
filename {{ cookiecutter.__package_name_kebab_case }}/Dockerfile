@@ -45,6 +45,7 @@ RUN ls -la /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 RUN ls -la /workspaces/
 RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 # Install the run time Python dependencies in the virtual environment.
 COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
@@ -52,6 +53,7 @@ COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter._
 
 RUN ls -la /workspaces/
 RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 
 RUN mkdir -p /home/user/.cache/pypoetry/ && mkdir -p /home/user/.config/pypoetry/ && \
@@ -66,6 +68,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 RUN ls -la /workspaces/
 RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 FROM base as ci
 
@@ -111,6 +114,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 RUN ls -la /workspaces/
 RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 COPY --chown=user:user .pre-commit-config.yaml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
@@ -120,6 +124,7 @@ RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
 
 RUN ls -la /workspaces/
 RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 # Configure the non-root user's shell.
 ENV ANTIDOTE_VERSION 1.8.6
 RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \
