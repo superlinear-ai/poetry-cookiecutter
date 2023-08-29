@@ -62,6 +62,9 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 
 
+RUN ls -la /workspaces/
+RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+
 FROM base as ci
 
 # Allow CI to run as root.
@@ -103,11 +106,18 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
+
+RUN ls -la /workspaces/
+RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+
 COPY --chown=user:user .pre-commit-config.yaml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
 
+
+RUN ls -la /workspaces/
+RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 # Configure the non-root user's shell.
 ENV ANTIDOTE_VERSION 1.8.6
 RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \
