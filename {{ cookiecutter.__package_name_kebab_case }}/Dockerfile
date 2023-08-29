@@ -10,6 +10,7 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 {%- endif %}
 
+
 # Install Poetry.
 ENV POETRY_VERSION 1.4.2
 RUN --mount=type=cache,target=/root/.cache/pip/ \
@@ -36,8 +37,12 @@ RUN python -m venv /opt/{{ cookiecutter.__package_name_kebab_case }}-env
 ENV PATH /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin:$PATH
 ENV VIRTUAL_ENV /opt/{{ cookiecutter.__package_name_kebab_case }}-env
 
+RUN ls -la /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin
+
 # Set the working directory.
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+RUN ls -la /workspaces/
+RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 # Install the run time Python dependencies in the virtual environment.
 COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
