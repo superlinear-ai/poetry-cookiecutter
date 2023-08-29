@@ -46,6 +46,12 @@ RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 # Install the run time Python dependencies in the virtual environment.
 COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+
+
+RUN ls -la /workspaces/
+RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+
+
 RUN mkdir -p /home/user/.cache/pypoetry/ && mkdir -p /home/user/.config/pypoetry/ && \
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
