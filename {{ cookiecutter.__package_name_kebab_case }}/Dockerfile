@@ -30,6 +30,8 @@ ARG GID=$UID
 RUN groupadd --gid $GID user && \
     useradd --create-home --gid $GID --uid $UID user --no-log-init && \
     chown user /opt/
+RUN echo ${UID}
+RUN echo ${GID}
 USER user
 
 # Create and activate a virtual environment.
