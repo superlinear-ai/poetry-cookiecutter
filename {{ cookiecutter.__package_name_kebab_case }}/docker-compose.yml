@@ -12,8 +12,8 @@ services:
       {%- endif %}
       args:
         PYTHON_VERSION: ${PYTHON_VERSION:-{{ cookiecutter.python_version }}}
-        UID: ${UID:-1001}
-        GID: ${GID:-1001}
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     {%- if not cookiecutter.private_package_repository_name %}
     environment:
       - POETRY_PYPI_TOKEN_PYPI
