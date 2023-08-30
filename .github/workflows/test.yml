@@ -31,7 +31,7 @@ jobs:
       - name: Scaffold Python package
         run: |
           pip install --no-input cruft
-          cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "3.8", "docker_image":"python:$PYTHON_VERSION", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
+          cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "3.8", "docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
