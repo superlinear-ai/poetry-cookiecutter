@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 
 # Create a non-root user and switch to it [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
-ARG UID=1001
+ARG UID=1000
 ARG GID=$UID
 RUN groupadd --gid $GID user && \
     useradd --create-home --gid $GID --uid $UID user --no-log-init && \
