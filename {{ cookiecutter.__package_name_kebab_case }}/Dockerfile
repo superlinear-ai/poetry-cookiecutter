@@ -10,7 +10,6 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 {%- endif %}
 
-
 # Install Poetry.
 ENV POETRY_VERSION 1.4.2
 RUN --mount=type=cache,target=/root/.cache/pip/ \
@@ -30,8 +29,6 @@ ARG GID=$UID
 RUN groupadd --gid $GID user && \
     useradd --create-home --gid $GID --uid $UID user --no-log-init && \
     chown user /opt/
-RUN echo ${UID}
-RUN echo ${GID}
 USER user
 
 # Create and activate a virtual environment.
@@ -39,22 +36,11 @@ RUN python -m venv /opt/{{ cookiecutter.__package_name_kebab_case }}-env
 ENV PATH /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin:$PATH
 ENV VIRTUAL_ENV /opt/{{ cookiecutter.__package_name_kebab_case }}-env
 
-RUN ls -la /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin
-
 # Set the working directory.
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-RUN ls -la /workspaces/
-RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 # Install the run time Python dependencies in the virtual environment.
 COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-
-
-RUN ls -la /workspaces/
-RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-
 
 RUN mkdir -p /home/user/.cache/pypoetry/ && mkdir -p /home/user/.config/pypoetry/ && \
     mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
@@ -64,11 +50,6 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     {%- endif %}
     poetry install --only main --no-interaction
 
-
-
-RUN ls -la /workspaces/
-RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
 FROM base as ci
 
@@ -111,20 +92,12 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
-
-RUN ls -la /workspaces/
-RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-
 COPY --chown=user:user .pre-commit-config.yaml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
 
 
-RUN ls -la /workspaces/
-RUN ls -la /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
-RUN ls -n /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 # Configure the non-root user's shell.
 ENV ANTIDOTE_VERSION 1.8.6
 RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \

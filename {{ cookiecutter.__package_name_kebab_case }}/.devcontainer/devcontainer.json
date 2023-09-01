@@ -5,7 +5,7 @@
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/",
     "remoteUser": "user",
     "overrideCommand": true,
-    "postStartCommand": "id -u && whoami && ls -la /opt/ && ls -la /opt/build/ && ls -la /workspaces/ && ls -n /workspaces/my-package/ && ls -la /workspaces/my-package/ && cp --update /opt/build/poetry/poetry.lock /workspaces/${localWorkspaceFolderBasename}/ && mkdir -p /workspaces/${localWorkspaceFolderBasename}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/${localWorkspaceFolderBasename}/.git/hooks/",
+    "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/${localWorkspaceFolderBasename}/ && mkdir -p /workspaces/${localWorkspaceFolderBasename}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/${localWorkspaceFolderBasename}/.git/hooks/",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -49,4 +49,5 @@
             }
         }
     }
+    
 }
