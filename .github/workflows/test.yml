@@ -18,11 +18,6 @@ jobs:
     name: Python ${{ matrix.python-version }}
 
     steps:
-      - name: Checkout user
-        run: |
-          echo “User ID: ${{ github.actor }}”
-          id -u
-      
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -42,7 +37,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          
+
       - name: Install @devcontainers/cli
         run: npm install --location=global @devcontainers/cli@0.41.0
 
