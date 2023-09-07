@@ -45,6 +45,11 @@ repos:
       {%- endif %}
       - id: trailing-whitespace
         types: [python]
+  - repo: https://github.com/python-poetry/poetry
+    rev: '1.6.0'
+    hooks:
+      - id: poetry-check
+      - id: poetry-lock
   - repo: local
     hooks:
       {%- if cookiecutter.with_conventional_commits|int %}
@@ -76,21 +81,9 @@ repos:
         args: [--check-sourced]
         language: system
         types: [shell]
-      {%- endif %}
-      - id: poetry-check
-        name: poetry check
-        entry: poetry check
-        language: system
-        files: pyproject.toml
-        pass_filenames: false
-      - id: poetry-lock-check
-        name: poetry lock check
-        entry: poetry lock
-        args: [--check]
-        language: system
-        pass_filenames: false
       - id: mypy
         name: mypy
         entry: mypy
         language: system
         types: [python]
+      {%- endif %}

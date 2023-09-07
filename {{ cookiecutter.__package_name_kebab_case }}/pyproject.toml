@@ -78,6 +78,8 @@ typeguard = ">=3.0.2"
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 cruft = ">=2.14.0"
+ipython = ">=8.14.0"
+ipykernel = ">=6.25.1"
 {%- if cookiecutter.with_jupyter_lab|int %}
 jupyterlab = ">=3.6.3"
 {%- endif %}
@@ -149,11 +151,11 @@ ignore-init-module-imports = true
 line-length = 99
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FLY", "G", "I", "ICN", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "SLF", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "RET504", "S101"]
+ignore = ["E501", "PGH001", "RET504", "S101", "W505", "PTH123"]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
 select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "I", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
+ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101", "W505", "PTH123"]
 unfixable = ["F401", "F841"]
 {%- endif %}
 src = ["src", "tests"]
