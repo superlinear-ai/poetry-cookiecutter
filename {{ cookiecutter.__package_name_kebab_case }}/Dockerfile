@@ -119,7 +119,8 @@ RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/a
 RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 {%- endif %}
 
-{% if "radixai/python-gpu" in cookiecutter.docker_image %}
+{%- if "radixai/python-gpu" in cookiecutter.docker_image %}
+
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/conda/lib
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
@@ -130,8 +131,8 @@ FROM base AS app
 
 # Copy the package source code to the working directory.
 COPY --chown=user:user . .
+{%- if "radixai/python-gpu" in cookiecutter.docker_image %}
 
-{% if "radixai/python-gpu" in cookiecutter.docker_image %}
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/conda/lib
 {%- endif %}
 # Expose the application.
