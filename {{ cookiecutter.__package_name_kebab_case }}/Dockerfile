@@ -126,7 +126,6 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/conda/lib
 
 
 
-
 FROM base AS app
 
 # Copy the package source code to the working directory.
