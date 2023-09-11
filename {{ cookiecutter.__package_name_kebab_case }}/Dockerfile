@@ -118,7 +118,6 @@ RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/a
 # Enable Poetry to read the private package repository credentials.
 RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 {%- endif %}
-
 {%- if "radixai/python-gpu" in cookiecutter.docker_image %}
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/conda/lib
