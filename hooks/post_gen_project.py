@@ -10,6 +10,7 @@ with_typer_cli = int("{{ cookiecutter.with_typer_cli }}")
 continuous_integration = "{{ cookiecutter.continuous_integration }}"
 is_deployable_app = "{{ not not cookiecutter.with_fastapi_api|int or not not cookiecutter.with_streamlit_app|int }}" == "True"
 is_publishable_package = "{{ not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int }}" == "True"
+with_sqlalchemy_orm = int("{{ cookiecutter.with_sqlalchemy_orm }}")
 
 # Remove FastAPI if not selected.
 if not with_fastapi_api:
@@ -42,3 +43,7 @@ if continuous_integration == "GitHub":
         os.remove(".github/workflows/deploy.yml")
     if not is_publishable_package:
         os.remove(".github/workflows/publish.yml")
+
+# Remove SQLAlchemy if not selected.
+if not with_sqlalchemy_orm:
+    shutil.rmtree(f"src/{package_name}/orm/")

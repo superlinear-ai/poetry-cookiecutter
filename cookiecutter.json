@@ -19,5 +19,6 @@
   "private_package_repository_name": "",
   "private_package_repository_url": "",
   "__package_name_kebab_case": "{{ cookiecutter.package_name|slugify }}",
-  "__package_name_snake_case": "{{ cookiecutter.package_name|slugify(separator='_') }}"
+  "__package_name_snake_case": "{{ cookiecutter.package_name|slugify(separator='_') }}",
+  "with_sqlalchemy_orm": "0"
 }
