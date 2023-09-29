@@ -44,6 +44,8 @@ if continuous_integration == "GitHub":
     if not is_publishable_package:
         os.remove(".github/workflows/publish.yml")
 
-# Remove SQLAlchemy if not selected.
+# Remove SQLAlchemy/Alembic if not selected.
 if not with_sqlalchemy_orm:
     shutil.rmtree(f"src/{package_name}/orm/")
+    shutil.rmtree("alembic")
+    os.remove("alembic.ini")

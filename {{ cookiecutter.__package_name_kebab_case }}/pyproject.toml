@@ -49,6 +49,10 @@ typer = { extras = ["all"], version = ">=0.9.0" }
 {%- if cookiecutter.with_fastapi_api|int %}
 uvicorn = { extras = ["standard"], version = ">=0.20.0" }
 {%- endif %}
+{%- if cookiecutter.with_sqlalchemy_orm|int %}
+alembic = ">=1.12.0"
+sqlalchemy = ">=2.0.21"
+{%- endif %}
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 {%- if cookiecutter.with_jupyter_lab|int %}
