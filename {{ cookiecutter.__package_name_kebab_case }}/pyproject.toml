@@ -143,7 +143,7 @@ select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "
 ignore = ["E501", "PGH001", "RET504", "S101"]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
-select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "I", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
+select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
 ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
 unfixable = ["F401", "F841"]
 {%- endif %}
