@@ -35,10 +35,10 @@ To create a new Python project with this template:
 
 1. Install the latest [Cruft](https://github.com/cruft/cruft) and [Cookiecutter](https://github.com/cookiecutter/cookiecutter) in your [Python environment](https://github.com/pyenv/pyenv-virtualenv) with:
    ```sh
-   pip install --upgrade cruft>=2.12.0 cookiecutter>=2.1.1
+   pip install --upgrade "cruft>=2.12.0" "cookiecutter>=2.1.1"
    ```
-2. Create a new repository and clone it locally.
-3. In the directory that contains the cloned repository, run:
+2. Create a new (empty) repository and clone it locally.
+3. To apply the Poetry Cookiecutter template, run in the directory that contains the cloned repository:
    ```sh
    cruft create -f https://github.com/radix-ai/poetry-cookiecutter
    ```
