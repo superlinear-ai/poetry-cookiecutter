@@ -37,7 +37,7 @@ To create a new Python project with this template:
    ```sh
    pip install --upgrade "cruft>=2.12.0" "cookiecutter>=2.1.1"
    ```
-2. Create a new (empty) repository and clone it locally.
+2. Create a new repository for your Python project, then clone it locally.
 3. Run the following command in the parent directory of the cloned repository to apply the Poetry Cookiecutter template:
    ```sh
    cruft create -f https://github.com/radix-ai/poetry-cookiecutter
