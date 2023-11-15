@@ -42,7 +42,7 @@ To create a new Python project with this template:
    ```sh
    cruft create -f https://github.com/radix-ai/poetry-cookiecutter
    ```
-4. _Optional:_ if your repository name differs from your project's slugified package name *(see first template parameter below)*, you will need to copy the scaffolded project into the repository with:
+4. _Optional:_ if your repository name differs from your project's slugified package name (see `package_name` in the [Template parameters](https://github.com/radix-ai/poetry-cookiecutter#-template-parameters) below), you will need to copy the scaffolded project into the repository with:
    ```sh
    cp -r {package-name}/ {repository-name}/
    ```
