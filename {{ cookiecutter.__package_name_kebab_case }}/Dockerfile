@@ -24,9 +24,9 @@ RUN groupadd --gid $GID user && \
 USER user
 
 # Create and activate a virtual environment.
-RUN python -m venv /opt/{{ cookiecutter.__package_name_kebab_case }}-env
-ENV PATH /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin:$PATH
 ENV VIRTUAL_ENV /opt/{{ cookiecutter.__package_name_kebab_case }}-env
+ENV PATH $VIRTUAL_ENV/bin:$PATH
+RUN python -m venv $VIRTUAL_ENV
 
 # Set the working directory.
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
