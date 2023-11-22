@@ -31,6 +31,8 @@ RUN python -m venv $VIRTUAL_ENV
 # Set the working directory.
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
+
+
 FROM base as poetry
 
 USER root
