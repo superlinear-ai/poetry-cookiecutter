@@ -39,10 +39,9 @@ USER root
 ENV POETRY_VERSION 1.6.1
 ENV POETRY_VIRTUAL_ENV /opt/poetry-env
 RUN --mount=type=cache,target=/root/.cache/pip/ \
-    python3 -m venv $POETRY_VIRTUAL_ENV && \
-    $POETRY_VIRTUAL_ENV/bin/pip install -U pip setuptools && \
+    python -m venv $POETRY_VIRTUAL_ENV && \
     $POETRY_VIRTUAL_ENV/bin/pip install poetry~=$POETRY_VERSION
-RUN ln -s $POETRY_VIRTUAL_ENV/bin/poetry /usr/bin/poetry
+RUN ln -s $POETRY_VIRTUAL_ENV/bin/poetry /usr/local/bin/poetry
 
 # Install compilers that may be required for certain packages or platforms.
 RUN --mount=type=cache,target=/var/cache/apt/ \
