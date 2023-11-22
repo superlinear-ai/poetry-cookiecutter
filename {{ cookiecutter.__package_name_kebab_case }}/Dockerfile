@@ -137,7 +137,7 @@ RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 
 FROM base AS app
 
-# Copy the virtual environment from the builder stage
+# Copy the virtual environment from the builder stage.
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 
 # Copy the package source code to the working directory.
