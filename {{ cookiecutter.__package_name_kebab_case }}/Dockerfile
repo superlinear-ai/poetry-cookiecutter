@@ -31,7 +31,7 @@ RUN python -m venv $VIRTUAL_ENV
 # Set the working directory.
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
-FROM base as builder
+FROM base as poetry
 
 USER root
 
@@ -63,7 +63,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 
 
-FROM builder as ci
+FROM poetry as ci
 
 # Allow CI to run as root.
 USER root
@@ -83,7 +83,7 @@ RUN --mount=type=cache,target=/root/.cache/pypoetry/ \
 
 
 
-FROM builder as dev
+FROM poetry as dev
 
 # Install development tools: curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 USER root
@@ -136,8 +136,8 @@ RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 
 FROM base AS app
 
-# Copy the virtual environment from the builder stage.
-COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
+# Copy the virtual environment from the poetry stage.
+COPY --from=poetry $VIRTUAL_ENV $VIRTUAL_ENV
 
 # Copy the package source code to the working directory.
 COPY --chown=user:user . .
