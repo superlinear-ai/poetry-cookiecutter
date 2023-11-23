@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION={{ cookiecutter.python_version }}
 FROM {{ cookiecutter.docker_image }} AS base
+
+# Remove docker-clean so we can keep the apt cache in Docker build cache.
+RUN rm /etc/apt/apt.conf.d/docker-clean
 {%- if cookiecutter.development_environment == "strict" %}
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
@@ -9,18 +12,6 @@ FROM {{ cookiecutter.docker_image }} AS base
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 {%- endif %}
-
-# Install Poetry.
-ENV POETRY_VERSION 1.6.1
-RUN --mount=type=cache,target=/root/.cache/pip/ \
-    pip install poetry~=$POETRY_VERSION
-
-# Install compilers that may be required for certain packages or platforms.
-RUN rm /etc/apt/apt.conf.d/docker-clean
-RUN --mount=type=cache,target=/var/cache/apt/ \
-    --mount=type=cache,target=/var/lib/apt/ \
-    apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential
 
 # Create a non-root user and switch to it [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
@@ -32,12 +23,34 @@ RUN groupadd --gid $GID user && \
 USER user
 
 # Create and activate a virtual environment.
-RUN python -m venv /opt/{{ cookiecutter.__package_name_kebab_case }}-env
-ENV PATH /opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin:$PATH
 ENV VIRTUAL_ENV /opt/{{ cookiecutter.__package_name_kebab_case }}-env
+ENV PATH $VIRTUAL_ENV/bin:$PATH
+RUN python -m venv $VIRTUAL_ENV
 
 # Set the working directory.
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+
+
+
+FROM base as poetry
+
+USER root
+
+# Install Poetry in separate venv so it doesn't pollute the main venv.
+ENV POETRY_VERSION 1.6.1
+ENV POETRY_VIRTUAL_ENV /opt/poetry-env
+RUN --mount=type=cache,target=/root/.cache/pip/ \
+    python -m venv $POETRY_VIRTUAL_ENV && \
+    $POETRY_VIRTUAL_ENV/bin/pip install poetry~=$POETRY_VERSION && \
+    ln -s $POETRY_VIRTUAL_ENV/bin/poetry /usr/local/bin/poetry
+
+# Install compilers that may be required for certain packages or platforms.
+RUN --mount=type=cache,target=/var/cache/apt/ \
+    --mount=type=cache,target=/var/lib/apt/ \
+    apt-get update && \
+    apt-get install --no-install-recommends --yes build-essential
+
+USER user
 
 # Install the run time Python dependencies in the virtual environment.
 COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
@@ -51,7 +64,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 
 
-FROM base as ci
+FROM poetry as ci
 
 # Allow CI to run as root.
 USER root
@@ -71,7 +84,7 @@ RUN --mount=type=cache,target=/root/.cache/pypoetry/ \
 
 
 
-FROM base as dev
+FROM poetry as dev
 
 # Install development tools: curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 USER root
@@ -123,6 +136,9 @@ RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 
 
 FROM base AS app
+
+# Copy the virtual environment from the poetry stage.
+COPY --from=poetry $VIRTUAL_ENV $VIRTUAL_ENV
 
 # Copy the package source code to the working directory.
 COPY --chown=user:user . .
