@@ -56,12 +56,6 @@ jobs:
       - name: Test package
         run: devcontainer exec --workspace-folder my-package poe test
 
-      - name: Build ci Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./my-package/
-          target: ci
-
       - name: Build app Docker image
         uses: docker/build-push-action@v5
         with:
