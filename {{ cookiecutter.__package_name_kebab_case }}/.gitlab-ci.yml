@@ -9,7 +9,8 @@ variables:
 .parallel:
   parallel:
     matrix:
-      - PYTHON_VERSION: [{{ cookiecutter.python_version }}]
+      - PYTHON_VERSION: ["{{ cookiecutter.python_version }}"]
+
 
 # Build the Dev Container.
 Build:
