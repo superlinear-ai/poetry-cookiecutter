@@ -11,6 +11,15 @@ variables:
     matrix:
       - PYTHON_VERSION: ["{{ cookiecutter.python_version }}"]
 
+.install_devcontainers_cli: &install_devcontainers_cli
+  cache:
+    paths:
+      - .apk_cache
+      - .npm_cache
+  before_script:
+    # Install the Dev Container CLI.
+    - mkdir -p .apk_cache && apk add --update-cache --cache-dir .apk_cache nodejs npm
+    - npm install --global --cache .npm_cache --prefer-offline @devcontainers/cli@0.54.0
 
 # Build the Dev Container.
 Build:
@@ -23,11 +32,7 @@ Build:
     - |
       # Log in to the Docker registry.
       echo "$CI_REGISTRY_PASSWORD" | docker login --username "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-      
-      # Install the Dev Container CLI.
-      apk add --update npm
-      npm install --location=global @devcontainers/cli@0.54.0
-      
+ 
       # Compute a hash for the Dev Container image.
       export CI_IMAGE_SHA="$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-8)"
       echo "CI_IMAGE_SHA=$CI_IMAGE_SHA" >> .env
@@ -50,6 +55,7 @@ Build:
   artifacts:
     reports:
       dotenv: .env
+  <<: *install_devcontainers_cli
 
 # Lint and test the package.
 Test:
@@ -60,8 +66,6 @@ Test:
     - docker:dind
   script:
     - |
-      apk add --update npm
-      npm install --location=global @devcontainers/cli@0.54.0
       devcontainer up --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE/devcontainer:$PYTHON_VERSION-$CI_IMAGE_SHA" --workspace-folder .
       devcontainer exec --workspace-folder . git config --global --add safe.directory /workspaces/{{ cookiecutter.__package_name_kebab_case }}
       devcontainer exec --workspace-folder . poe lint
@@ -77,6 +81,7 @@ Test:
         - reports/pytest.xml
     untracked: true
     when: always
+  <<: *install_devcontainers_cli
 
 {% if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int -%}
 # Publish this package version to {% if cookiecutter.private_package_repository_name %}a private package repository{% else %}PyPI{% endif %}.
