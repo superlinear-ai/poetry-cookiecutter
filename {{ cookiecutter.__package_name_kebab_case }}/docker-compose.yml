@@ -17,6 +17,7 @@ services:
     {%- if not cookiecutter.private_package_repository_name %}
     environment:
       - POETRY_PYPI_TOKEN_PYPI
+      - CI
     {%- else %}
     secrets:
       - poetry-auth

@@ -274,10 +274,13 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
   help = "Lint this package"
 
     [[tool.poe.tasks.lint.sequence]]
-    cmd = """
-      pre-commit run
-        --all-files
-        --color always
+    shell = """
+{%- if cookiecutter.development_environment == "strict" %}
+      if [ -n "$CI" ]; then
+        export SKIP=no-commit-to-branch
+      fi
+{%- endif %}
+      pre-commit run --all-files --color always
       """
 {%- if cookiecutter.development_environment == "strict" %}
 
