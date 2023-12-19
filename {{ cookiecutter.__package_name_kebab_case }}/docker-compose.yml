@@ -16,8 +16,10 @@ services:
         GID: ${GID:-1000}
     {%- if not cookiecutter.private_package_repository_name %}
     environment:
-      - POETRY_PYPI_TOKEN_PYPI
+      {%- if cookiecutter.development_environment == "strict" %}
       - CI
+      {%- endif %}
+      - POETRY_PYPI_TOKEN_PYPI
     {%- else %}
     secrets:
       - poetry-auth

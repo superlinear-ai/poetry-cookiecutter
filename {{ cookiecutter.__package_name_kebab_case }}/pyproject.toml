@@ -275,11 +275,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 
     [[tool.poe.tasks.lint.sequence]]
     shell = """
-{%- if cookiecutter.development_environment == "strict" %}
-      if [ -n "$CI" ]; then
-        export SKIP=no-commit-to-branch
-      fi
-{%- endif %}
+      {%- if cookiecutter.development_environment == "strict" %}[ -n "$CI" ] && export SKIP=no-commit-to-branch{%- endif %}
       pre-commit run --all-files --color always
       """
 {%- if cookiecutter.development_environment == "strict" %}
