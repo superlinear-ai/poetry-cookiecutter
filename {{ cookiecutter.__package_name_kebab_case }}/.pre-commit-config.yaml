@@ -40,9 +40,6 @@ repos:
       - id: mixed-line-ending
       - id: name-tests-test
         args: [--pytest-test-first]
-      {%- if cookiecutter.development_environment == "strict" %}
-      - id: no-commit-to-branch
-      {%- endif %}
       - id: trailing-whitespace
         types: [python]
   - repo: local
