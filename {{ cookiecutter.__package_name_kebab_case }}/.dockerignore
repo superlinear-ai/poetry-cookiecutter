@@ -1,1 +1,5 @@
-.git
+# Caches
+.*_cache/
+
+# Git
+.git/

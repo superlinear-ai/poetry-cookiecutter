@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: template
 
@@ -34,16 +34,14 @@ jobs:
           cruft create --no-input --extra-context '{"package_name": "My Package", "python_version": "3.8", "docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 21
 
       - name: Install @devcontainers/cli
-        run: npm install --location=global @devcontainers/cli@0.41.0
+        run: npm install --location=global @devcontainers/cli@0.55.0
 
       - name: Start Dev Container with Python ${{ matrix.python-version }}
-        env:
-          DOCKER_BUILDKIT: 1
         run: |
           git config --global init.defaultBranch main
           git init
@@ -58,14 +56,8 @@ jobs:
       - name: Test package
         run: devcontainer exec --workspace-folder my-package poe test
 
-      - name: Build ci Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: ./my-package/
-          target: ci
-
       - name: Build app Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           build-args: |
             SOURCE_BRANCH=${{ env.GITHUB_REF }}

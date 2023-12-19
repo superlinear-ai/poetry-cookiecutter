@@ -1,103 +1,81 @@
 stages:
-  - prebuild
   - build
   - test
   - {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}deploy{% else %}publish{% endif %}
 
-Compute CI image hash:
-  stage: prebuild
-  script:
-    - export DOCKER_IMAGE_SHA="$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-12)"
-    - echo "CI_IMAGE_SHA=$DOCKER_IMAGE_SHA" >> .env
-  artifacts:
-    reports:
-      dotenv: .env
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
 
-# Base Docker build script.
-.docker:
-  image: docker:stable
+.python_matrix:
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["{{ cookiecutter.python_version }}"]
+
+.install_devcontainers_cli:
+  cache:
+    paths:
+      - .apk_cache
+      - .npm_cache
+  before_script:
+    - mkdir -p .apk_cache && apk add --cache-dir .apk_cache npm
+    - npm install --cache .npm_cache --global --prefer-offline @devcontainers/cli@0.55.0
+
+# Build the Dev Container.
+Build:
+  extends:
+    - .python_matrix
+    - .install_devcontainers_cli
+  stage: build
+  image: docker:latest
   services:
-    - docker:stable-dind
-  variables:
-    DOCKER_REGISTRY: $CI_REGISTRY
-    DOCKER_REGISTRY_USER: $CI_REGISTRY_USER
-    DOCKER_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
+    - docker:dind
   script:
     - |
-      echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username "$DOCKER_REGISTRY_USER" --password-stdin "$DOCKER_REGISTRY"
-      DOCKER_PUSH=${DOCKER_PUSH:-$(timeout 2s docker pull "$DOCKER_IMAGE":"$DOCKER_IMAGE_SHA" >/dev/null 2>&1 && echo $? || echo $?)}
-      if [ "$DOCKER_PUSH" -ne 1 ]; then
-        echo "$DOCKER_IMAGE:$DOCKER_IMAGE_SHA exists, skipping this job..."
+      # Log in to the Docker registry.
+      echo "$CI_REGISTRY_PASSWORD" | docker login --username "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+ 
+      # Compute a hash for the Dev Container image.
+      export CI_IMAGE_SHA="$(sha1sum Dockerfile poetry.lock pyproject.toml | sha1sum | cut -c 1-8)"
+      echo "CI_IMAGE_SHA=$CI_IMAGE_SHA" >> .env
+      
+      # Build and push the Dev Container image, unless it already exists.
+      IMAGE_NAME="$CI_REGISTRY_IMAGE/devcontainer:$PYTHON_VERSION-$CI_IMAGE_SHA"
+      IMAGE_EXISTS=${IMAGE_EXISTS:-$(timeout 2s docker pull "$IMAGE_NAME" >/dev/null 2>&1 && echo $? || echo $?)}
+      if [ "$IMAGE_EXISTS" -ne 1 ]; then
+        echo "$IMAGE_NAME exists, skipping this job..."
       else
-        # Compile a list of image tags consisting of a hash of its contents, the latest tag if this
-        # pipeline is running for the default branch, and the Git tag if this commit is tagged.
-        DOCKER_TAGS="$DOCKER_IMAGE_SHA"
-        if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then DOCKER_TAGS="$DOCKER_TAGS latest"; fi
-        if [ -n "$CI_COMMIT_TAG" ]; then DOCKER_TAGS="$DOCKER_TAGS $CI_COMMIT_TAG"; fi
-        if [ -n "$CI_ENVIRONMENT_NAME" ]; then DOCKER_TAGS="$DOCKER_TAGS $CI_ENVIRONMENT_NAME"; fi
-        DOCKER_TAGS_JOINED=""
-        for DOCKER_TAG in $DOCKER_TAGS; do
-          DOCKER_TAGS_JOINED="$DOCKER_TAGS_JOINED --tag $DOCKER_IMAGE:$DOCKER_TAG"
-        done
-
-        # Build the Docker image with all of the selected tags.
         {%- if cookiecutter.private_package_repository_name %}
         echo "[http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]" >> auth.toml
         echo "username = \"gitlab-ci-token\"" >> auth.toml
         echo "password = \"$CI_JOB_TOKEN\"" >> auth.toml
+        export $POETRY_AUTH_TOML_PATH=$(pwd)/auth.toml
         {%- endif %}
-        DOCKER_BUILDKIT=1 docker build \
-          --cache-from "$CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA" \
-          {%- if cookiecutter.private_package_repository_name %}
-          --secret id=poetry_auth,src=auth.toml \
-          {%- endif %}
-          --target "$DOCKER_TARGET" \
-          --pull \
-          $DOCKER_TAGS_JOINED \
-          .
-
-        # Push all the tagged images.
-        for DOCKER_TAG in $DOCKER_TAGS; do
-          docker push "$DOCKER_IMAGE:$DOCKER_TAG"
-        done
+        devcontainer build --image-name "$IMAGE_NAME" --workspace-folder .
+        docker push "$IMAGE_NAME"
       fi
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        - Dockerfile
-        - poetry.lock
-        - pyproject.toml
-
-# Build CI Docker image.
-Build CI image:
-  extends:
-    - .docker
-  stage: build
-  variables:
-    DOCKER_IMAGE: $CI_REGISTRY_IMAGE/ci
-    DOCKER_IMAGE_SHA: $CI_IMAGE_SHA
-    DOCKER_TARGET: ci
+  artifacts:
+    reports:
+      dotenv: .env
 
 # Lint and test the package.
 Test:
+  extends:
+    - .python_matrix
+    - .install_devcontainers_cli
   stage: test
-  image: $CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - .mypy_cache/
-      - .pytest_cache/
+  image: docker:latest
+  services:
+    - docker:dind
   script:
-    {%- if cookiecutter.private_package_repository_name %}
-    - poetry config http-basic.{{ cookiecutter.private_package_repository_name|slugify }} "gitlab-ci-token" "$CI_JOB_TOKEN"
-    {%- endif %}
-    - poe lint
-    - poe test
+    - |
+      devcontainer up --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE/devcontainer:$PYTHON_VERSION-$CI_IMAGE_SHA" --workspace-folder .
+      devcontainer exec --workspace-folder . git config --global --add safe.directory /workspaces/{{ cookiecutter.__package_name_kebab_case }}
+      devcontainer exec --workspace-folder . poe lint
+      devcontainer exec --workspace-folder . poe test
   coverage: '/^TOTAL.*\s+(\d+(?:\.\d+)?)%/'
   artifacts:
     reports:
-      coverage_report: 
+      coverage_report:
         coverage_format: cobertura
         path: reports/coverage.xml
       junit:
@@ -107,10 +85,10 @@ Test:
     when: always
 
 {% if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int -%}
-# Publish this package version to a (private) package repository.
+# Publish this package version to {% if cookiecutter.private_package_repository_name %}a private package repository{% else %}PyPI{% endif %}.
 Publish:
   stage: publish
-  image: $CI_REGISTRY_IMAGE/ci:$CI_IMAGE_SHA
+  image: $CI_REGISTRY_IMAGE/devcontainer:{{ cookiecutter.python_version }}-$CI_IMAGE_SHA
   script:
     {%- if cookiecutter.private_package_repository_name %}
     - poetry config repositories.private "{{ cookiecutter.private_package_repository_url.replace('simple/', '').replace('simple', '') }}"
@@ -123,21 +101,48 @@ Publish:
   only:
     - tags
 {%- else -%}
-# Build the application as a Docker image and push it to the GitLab registry.
-.deploy:
-  extends:
-    - .docker
+# Deploy the application to the Docker registry.
+Deploy:
   stage: deploy
-  variables:
-    DOCKER_IMAGE: $CI_REGISTRY_IMAGE
-    DOCKER_IMAGE_SHA: ${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
-    DOCKER_PUSH: 1
-    DOCKER_TARGET: app
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - |
+      # Log in to the Docker registry.
+      echo "$CI_REGISTRY_PASSWORD" | docker login --username "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+      
+      # Compile a list of tags for the image.
+      DOCKER_TAGS=""
+      if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then DOCKER_TAGS="$DOCKER_TAGS latest"; fi
+      if [ -n "$CI_COMMIT_TAG" ]; then DOCKER_TAGS="$DOCKER_TAGS $CI_COMMIT_TAG"; fi
+      if [ -n "$CI_ENVIRONMENT_NAME" ]; then DOCKER_TAGS="$DOCKER_TAGS $CI_ENVIRONMENT_NAME"; fi
+      DOCKER_TAGS_JOINED=""
+      for DOCKER_TAG in $DOCKER_TAGS; do
+        DOCKER_TAGS_JOINED="$DOCKER_TAGS_JOINED --tag $CI_REGISTRY_IMAGE:$DOCKER_TAG"
+      done
+      
+      # Build the app image.
+      {%- if cookiecutter.private_package_repository_name %}
+      echo "[http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]" >> auth.toml
+      echo "username = \"gitlab-ci-token\"" >> auth.toml
+      echo "password = \"$CI_JOB_TOKEN\"" >> auth.toml
+      {%- endif %}
+      docker build \
+        --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE/devcontainer:{{ cookiecutter.python_version }}-$CI_IMAGE_SHA" \
+        --pull \
+        {%- if cookiecutter.private_package_repository_name %}
+        --secret id=poetry-auth,src=auth.toml \
+        {%- endif %}
+        --target app \
+        $DOCKER_TAGS_JOINED \
+        .
+      
+      # Push the tags to the Docker registry.
+      for DOCKER_TAG in $DOCKER_TAGS; do
+        docker push "$CI_REGISTRY_IMAGE:$DOCKER_TAG"
+      done
+  only:
+    - tags
   when: manual
-{% for environment in ["feature", "development", "test", "acceptance", "production"] %}
-Deploy ({{ environment }}):
-  extends:
-    - .deploy
-  environment: {{ environment }}
-{% endfor %}
 {%- endif %}
