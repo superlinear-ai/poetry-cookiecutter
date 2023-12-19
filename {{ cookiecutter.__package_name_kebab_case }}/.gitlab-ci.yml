@@ -6,24 +6,25 @@ stages:
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
-.parallel:
+.python_matrix:
   parallel:
     matrix:
       - PYTHON_VERSION: ["{{ cookiecutter.python_version }}"]
 
-.install_devcontainers_cli: &install_devcontainers_cli
+.install_devcontainers_cli:
   cache:
     paths:
       - .apk_cache
       - .npm_cache
   before_script:
-    # Install the Dev Container CLI.
-    - mkdir -p .apk_cache && apk add --update-cache --cache-dir .apk_cache nodejs npm
-    - npm install --global --cache .npm_cache --prefer-offline @devcontainers/cli@0.54.0
+    - mkdir -p .apk_cache && apk add --cache-dir .apk_cache npm
+    - npm install --cache .npm_cache --global --prefer-offline @devcontainers/cli@0.55.0
 
 # Build the Dev Container.
 Build:
-  extends: .parallel
+  extends:
+    - .python_matrix
+    - .install_devcontainers_cli
   stage: build
   image: docker:latest
   services:
@@ -55,11 +56,12 @@ Build:
   artifacts:
     reports:
       dotenv: .env
-  <<: *install_devcontainers_cli
 
 # Lint and test the package.
 Test:
-  extends: .parallel
+  extends:
+    - .python_matrix
+    - .install_devcontainers_cli
   stage: test
   image: docker:latest
   services:
@@ -81,7 +83,6 @@ Test:
         - reports/pytest.xml
     untracked: true
     when: always
-  <<: *install_devcontainers_cli
 
 {% if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int -%}
 # Publish this package version to {% if cookiecutter.private_package_repository_name %}a private package repository{% else %}PyPI{% endif %}.
