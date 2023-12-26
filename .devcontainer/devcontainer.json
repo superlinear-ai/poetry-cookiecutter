@@ -1,25 +1,23 @@
 {
-    "name": "Poetry Cookiecutter",
-    "image": "mcr.microsoft.com/vscode/devcontainers/python:3.10",
-    "onCreateCommand": "pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
-    "remoteUser": "vscode",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "ms-python.python",
-                "tamasfe.even-better-toml",
-                "visualstudioexptteam.vscodeintellicode"
-            ],
-            "settings": {
-                "editor.formatOnSave": true,
-                "[toml]": {
-                    "editor.formatOnSave": false
-                },
-                "editor.rulers": [
-                    100
-                ],
-                "files.autoSave": "onFocusChange"
-            }
-        }
+  "name": "Poetry Cookiecutter",
+  "image": "mcr.microsoft.com/vscode/devcontainers/python:3.10",
+  "onCreateCommand": "pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "tamasfe.even-better-toml",
+        "visualstudioexptteam.vscodeintellicode"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "[toml]": {
+          "editor.formatOnSave": false
+        },
+        "editor.rulers": [],
+        "files.autoSave": "onFocusChange"
+      }
     }
+  }
 }

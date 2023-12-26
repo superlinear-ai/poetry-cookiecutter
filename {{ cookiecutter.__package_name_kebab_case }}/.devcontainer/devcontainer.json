@@ -35,7 +35,6 @@
                     "editor.formatOnSave": false
                 },
                 "editor.rulers": [
-                    100
                 ],
                 "files.autoSave": "onFocusChange",
                 "mypy-type-checker.importStrategy": "fromEnvironment",
