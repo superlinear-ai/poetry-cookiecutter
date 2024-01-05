@@ -38,12 +38,13 @@ To create a new Python project with this template:
    ```sh
    pip install --upgrade "cruft>=2.12.0" "cookiecutter>=2.1.1"
    ```
-2. Run the following command in the parent directory where you want your package to apply the Poetry Cookiecutter template:
+2. Create a new repository for your Python project
+3. Run the following command in the parent directory where you want your package to apply the Poetry Cookiecutter template:
    ```sh
    cruft create -f https://github.com/Baseline-quebec/baseline-app-cookiecutter
    ```
-3. Create a new repository for your Python project and add the remote origin to your local package.
-4. _Optional:_ Link your repository to a Teamwork Project by adding the required Secrets to the Github Repository for the Teamwork Integration Github Workflow using this documentation: https://github.com/Teamwork/github-sync
+4. Add the remote origin to your local package.
+5. _Optional:_ Link your repository to a Teamwork Project by adding the required Secrets to the Github Repository for the Teamwork Integration Github Workflow using this documentation: https://github.com/Teamwork/github-sync
 
 ### Updating your Python project
 

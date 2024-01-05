@@ -18,6 +18,8 @@
                 "ryanluker.vscode-coverage-gutters",
                 "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode"
+                "GitHub.copilot",
+				"GitHub.copilot-chat"
             ],
             "settings": {
                 "coverage-gutters.coverageFileNames": [
@@ -35,7 +37,7 @@
                     "editor.formatOnSave": false
                 },
                 "editor.rulers": [
-                    100
+                    99
                 ],
                 "files.autoSave": "onFocusChange",
                 "mypy-type-checker.importStrategy": "fromEnvironment",

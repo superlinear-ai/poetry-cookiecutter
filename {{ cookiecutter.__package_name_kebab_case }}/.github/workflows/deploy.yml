@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "v[1-9]+.*.*"
   workflow_dispatch:
     inputs:
       environment:
