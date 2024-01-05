@@ -47,7 +47,6 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 1. [Install Docker Desktop](https://www.docker.com/get-started).
     - Enable _Use Docker Compose V2_ in Docker Desktop's preferences window.
     - _Linux only_:
-        - [Configure Docker to use the BuildKit build system](https://docs.docker.com/build/buildkit/#getting-started). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
         - Export your user's user id and group id so that [files created in the Dev Container are owned by your user](https://github.com/moby/moby/issues/3206):
             ```sh
             cat << EOF >> ~/.bashrc
@@ -84,7 +83,7 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
     # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Preferences/pypoetry/auth.toml
+    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
     # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
     [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
     username = "{personal access token name}"
@@ -94,7 +93,7 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 1. [Add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
     ```toml
     # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Preferences/pypoetry/auth.toml
+    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
     # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
     [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
     username = "{username}"

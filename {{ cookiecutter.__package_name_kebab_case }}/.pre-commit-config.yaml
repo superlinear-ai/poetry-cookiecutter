@@ -7,7 +7,7 @@ repos:
     hooks:
       - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.9.0
+    rev: v1.10.0
     hooks:
       - id: python-check-mock-methods
       - id: python-use-type-annotations
@@ -16,7 +16,7 @@ repos:
       - id: rst-inline-touching-normal
       - id: text-unicode-replacement-char
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.5.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -40,9 +40,6 @@ repos:
       - id: mixed-line-ending
       - id: name-tests-test
         args: [--pytest-test-first]
-      {%- if cookiecutter.development_environment == "strict" %}
-      - id: no-commit-to-branch
-      {%- endif %}
       - id: trailing-whitespace
         types: [python]
   - repo: https://github.com/python-poetry/poetry
@@ -61,19 +58,20 @@ repos:
         language: system
         stages: [commit-msg]
       {%- endif %}
-      - id: ruff
-        name: ruff
-        entry: ruff
-        args: ["--extend-fixable={% if cookiecutter.development_environment == "strict" %}ERA001,F401,F841,T201,T203{% else %}F401,F841{% endif %}"{% if cookiecutter.development_environment == "simple" %}, "--fix-only"{% endif %}]
+      - id: ruff-check
+        name: ruff check
+        entry: ruff check
+        args: ["--force-exclude", "--extend-fixable={% if cookiecutter.development_environment == "strict" %}ERA001,F401,F841,T201,T203{% else %}F401,F841{% endif %}"{% if cookiecutter.development_environment == "simple" %}, "--fix-only"{% endif %}]
         require_serial: true
         language: system
-        types: [python]
-      - id: black
-        name: black
-        entry: black
+        types_or: [python, pyi]
+      - id: ruff-format
+        name: ruff format
+        entry: ruff format
+        args: [--force-exclude]
         require_serial: true
         language: system
-        types: [python]
+        types_or: [python, pyi]
       {%- if cookiecutter.development_environment == "strict" %}
       - id: shellcheck
         name: shellcheck
@@ -81,6 +79,12 @@ repos:
         args: [--check-sourced]
         language: system
         types: [shell]
+      {%- endif %}
+      - id: poetry-check
+        name: poetry check
+        entry: poetry check
+        language: system
+        pass_filenames: false
       - id: mypy
         name: mypy
         entry: mypy
