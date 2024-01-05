@@ -1,4 +1,4 @@
-[<teamwork_task_id>:<teamwork_task_name>]({{ cookiecutter.teamwork_uri }}/-<teamwork_task_id>)
+[<teamwork_task_id>:<teamwork_task_name>]({{ cookiecutter.teamwork_uri }}/<teamwork_task_id>)
 
 ## Describe your changes
 
