@@ -42,21 +42,8 @@ To create a new Python project with this template:
    ```sh
    cruft create -f https://github.com/Baseline-quebec/baseline-app-cookiecutter
    ```
-3. Create a new repository for your Python project and add the origin to your local package.
-4. _Optional:_ Add the required Secrets to the Teamwork Integration inside Github Workflow using this documentation: https://github.com/Teamwork/github-sync
-
-There are the lines to update:
-
-```yaml
-GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
-TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
-```
-
-4. _Optional:_ if your repository name differs from your project's slugified package name (see `package_name` in the [Template parameters](https://github.com/radix-ai/poetry-cookiecutter#-template-parameters) below), you will need to copy the scaffolded project into the repository with:
-   ```sh
-   cp -r {package-name}/ {repository-name}/
-   ```
+3. Create a new repository for your Python project and add the remote origin to your local package.
+4. _Optional:_ Link your repository to a Teamwork Project by adding the required Secrets to the Github Repository for the Teamwork Integration Github Workflow using this documentation: https://github.com/Teamwork/github-sync
 
 ### Updating your Python project
 
