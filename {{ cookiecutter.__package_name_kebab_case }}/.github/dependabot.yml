@@ -9,6 +9,18 @@ updates:
       prefix: "ci"
       prefix-development: "ci"
       include: "scope"
+    groups:
+      ci-dependencies:
+        patterns:
+        - "*"
+        update-types:
+        - "minor"
+        - "patch"
+      ci-major-updates:
+        patterns:
+        - "*"
+        update-types:
+        - "major"  
   - package-ecosystem: pip
     directory: /
     schedule:
@@ -20,3 +32,15 @@ updates:
     versioning-strategy: increase
     allow:
       - dependency-type: "all"
+    groups:
+      dependencies:
+        patterns:
+        - "*"
+        update-types:
+        - "minor"
+        - "patch"
+      major-updates:
+        patterns:
+        - "*"
+        update-types:
+        - "major"

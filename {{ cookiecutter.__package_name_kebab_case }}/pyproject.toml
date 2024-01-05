@@ -142,11 +142,12 @@ ignore-init-module-imports = true
 line-length = 99
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "PTH123", "RET504", "S101", "W505"]
+ignore = ["E501", "E731", "PGH001", "PTH123", "RET504", "S101", "W505"]
+
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
 select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
+ignore = ["E501", "E731", "PGH001", "PGH002", "PGH003", "PTH123", "RET504", "S101", "W505"]
 unfixable = ["F401", "F841"]
 {%- endif %}
 src = ["src", "tests"]
@@ -154,6 +155,10 @@ target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
 
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
+
+[tool.ruff.isort]
+lines-after-imports = 2
+
 {%- if cookiecutter.development_environment == "strict" %}
 
 [tool.ruff.pycodestyle]
@@ -162,6 +167,9 @@ max-doc-length = 99
 
 [tool.ruff.pydocstyle]
 convention = "{{ cookiecutter.docstring_style|lower }}"
+
+[tool.ruff.pylint]
+max-args = 6
 
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
 {%- if cookiecutter.with_fastapi_api|int %}

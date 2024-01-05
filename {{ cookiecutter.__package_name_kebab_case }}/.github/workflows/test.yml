@@ -41,7 +41,9 @@ jobs:
       - name: Test package
         run: devcontainer exec --workspace-folder . poe test
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
         with:
-          files: reports/coverage.xml
+          path: htmlcov/
+          name: coverage-report
+          retention-days: 7
