@@ -42,11 +42,6 @@ repos:
         args: [--pytest-test-first]
       - id: trailing-whitespace
         types: [python]
-  - repo: https://github.com/python-poetry/poetry
-    rev: '1.6.0'
-    hooks:
-      - id: poetry-check
-      - id: poetry-lock
   - repo: local
     hooks:
       {%- if cookiecutter.with_conventional_commits|int %}

@@ -100,8 +100,8 @@ command_line = "--module pytest"
 data_file = "reports/.coverage"
 source = ["src"]
 
-[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
-output = "reports/coverage.xml"
+[tool.coverage.html]  # https://coverage.readthedocs.io/en/latest/cmd.html#html-reporting-coverage-html
+directory = "reports/htmlcov"
 
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
@@ -305,4 +305,4 @@ max-args = 6
     cmd = "coverage report"
 
     [[tool.poe.tasks.test.sequence]]
-    cmd = "coverage xml"
+    cmd = "coverage html"
