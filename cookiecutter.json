@@ -15,7 +15,7 @@
   "with_streamlit_app": "0",
   "with_typer_cli": "0",
   "continuous_integration": "GitHub",
-  "docstring_style": "NumPy",
+  "docstring_style": "Google",
   "private_package_repository_name": "",
   "private_package_repository_url": "",
   "teamwork_uri": "",
