@@ -64,7 +64,7 @@ pytest = ">=7.3.1"
 pytest-clarity = ">=1.0.1"
 pytest-mock = ">=3.10.0"
 pytest-xdist = ">=3.2.1"
-ruff = ">=0.1.3"
+ruff = ">=0.2.1"
 {%- if cookiecutter.development_environment == "strict" %}
 safety = ">=2.3.4,!=2.3.5"
 shellcheck-py = ">=0.9.0"
@@ -136,8 +136,12 @@ xfail_strict = true
 
 [tool.ruff]  # https://github.com/charliermarsh/ruff
 fix = true
-ignore-init-module-imports = true
 line-length = 100
+src = ["src", "tests"]
+target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
+
+[tool.ruff.lint]
+ignore-init-module-imports = true
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
 ignore = ["E501", "PGH001", "RET504", "S101"]
@@ -147,18 +151,16 @@ select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "
 ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
 unfixable = ["F401", "F841"]
 {%- endif %}
-src = ["src", "tests"]
-target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
 
-[tool.ruff.flake8-tidy-imports]
+[tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 {%- if cookiecutter.development_environment == "strict" %}
 
-[tool.ruff.pycodestyle]
+[tool.ruff.lint.pycodestyle]
 max-doc-length = 100
 {%- endif %}
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "{{ cookiecutter.docstring_style|lower }}"
 
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
