@@ -79,9 +79,14 @@ jupyterlab = ">=3.6.3"
 pdoc = ">=13.1.1"
 {%- if cookiecutter.private_package_repository_name %}
 
+[[tool.poetry.source]]
+name = "pypi"
+priority = "default"
+
 [[tool.poetry.source]]  # https://python-poetry.org/docs/repositories/#using-a-private-repository
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
+priority = "explicit"
 {%- endif %}
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
