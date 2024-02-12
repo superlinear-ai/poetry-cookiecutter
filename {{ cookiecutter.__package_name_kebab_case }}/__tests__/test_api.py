@@ -3,7 +3,7 @@
 import httpx
 from fastapi.testclient import TestClient
 
-from {{ cookiecutter.__package_name_snake_case }}.api import app
+from {{ cookiecutter.__package_name_snake_case }}.serve.api import app
 
 client = TestClient(app)
 

@@ -131,7 +131,7 @@ addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiec
 {%- if cookiecutter.development_environment == "strict" %}
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 {%- endif %}
-testpaths = ["src", "tests"]
+testpaths = ["__tests__"]
 xfail_strict = true
 
 [tool.ruff]  # https://github.com/charliermarsh/ruff
