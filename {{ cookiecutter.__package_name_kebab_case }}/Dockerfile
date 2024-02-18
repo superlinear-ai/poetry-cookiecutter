@@ -1,3 +1,13 @@
+##########################
+#   ____                 
+#  |  _ \                
+#  | |_) | __ _ ___  ___ 
+#  |  _ < / _` / __|/ _ \
+#  | |_) | (_| \__ \  __/
+#  |____/ \__,_|___/\___|
+#                                      
+##########################
+
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION={{ cookiecutter.python_version }}
 FROM {{ cookiecutter.docker_image }} AS base
@@ -30,14 +40,23 @@ RUN python -m venv $VIRTUAL_ENV
 # Set the working directory.
 WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
 
-
+####################################
+#   _____           _              
+#  |  __ \         | |             
+#  | |__) |__   ___| |_ _ __ _   _ 
+#  |  ___/ _ \ / _ \ __| '__| | | |
+#  | |  | (_) |  __/ |_| |  | |_| |
+#  |_|   \___/ \___|\__|_|   \__, |
+#                             __/ |
+#                            |___/ 
+####################################
 
 FROM base as poetry
 
 USER root
 
 # Install Poetry in separate venv so it doesn't pollute the main venv.
-ENV POETRY_VERSION 1.6.1
+ENV POETRY_VERSION 1.7.0
 ENV POETRY_VIRTUAL_ENV /opt/poetry-env
 RUN --mount=type=cache,target=/root/.cache/pip/ \
     python -m venv $POETRY_VIRTUAL_ENV && \
@@ -62,7 +81,19 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     {%- endif %}
     poetry install --only main --no-interaction
 
-
+################################################################
+#  __      _______  _____          _        _____             
+#  \ \    / / ____|/ ____|        | |      |  __ \            
+#   \ \  / / (___ | |     ___   __| | ___  | |  | | _____   __
+#    \ \/ / \___ \| |    / _ \ / _` |/ _ \ | |  | |/ _ \ \ / /
+#     \  /  ____) | |___| (_) | (_| |  __/ | |__| |  __/\ V / 
+#    __\/_ |_____/ \_____\___/ \__,_|\___| |_____/ \___| \_/  
+#   / ____|          | |      (_)                             
+#  | |     ___  _ __ | |_ __ _ _ _ __   ___ _ __              
+#  | |    / _ \| '_ \| __/ _` | | '_ \ / _ \ '__|             
+#  | |___| (_) | | | | || (_| | | | | |  __/ |                
+#   \_____\___/|_| |_|\__\__,_|_|_| |_|\___|_|      
+#################################################################    
 
 FROM poetry as dev
 
@@ -71,8 +102,11 @@ USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes curl git gnupg ssh sudo vim zsh && \
+    apt-get install --no-install-recommends --yes curl git gnupg ssh sudo vim zsh awscli gh less{%-if cookiecutter.with_ml_inference|int %} nodejs npm {%- endif %}&& \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
+    {%-if cookiecutter.with_ml_inference|int %}
+    npm install serverless -g && \
+    {%- endif %}
     usermod --shell /usr/bin/zsh user && \
     echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
 USER user
@@ -113,8 +147,6 @@ RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
-
-
 FROM base AS app
 
 # Copy the virtual environment from the poetry stage.
@@ -131,4 +163,27 @@ CMD [{% if cookiecutter.with_fastapi_api|int %}"api"{% else %}"app"{% endif %}]
 ENTRYPOINT ["/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/{{ cookiecutter.__package_name_kebab_case }}"]
 CMD []
 {%- endif %}
+{%- endif %}
+
+{%- if cookiecutter.with_ml_training|int %}
+################################################################
+#    _____                                  _             
+#   / ____|                                | |            
+#  | (___   __ _  __ _  ___ _ __ ___   __ _| | _____ _ __ 
+#   \___ \ / _` |/ _` |/ _ \ '_ ` _ \ / _` | |/ / _ \ '__|
+#   ____) | (_| | (_| |  __/ | | | | | (_| |   <  __/ |   
+#  |_____/ \__,_|\__, |\___|_| |_| |_|\__,_|_|\_\___|_|   
+#                 __/ |                                   
+#                |___/                                    
+#
+################################################################
+
+FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:2.0-gpu-py310 as sagemaker
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir wandb dvc"[s3]" && \
+    pip freeze
+ARG KEY_ID=""
+ARG SECRET_KEY=""
+ENV AWS_ACCESS_KEY_ID=${KEY_ID}
+ENV AWS_SECRET_ACCESS_KEY=${SECRET_KEY}
 {%- endif %}

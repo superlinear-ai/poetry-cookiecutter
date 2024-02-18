@@ -1,0 +1,156 @@
+name: Create Sagemaker Endpoint
+on:
+  pull_request:
+    branches:
+      - master
+    types: [assigned, ready_for_review]
+
+jobs:
+  check_endpoint:
+    name: Check if Endpoint Exists.
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Configure AWS credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Use GitHub OIDC provider
+          role-to-assume: {% raw %}${{secrets.AWS_ASSUME_ROLE_ARN}}{% endraw %}
+          aws-region: us-east-1
+
+      - name: Run AWS CLI
+        id: aws-cli
+        env:
+          EVENT_SHA: {% raw %}${{github.event.pull_request.head.sha}}{% endraw %}
+        run: |
+          ENDPOINT_DESCRIPTION=$(aws sagemaker list-endpoints --name-contains "${EVENT_SHA:0:7}" --query "Endpoints[0].EndpointName")
+          if [ "$ENDPOINT_DESCRIPTION" = null ] ; then
+            echo "Endpoint does not exist."
+            echo "IS_DEPLOYED=false" >> "$GITHUB_OUTPUT"
+            echo "Endpoint Check: :rocket:" >> $GITHUB_STEP_SUMMARY
+            echo "| Endpoint | Status |" >> $GITHUB_STEP_SUMMARY
+            echo "| -------- | ------ |" >> $GITHUB_STEP_SUMMARY
+            echo "| ${EVENT_SHA:0:7} | Not Deployed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Endpoint exists."
+            echo "IS_DEPLOYED=true" >> "$GITHUB_OUTPUT"
+            echo "Endpoint Check: :rocket:" >> $GITHUB_STEP_SUMMARY
+            echo "| Endpoint | Status |" >> $GITHUB_STEP_SUMMARY
+            echo "| -------- | ------ |" >> $GITHUB_STEP_SUMMARY
+            echo "| ${EVENT_SHA:0:7} | Already in Service |" >> $GITHUB_STEP_SUMMARY
+          fi
+    outputs:
+      IS_DEPLOYED: {% raw %}${{steps.aws-cli.outputs.IS_DEPLOYED}}{% endraw %}
+
+  deploy_endpoint:
+    name: Create Sagemaker Endpoint.
+    needs:
+      - check_endpoint
+    if: |
+      needs.check_endpoint.outputs.IS_DEPLOYED == 'false' &&
+      github.event.assignee.login == 'ajay-bhargava'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    strategy:
+      matrix:
+        python-version: [3.11]
+    steps:
+      #----------------------------------------------
+      #       set environment variables and apps
+      #----------------------------------------------
+      - name: Establish Github App Bot
+        id: github-app-token
+        uses: mercari/github-app-token-generator@v1
+        with:
+          app-id: {% raw %}${{secrets.GH_APP_ID}}{% endraw %}
+          app-private-key: {% raw %}${{secrets.GH_APP_PEM}}{% endraw %}
+          app-installation-id: {% raw %}${{secrets.GH_APP_INSTALLATION_ID}}{% endraw %}
+
+      #----------------------------------------------
+      #       check-out repo and login to AWS
+      #----------------------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Use GitHub OIDC provider
+          role-to-assume: {% raw %}${{secrets.AWS_ASSUME_ROLE_ARN}}{% endraw %}
+          aws-region: us-east-1
+      #----------------------------------------------
+      #       Setup Poetry and Install Dependencies
+      #----------------------------------------------
+      - name: Install Poetry Action
+        uses: snok/install-poetry@v1.3.4
+        with:
+          installer-parallel: true
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
+        uses: actions/setup-python@v5
+        with:
+          python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+          cache: poetry
+
+      - name: Install Poetry Project
+        run: |
+          poetry env use {% raw %}${{ matrix.python-version }}{% endraw %}
+          poetry install --no-interaction --only runtime
+      #----------------------------------------------
+      #       Setup CML Runner
+      #----------------------------------------------
+      - name: Setup CML Runner
+        uses: iterative/setup-cml@v2
+      #----------------------------------------------
+      #       Run Sagemaker model deployment
+      #----------------------------------------------
+      - name: Deploy Sagemaker Endpoint
+        env:
+          SAGEMAKER_IAM_ROLE: {% raw %}${{secrets.SAGEMAKER_IAM_ROLE}}{% endraw %}
+          REPO_TOKEN: {% raw %}${{ steps.github-app-token.outputs.token }}{% endraw %}
+          EVENT_SHA: {% raw %}${{github.event.pull_request.head.sha}}{% endraw %}
+        id: deploy
+        run: |
+          poetry run python3 ./src/{{ cookiecutter.__package_name_snake_case }}/deploy.py
+          cat details.txt >> report.md
+          cml comment create report.md
+
+  write-deployment-sha:
+    name: Write SHA to .env file for Serverless
+    runs-on: ubuntu-latest
+    needs: deploy_endpoint
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Write Updated Deployment SHA to .env file
+        env:
+          DEPLOY_VALUE: {% raw %}${{github.event.pull_request.head.sha}}{% endraw %}
+        run: |
+          touch -c .env
+          echo "DEPLOY_SHA=${DEPLOY_VALUE:0:7}" >> .env
+        working-directory: ./src/serve/
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update Serverless Deployment SHA"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+      #----------------------------------------------
+      #       Future State: Run A/B Test
+      #       Code on Endpoint(Could be part of
+      #       the same deploy.py script)
+      #----------------------------------------------

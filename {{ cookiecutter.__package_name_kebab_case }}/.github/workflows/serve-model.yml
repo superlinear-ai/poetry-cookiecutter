@@ -1,4 +1,4 @@
-name: Deploy or Destroy Endpoint
+name: Serve or Destroy Endpoint
 on: 
   pull_request:
     branches:

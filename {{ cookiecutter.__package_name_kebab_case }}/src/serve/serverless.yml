@@ -1,0 +1,31 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+useDotenv: true
+service: {{cookiecutter.__package_name_kebab_case}}-service
+frameworkVersion: "3"
+org: {{ cookiecutter.organization_name | lower | replace(' ', '') }}
+app: {{ cookiecutter.__package_name_kebab_case }}-application
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: python3.9
+  timeout: 29
+  memorySize: 2048
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action: "sagemaker:*"
+          Resource: "*"
+
+# The `functions` block defines what code to deploy
+functions:
+  api:
+    handler: api.handler
+    events:
+      - httpApi: "*"
+
+plugins:
+  - serverless-python-requirements
+  - serverless-dotenv-plugin

@@ -16,6 +16,78 @@ _Python CLI_: to view this app's CLI commands once it's installed, run `{{ cooki
 _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}REST API{% else %}Streamlit app{% endif %}, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running {% if cookiecutter.with_fastapi_api|int %}`poe api`{% else %}`poe app`{% endif %}.
 {%- endif %}
 
+{%- if cookiecutter.with_ml_training|int % or cookiecutter.with_ml_inference|int %}
+## Developing
+{%- if cookiecutter.with_ml_training|int %}
+_Provisioning Datasets_: This package has `DVC` enabled. Here's an example of your very first dataset if you don't have one yet: 
+
+<details>
+<summary>Adding DVC Datasets</summary>
+
+```python
+"""Get the MNIST dataset."""
+
+import boto3
+from torchvision import datasets, transforms
+
+region = boto3.Session().region_name
+
+datasets.MNIST.mirrors = [
+    f"https://sagemaker-example-files-prod-{region}.s3.amazonaws.com/datasets/image/MNIST/"
+]
+
+train_set = datasets.MNIST(
+    "../data/",
+    download=True,
+    transform=transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+    ),
+)
+```
+
+then you may run: 
+
+```bash
+dvc add data/
+dvc push
+```
+
+This will make the Dataset available at the S3 path that has been specified at repository creation and available to Sagemaker during training. It will also create a `data.dvc` file that you can commit to your repository. 
+</details>
+{%- endif %}
+{%- if cookiecutter.with_ml_inference|int %}
+_Inference Endpoint_: Once a Sagemaker endpoint is deployed, it is important to test its functionality. Here is an example of how to test your endpoint before deploying it to an API gateway: 
+
+<details>
+<summary>Testing Sagemaker Endpoint</summary>
+
+```python
+import json
+
+import boto3
+from src.{{cookiecutter.__package_name_snake_case}}.settings import Settings
+
+SETTINGS = Settings()
+sagemaker_runtime = boto3.client('sagemaker-runtime')
+# This example is for a .png file, but you can change the content type to match your payload
+with open('../data/4.png', 'rb') as f:
+    payload = f.read()
+    try:
+        response = sagemaker_runtime.invoke_endpoint(
+            EndpointName=SETTINGS.github_sha[:7],
+            ContentType='application/octet-stream',  # Change this depending on your payload format
+            Accept='application/json',
+            Body=payload
+        )
+    except Exception as e:
+        raise(e)
+json_body = json.loads(response['Body'].read().decode('utf-8'))
+json_body['prediction'][0]
+```
+</details>
+
+{%- endif %}
+{%- endif %}
 ## Contributing
 
 <details>
@@ -114,10 +186,6 @@ The following development environments are supported:
 1. ⭐️ _GitHub Codespaces_: click on _Code_ and select _Create codespace_ to start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces).
 {%- endif %}
 1. ⭐️ _Dev Container (with container volume)_: click on [Open in Dev Containers](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url={{ cookiecutter.package_url.replace("https://", "git@").replace(".com/", ".com:") if cookiecutter.private_package_repository_url else cookiecutter.package_url }}) to clone this repository in a container volume and create a Dev Container with VS Code.
-1. _Dev Container_: clone this repository, open it with VS Code, and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_.
-1. _PyCharm_: clone this repository, open it with PyCharm, and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote) with the `dev` service.
-1. _Terminal_: clone this repository, open it with your terminal, and run `docker compose up --detach dev` to start a Dev Container in the background, and then run `docker compose exec dev zsh` to open a shell prompt in the Dev Container.
-
 </details>
 
 <details>
@@ -128,6 +196,9 @@ The following development environments are supported:
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
 - Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `pyproject.toml` and `poetry.lock`. Add `--group test` or `--group dev` to install a CI or development dependency, respectively.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
+{%- if cookiecutter.with_ml_training|int %}
+- Run `poe dockerize-requirements` from within the development environment to add training requirements to a Sagemaker package. 
+{%- endif %}
 {%- if cookiecutter.with_conventional_commits|int %}
 - Run `cz bump` to bump the package's version, update the `CHANGELOG.md`, and create a git tag.
 {%- endif %}

@@ -1,0 +1,227 @@
+name: Train Sagemaker Model
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  #----------------------------------------------------------------
+  #   Check if there are files changed between PR commits
+  #----------------------------------------------------------------
+  check_files_changed:
+    if: github.event.pull_request.commits > 0
+    name: Diff PR Commits.
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      #----------------------------------------------
+      #       set environment variables and apps
+      #----------------------------------------------
+      - name: Establish Github App Bot
+        id: github-app-token
+        uses: mercari/github-app-token-generator@v1
+        with:
+          app-id: {% raw %}${{{% endraw %}secrets.GH_APP_ID}}
+          app-private-key: {% raw %}${{{% endraw %}secrets.GH_APP_PEM}}
+          app-installation-id: {% raw %}${{{% endraw %}secrets.GH_APP_INSTALLATION_ID}}
+
+      - name: Set Environment Variables
+        id: vars
+        run: |
+          echo "REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F/ '{print $2}')" >> "$GITHUB_OUTPUT"
+          echo "This is run attempt {% raw %}${{{% endraw %} github.run_attempt }}"
+      #----------------------------------------------
+      #          check-out repo latest commit
+      #----------------------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: {% raw %}${{{% endraw %} github.event.pull_request.head.sha }}
+          fetch-depth: 2
+      #----------------------------------------------
+      #         setup changed-files@v42 action
+      #----------------------------------------------
+      - name: Check if files changed
+        id: changed_files
+        uses: tj-actions/changed-files@v42
+        with:
+          since_last_remote_commit: true
+          files_yaml: |
+            train: 
+              - data.dvc
+              - src/{{cookiecutter.__package_name_snake_case}}/train/**/*
+              - Dockerfile
+
+      - name: Set output
+        env:
+          CHANGED_FILES: {% raw %}${{{% endraw %}steps.changed_files.outputs.train_any_changed}}
+          CHANGE_LIST: {% raw %}${{{% endraw %} steps.changed_files.outputs.train_all_changed_files }}
+        run: |
+          echo "There were files changed...${CHANGED_FILES}, ${CHANGE_LIST}"
+    outputs:
+      files_changed: {% raw %}${{{% endraw %}steps.changed_files.outputs.train_any_changed}}
+  push-to-ecr:
+    name: Push Docker Image to ECR.
+    needs: check_files_changed
+    if: |
+      needs.check_files_changed.outputs.files_changed == 'true' || 
+      needs.check_files_changed.result == 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Set Environment Variables
+        id: vars
+        run: echo "REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F/ '{print $2}')" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Configure AWS credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Use GitHub OIDC provider
+          role-to-assume: {% raw %}${{{% endraw %}secrets.AWS_ASSUME_ROLE_ARN}}
+          aws-region: us-east-1
+      #----------------------------------------------
+      #       Check if ECR Repo Exists
+      #----------------------------------------------
+      - name: Login to Amazon ECR
+        id: login-ecr-home-repo
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: {% raw %}${{{% endraw %}vars.ECR_ACCOUNT_ID}}
+
+      - name: Check if ECR Repository Exists
+        id: check-ecr
+        uses: mnmandahalf/check-ecr-image-exists@v0.1.5
+        with:
+          repository-name: {{cookiecutter.__organization_name_kebab_case}}-sagemaker-container
+          region: us-east-1
+          image-tag: {% raw %}${{{% endraw %} steps.vars.outputs.REPO_NAME }}
+
+      - name: Report if ECR Repository Exists
+        if: steps.check-ecr.outputs.image-exists == 1
+        run: |
+          echo "### :white_check_mark: ECR Repository Exists" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "" 
+          echo "| ECR Repository | ECR Tag |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| {{cookiecutter.__organization_name_kebab_case}}-sagemaker-container | {% raw %}${{{% endraw %} steps.vars.outputs.REPO_NAME }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+      #----------------------------------------------
+      #       If ECR Repo Doesn't Exist Make It.
+      #----------------------------------------------
+      - name: Login to Amazon ECR
+        if: steps.check-ecr.outputs.image-exists == 0
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: "763104351884,{% raw %}${{{% endraw %}vars.ECR_ACCOUNT_ID}}"
+
+      - name: Build, tag, and push image to Amazon ECR
+        if: steps.check-ecr.outputs.image-exists == 0
+        id: build-image
+        env:
+          ECR_REGISTRY: {% raw %}${{{% endraw %}steps.login-ecr-home-repo.outputs.registry}}
+          ECR_REPOSITORY: {{cookiecutter.__organization_name_kebab_case}}-sagemaker-container
+          IMAGE_TAG: {% raw %}${{{% endraw %} steps.vars.outputs.REPO_NAME }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --target sagemaker . --build-arg REGION=us-east-1 --build-arg KEY_ID={% raw %}${{{% endraw %}secrets.DVC_ACCESS_KEY}} --build-arg SECRET_KEY={% raw %}${{{% endraw %}secrets.DVC_SECRET_KEY}}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "### :whale: Docker Image Built and Pushed to ECR" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "" 
+          echo "| ECR Repository | ECR Tag |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| $ECR_REPOSITORY | $IMAGE_TAG |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+  train-on-sagemaker:
+    name: Train Sagemaker Model.
+    needs: push-to-ecr
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      #----------------------------------------------
+      #       Login to Github App Bot
+      #----------------------------------------------
+      - name: Establish Github App Bot
+        id: github-app-token
+        uses: mercari/github-app-token-generator@v1
+        with:
+          app-id: {% raw %}${{{% endraw %}secrets.GH_APP_ID}}
+          app-private-key: {% raw %}${{{% endraw %}secrets.GH_APP_PEM}}
+          app-installation-id: {% raw %}${{{% endraw %}secrets.GH_APP_INSTALLATION_ID}}
+
+      #----------------------------------------------
+      #       check-out repo and login to AWS
+      #----------------------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Use GitHub OIDC provider
+          role-to-assume: {% raw %}${{{% endraw %}secrets.AWS_ASSUME_ROLE_ARN}}
+          aws-region: us-east-1
+      #----------------------------------------------
+      #       Setup Poetry and Install Dependencies
+      #----------------------------------------------
+      - name: Install Poetry Action
+        uses: snok/install-poetry@v1.3.4
+        with:
+          installer-parallel: true
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Set up Python {% raw %}${{{% endraw %} matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: {% raw %}${{{% endraw %} matrix.python-version }}
+          cache: poetry
+
+      - name: Install Poetry Project
+        run: |
+          poetry env use {% raw %}${{{% endraw %} matrix.python-version }}
+          poetry install --no-interaction --only runtime
+      #----------------------------------------------
+      #       Setup CML Runner
+      #----------------------------------------------
+      - name: Setup CML Runner
+        uses: iterative/setup-cml@v2
+      #----------------------------------------------
+      #       Run Sagemaker Training Script
+      #----------------------------------------------
+      - name: Configure and Launch Sagemaker Training Job
+        env:
+          SAGEMAKER_IAM_ROLE: {% raw %}${{{% endraw %}secrets.SAGEMAKER_IAM_ROLE}}
+          WANDB_API_KEY: {% raw %}${{{% endraw %}secrets.WANDB_API_KEY}}
+          REPO_TOKEN: {% raw %}${{{% endraw %} steps.github-app-token.outputs.token }}
+          EVENT_SHA: {% raw %}${{{% endraw %}github.event.pull_request.head.sha}}
+          ECR_ACCOUNT_ID: {% raw %}${{{% endraw %}secrets.ECR_ACCOUNT_ID}}
+        id: train
+        run: |
+          poetry run python3 ./src/{{cookiecutter.__package_name_snake_case}}/fit.py
+          cat details.txt >> report.md
+          cml comment create report.md
+          echo "### :rocket: Sagemaker Training Job Successfully Launched" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Link |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Github Commit | ${EVENT_SHA:0:7} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Sagemaker | [Here](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups/log-group/\$252Faws\$252Fsagemaker\$252FTrainingJobs\$3FlogStreamNameFilter\$3D${EVENT_SHA:0:7}) |" >> $GITHUB_STEP_SUMMARY

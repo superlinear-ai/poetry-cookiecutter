@@ -43,7 +43,7 @@ sentry-sdk = ">=1.16.0"
 {%- if cookiecutter.with_streamlit_app|int %}
 streamlit = ">=1.19.0"
 {%- endif %}
-{%- if cookiecutter.with_typer_cli|int %}
+{%- if cookiecutter.with_typer_cli|int or cookiecutter.with_ml_training|int %}
 typer = { extras = ["all"], version = ">=0.9.0" }
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
@@ -75,13 +75,39 @@ typeguard = ">=3.0.2"
 cruft = ">=2.14.0"
 {%- if cookiecutter.with_jupyter_lab|int %}
 jupyterlab = ">=3.6.3"
+ipywidgets = "^8.1.1"
 {%- endif %}
+{%- if cookiecutter.with_ml_training|int or cookiecutter.with_ml_inference|int %}
+boto3 = ">=1.18.0"
+botocore = ">=1.21.0"
+sagemaker = "^2.203.0"
+{%- endif %}
+{%- if cookiecutter.with_ml_training|int %}
+dvc = {extras = ["s3"], version = "^3.37.0"}
+wandb = "^0.16.2"
+sagemaker-training = ">=4.7.0"
+{%- endif %}
+{%- if cookiecutter.with_ml_inference|int %}
+mangum = "^0.17.0"
 pdoc = ">=13.1.1"
+{%- endif %}
 {%- if cookiecutter.private_package_repository_name %}
 
 [[tool.poetry.source]]  # https://python-poetry.org/docs/repositories/#using-a-private-repository
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
+{%- endif %}
+
+{%- if cookiecutter.with_ml_training|int %}
+
+[tool.poetry.group.sagemaker]
+optional = true
+
+[tool.poetry.group.sagemaker.dependencies]
+torch = "^2.1.2"
+torchvision = "^0.16.2"
+horovod = "^0.28.1"
+packaging = "^23.2"
 {%- endif %}
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
@@ -147,7 +173,7 @@ select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "
 ignore = ["E501", "PGH001", "PGH002", "PGH003", "RET504", "S101"]
 unfixable = ["F401", "F841"]
 {%- endif %}
-src = ["src", "tests"]
+src = ["src", "__tests__"]
 target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
 
 [tool.ruff.flake8-tidy-imports]
@@ -173,7 +199,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
         --host $host \
         --port $port \
         --reload \
-        {{ cookiecutter.__package_name_snake_case }}.api:app
+        serve.api:app
     } else {
       gunicorn \
         --access-logfile - \
@@ -185,7 +211,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
         --worker-class uvicorn.workers.UvicornWorker \
         --worker-tmp-dir /dev/shm \
         --workers 2 \
-        {{ cookiecutter.__package_name_snake_case }}.api:app
+        serve.api:app
     } fi
     """
 
@@ -217,7 +243,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
       --server.address $host
       --server.port $port
       --theme.base light
-      src/{{ cookiecutter.__package_name_snake_case }}/app.py
+      src/serve/app.py
     """
   use_exec = true
 
@@ -296,3 +322,15 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
 
     [[tool.poe.tasks.test.sequence]]
     cmd = "coverage xml"
+
+{%- if cookiecutter.with_ml_training|int %}
+  [tool.poe.tasks.dockerize-requirements]
+  help = "Dockerize training script requirements for Sagemaker Training Job."
+
+    [[tool.poe.tasks.dockerize-requirements.sequence]]
+    shell = """
+      function strip_pip_list() { awk '{print $1}' <<< "$@"; } && \
+      strip_pip_list "$(poetry show --only sagemaker -T)" >> /workspaces/{{cookiecutter.__package_name_kebab_case}}/src/{{cookiecutter.__package_name_snake_case}}/train/requirements.txt
+      """
+    interpreter = "zsh"
+{%- endif %}

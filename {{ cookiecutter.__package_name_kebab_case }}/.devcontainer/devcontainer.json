@@ -4,6 +4,9 @@
     "service": "devcontainer",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/",
     "remoteUser": "user",
+    "mounts": [
+        "source=${localEnv:HOME}/.aws,target=/home/user/.aws,type=bind,consistency=cached"
+    ],
     "overrideCommand": true,
     "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/${localWorkspaceFolderBasename}/ && mkdir -p /workspaces/${localWorkspaceFolderBasename}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/${localWorkspaceFolderBasename}/.git/hooks/",
     "customizations": {
@@ -12,12 +15,29 @@
                 "charliermarsh.ruff",
                 "ms-python.mypy-type-checker",
                 "ms-python.python",
+                "euskadi31.json-pretty-printer",
+                "freetonik.day-night-theme-switcher",
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "github.vscode-github-actions",
+                "mhutchie.git-graph",
+                "ms-python.mypy-type-checker",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-vscode.live-server",
+                "ryanluker.vscode-coverage-gutters",
+                "yzhang.markdown-all-in-one",
                 {%- if cookiecutter.with_jupyter_lab|int %}
                 "ms-toolsai.jupyter",
+                "ms-toolsai.jupyter-keymap",
+                "ms-toolsai.jupyter-renderers",
+                "ms-toolsai.vscode-jupyter-cell-tags",
+                "ms-toolsai.vscode-jupyter-slideshow",
                 {%- endif %}
                 "ryanluker.vscode-coverage-gutters",
                 "tamasfe.even-better-toml",
-                "visualstudioexptteam.vscodeintellicode"
+                "visualstudioexptteam.vscodeintellicode",
+                "GitHub.github-vscode-theme"
             ],
             "settings": {
                 "coverage-gutters.coverageFileNames": [
@@ -42,6 +62,31 @@
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,
                 "ruff.importStrategy": "fromEnvironment",
+                "workbench.preferredDarkColorTheme": "GitHub Dark",
+                "workbench.preferredHighContrastColorTheme": "GitHub Dark High Contrast",
+                "workbench.preferredHighContrastLightColorTheme": "GitHub Light High Contrast",
+                "workbench.preferredLightColorTheme": "GitHub Light",
+                "window.autoDetectColorScheme": true,
+                "files.exclude": {
+                    "**/__pycache__": true,
+                    "**/.github": false,
+                    "**/.gitignore": true,
+                    "**/.gitmodules": true,
+                    "**/.vscode": true,
+                    "**/.debug": true,
+                    "**/.dvc": true,
+                    "**/.dvcignore": true,
+                    "**/.env": true,
+                    "**/.pre-commit-config.yaml": true,
+                    "**/.devcontainer": true,
+                    "**/.cruft.json": true,
+                    "**/.mypy_cache": true,
+                    "**/.pytest_cache": true,
+                    "**/.ruff_cache": true,
+                    "**/.dockerignore": true,
+                    "**/py.typed": true,
+                    "**/**/__init__.py": true
+                  },
                 {%- if cookiecutter.development_environment == "strict" %}
                 "ruff.logLevel": "warn",
                 {%- endif %}
@@ -53,5 +98,6 @@
                 }
             }
         }
-    }
+    },
+    "postCreateCommand": "starship preset plain-text-symbols -o ~/.config/starship.toml"
 }

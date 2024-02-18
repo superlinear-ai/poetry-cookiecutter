@@ -22,10 +22,13 @@ data/
 # Hypothesis
 .hypothesis/
 
+{%- if cookiecutter.with_ml_training | int %}
+{%- else -%}
 # Jupyter
 *.ipynb
 .ipynb_checkpoints/
 notebooks/
+{%- endif %}
 
 # macOS
 .DS_Store
