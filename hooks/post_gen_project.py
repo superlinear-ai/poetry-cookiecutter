@@ -68,6 +68,9 @@ if not with_fastapi_api and not with_streamlit_app:
 if is_ml_inference_script and is_api_endpoint:
     os.remove(".github/workflows/ship.yml")
 
+if is_ml_inference_script and is_api_endpoint and not is_ml_training_script:
+    shutil.rmtree(f"src/{package_name}/deploy")
+    
 # Remove the continuous integration provider that is not selected.
 if continuous_integration != "GitHub":
     shutil.rmtree(".github/")

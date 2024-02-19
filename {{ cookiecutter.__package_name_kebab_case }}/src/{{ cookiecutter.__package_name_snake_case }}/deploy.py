@@ -1,6 +1,43 @@
-"""This module contains the code for deploying the mdoel to Sagemaker following training."""
+"""This module contains the code for deploying the model to Sagemaker following training."""
 import boto3
 import sagemaker
+{{%- if cookiecutter.with_ml_inference|int and cookiecutter.with_fastapi_api|int and not cookiecutter.with_ml_training %}}
+from sagemaker.huggingface import HuggingFaceModel
+from sagemaker.serializers import DataSerializer
+from sagemaker.deserializers import JSONDeserializer
+
+from {{cookiecutter.__package_name_snake_case}}.settings import Settings
+
+# Sagemaker Variables
+SESSION = sagemaker.Session(boto3.Session(region_name="us-east-1"))
+
+# Github and AWS Settings
+SETTINGS = Settings()
+
+# Hub Model configuration. https://huggingface.co/models
+hub = {
+	'HF_MODEL_ID':'google/vit-base-patch16-224',
+	'HF_TASK':'image-classification'
+}
+# create Hugging Face Model Class
+hf_model = HuggingFaceModel(
+	transformers_version='4.37.0',
+	pytorch_version='2.1.0',
+	py_version='py310',
+	env=hub,
+	role=SETTINGS.iam_role, 
+)
+endpoint_name = f"{SETTINGS.short_sha}"
+predictor = hf_model.deploy(
+	initial_instance_count=1,
+	instance_type='ml.m5.xlarge'
+    endpoint_name=endpoint_name,
+    serializer=DataSerializer(),
+    deserializer=JSONDeserializer(),
+    endpoint_logging=True,
+)
+
+{{%- else -%}}
 from sagemaker.deserializers import JSONDeserializer
 from sagemaker.estimator import Estimator
 from sagemaker.pytorch import PyTorchModel
@@ -42,6 +79,7 @@ predictor = model.deploy(
     deserializer=JSONDeserializer(),
     endpoint_logging=True,
 )
+{%- endif %}
 
 # Create a CML Runner Comment
 message = (
