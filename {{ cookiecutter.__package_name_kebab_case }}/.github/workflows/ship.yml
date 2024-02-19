@@ -1,0 +1,98 @@
+name: Ship App to ECR
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: Deployment environment
+        default: development
+        type: choice
+        options:
+          - feature
+          - development
+          - test
+          - acceptance
+          - production
+
+env:
+  DEFAULT_DEPLOYMENT_ENVIRONMENT: feature
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Configure AWS credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Use GitHub OIDC provider
+          role-to-assume: {% raw %}${{{% endraw %}secrets.AWS_ASSUME_ROLE_ARN}}
+          aws-region: us-east-1
+      #----------------------------------------------
+      #       Check if ECR Repo Exists
+      #----------------------------------------------
+      - name: Login to Amazon ECR
+        id: login-ecr-home-repo
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: {% raw %}${{{% endraw %}vars.ECR_ACCOUNT_ID}}
+
+      - name: Check if ECR Repository Exists
+        id: check-ecr
+        uses: mnmandahalf/check-ecr-image-exists@v0.1.5
+        with:
+          repository-name: {{cookiecutter.__organization_name_kebab_case}}-sagemaker-container
+          region: us-east-1
+          image-tag: {% raw %}${{{% endraw %} steps.vars.outputs.REPO_NAME }}
+
+      - name: Report if ECR Repository Exists
+        if: steps.check-ecr.outputs.image-exists == 1
+        run: |
+          echo "### :white_check_mark: ECR Repository Exists" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "" 
+          echo "| ECR Repository | ECR Tag |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| {{cookiecutter.__organization_name_kebab_case}}-sagemaker-container | {% raw %}${{{% endraw %} steps.vars.outputs.REPO_NAME }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+      #----------------------------------------------
+      #       If ECR Repo Doesn't Exist Make It.
+      #----------------------------------------------
+      - name: Login to Amazon ECR
+        if: steps.check-ecr.outputs.image-exists == 0
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: "{% raw %}${{{% endraw %}vars.ECR_ACCOUNT_ID}}"
+
+      - name: Build, tag, and push image to Amazon ECR
+        if: steps.check-ecr.outputs.image-exists == 0
+        id: build-image
+        env:
+          ECR_REGISTRY: {% raw %}${{{% endraw %}steps.login-ecr-home-repo.outputs.registry}}
+          ECR_REPOSITORY: {{cookiecutter.__organization_name_kebab_case}}-sagemaker-container
+          IMAGE_TAG: {% raw %}${{{% endraw %} steps.vars.outputs.REPO_NAME }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --target sagemaker . --build-arg REGION=us-east-1 --build-arg KEY_ID={% raw %}${{{% endraw %}secrets.DVC_ACCESS_KEY}} --build-arg SECRET_KEY={% raw %}${{{% endraw %}secrets.DVC_SECRET_KEY}}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "### :whale: Docker Image Built and Pushed to ECR" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "" 
+          echo "| ECR Repository | ECR Tag |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| $ECR_REPOSITORY | $IMAGE_TAG |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY

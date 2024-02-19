@@ -147,6 +147,15 @@ RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
 
+##########################
+#   ____  _     _    
+#  / ___|| |__ (_)_ __  
+#  \___ \| '_ \| | '_ \ 
+#   ___) | | | | | |_) |
+#  |____/|_| |_|_| .__/ 
+#                |_|    
+##########################
+
 FROM base AS app
 
 # Copy the virtual environment from the poetry stage.
