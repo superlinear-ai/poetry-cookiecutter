@@ -51,6 +51,10 @@ if not is_ml_inference_script:
     os.remove(".github/workflows/create-endpoint.yml")
     shutil.rmtree(f"src/{package_name}/deploy")
 
+# Neither ML training nor inference is selected.
+if not is_ml_training_script and not is_ml_inference_script:
+    os.remove(f"src/{package_name}/settings.py")
+
 # Remove Typer if not selected.
 if not with_typer_cli:
     os.remove(f"src/{package_name}/cli.py")
