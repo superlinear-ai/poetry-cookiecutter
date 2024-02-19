@@ -1,7 +1,7 @@
 """This module contains the code for deploying the model to Sagemaker following training."""
 import boto3
 import sagemaker
-{{%- if cookiecutter.with_ml_inference|int and cookiecutter.with_fastapi_api|int and not cookiecutter.with_ml_training %}}
+{{%- if cookiecutter.with_ml_inference|int and cookiecutter.with_fastapi_api|int and not cookiecutter.with_ml_training|int %}}
 from sagemaker.huggingface import HuggingFaceModel
 from sagemaker.serializers import DataSerializer
 from sagemaker.deserializers import JSONDeserializer
