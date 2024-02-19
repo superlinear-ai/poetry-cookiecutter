@@ -37,7 +37,7 @@ if not with_streamlit_app:
 # Remove ML training scripts if not selected.
 if not is_ml_training_script:
     os.remove(f"src/{package_name}/fit.py")
-    os.remove("__tests__/test_ml_cli.py")
+    os.remove("__tests__/test_train.py")
     os.remove(".github/workflows/train.yml")
     shutil.rmtree(f"src/{package_name}/train")
 

@@ -12,14 +12,11 @@ on:
         default: development
         type: choice
         options:
-          - feature
           - development
-          - test
-          - acceptance
           - production
 
 env:
-  DEFAULT_DEPLOYMENT_ENVIRONMENT: feature
+  DEFAULT_DEPLOYMENT_ENVIRONMENT: development
 
 jobs:
   deploy:
