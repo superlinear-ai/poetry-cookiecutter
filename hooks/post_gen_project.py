@@ -27,7 +27,7 @@ if not with_fastapi_api:
 # Remove Sentry if not selected.
 if not with_sentry_logging:
     os.remove(f"src/{package_name}/sentry.py")
-    os.remove("tests/test_sentry.py")
+    os.remove("__tests__/test_sentry.py")
 
 # Remove Streamlit if not selected.
 if not with_streamlit_app:
@@ -54,7 +54,7 @@ if not is_ml_inference_script:
 # Remove Typer if not selected.
 if not with_typer_cli:
     os.remove(f"src/{package_name}/cli.py")
-    os.remove("tests/test_cli.py")
+    os.remove("__tests__/test_cli.py")
 
 # Remove the continuous integration provider that is not selected.
 if continuous_integration != "GitHub":
