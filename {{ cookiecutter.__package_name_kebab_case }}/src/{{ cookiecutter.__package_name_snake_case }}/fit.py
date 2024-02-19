@@ -18,19 +18,13 @@ run_id = wandb.util.generate_id()  # type: ignore
 wandb.init(
     id=run_id,
     project=settings.github_repo_name,
-    entity="{{cookiecutter.variable_name | lower | replace(' ', '_') | replace('-', '_')}}",
+    entity="{{cookiecutter.author_name | lower | replace(' ', '_') | replace('-', '_')}}",
     name=settings.short_sha,
     tags=["debugging", "wandb", "sagemaker"],
 )
 wandb_run_url = wandb.run.get_url()  # type: ignore
 
-# Hyperparameters
-hyperparameters = {
-    "epochs": 20,
-    "momentum": 0.5,
-}
-
-# Environment Variables
+# Environment Variables to pass to the Estimator
 environment = {
     "WANDB_RUN_ID": run_id,
     "WANDB_API_KEY": settings.wandb_api_key,
@@ -47,7 +41,6 @@ estimator = Estimator(
     instance_type=TRAINING_INSTANCE,
     instance_count=1,
     environment=environment,
-    hyperparameters=hyperparameters,  # type: ignore
     base_job_name=settings.output_s3_uri,
     output_path=settings.output_s3_uri,
     code_location=settings.output_s3_uri,
