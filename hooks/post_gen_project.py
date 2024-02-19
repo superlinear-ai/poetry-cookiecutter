@@ -70,7 +70,9 @@ if is_ml_inference_script and is_api_endpoint:
 
 if is_ml_inference_script and is_api_endpoint and not is_ml_training_script:
     shutil.rmtree(f"src/{package_name}/deploy")
-    
+    os.remove(f"src/{package_name}/deploy.py")
+    os.rename(f"src/{package_name}/deploy-inference.py", f"src/{package_name}/deploy.py")
+
 # Remove the continuous integration provider that is not selected.
 if continuous_integration != "GitHub":
     shutil.rmtree(".github/")

@@ -1,11 +1,9 @@
 """This module contains the code for deploying the model to Sagemaker following training."""
 import boto3
 import sagemaker
+from sagemaker.huggingface import HuggingFaceModel
+from sagemaker.serializers import DataSerializer
 from sagemaker.deserializers import JSONDeserializer
-from sagemaker.estimator import Estimator
-from sagemaker.pytorch import PyTorchModel
-from sagemaker.serializers import IdentitySerializer
-
 from {{cookiecutter.__package_name_snake_case}}.settings import Settings
 
 # Sagemaker Variables
@@ -14,31 +12,26 @@ SESSION = sagemaker.Session(boto3.Session(region_name="us-east-1"))
 # Github and AWS Settings
 SETTINGS = Settings()
 
-# Get the model path from the training job
-model_path = Estimator.attach(
-    training_job_name=SETTINGS.short_sha, sagemaker_session=SESSION
-).model_data
-
-# Define the Model
-model = PyTorchModel(
-    model_data=model_path,  # type: ignore
-    role=SETTINGS.iam_role,
-    sagemaker_session=SESSION,
-    source_dir="./src/{{cookiecutter.__package_name_snake_case}}/deploy/",
-    framework_version="2.1",
-    py_version="py310",
-    entry_point="inference.py",
-    name=SETTINGS.short_sha,
-    code_location=SETTINGS.output_s3_uri,
+# Hub Model configuration. https://huggingface.co/models
+hub = {
+	'HF_MODEL_ID':'google/vit-base-patch16-224',
+	'HF_TASK':'image-classification'
+}
+# create Hugging Face Model Class
+hf_model = HuggingFaceModel(
+	transformers_version='4.37.0',
+	pytorch_version='2.1.0',
+	py_version='py310',
+	env=hub,
+	role=SETTINGS.iam_role, 
 )
 
-# Deploy the Model
 endpoint_name = f"{SETTINGS.short_sha}"
-predictor = model.deploy(
-    initial_instance_count=1,
-    instance_type="ml.m5.large",
+predictor = hf_model.deploy(
+	initial_instance_count=1,
+	instance_type='ml.m5.xlarge',
     endpoint_name=endpoint_name,
-    serializer=IdentitySerializer(),
+    serializer=DataSerializer(),
     deserializer=JSONDeserializer(),
     endpoint_logging=True,
 )
