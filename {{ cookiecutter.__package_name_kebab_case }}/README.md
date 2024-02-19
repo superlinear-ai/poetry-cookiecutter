@@ -16,7 +16,7 @@ _Python CLI_: to view this app's CLI commands once it's installed, run `{{ cooki
 _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}REST API{% else %}Streamlit app{% endif %}, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running {% if cookiecutter.with_fastapi_api|int %}`poe api`{% else %}`poe app`{% endif %}.
 {%- endif %}
 
-{%- if cookiecutter.with_ml_training|int % or cookiecutter.with_ml_inference|int %}
+{%- if cookiecutter.with_ml_training|int or cookiecutter.with_ml_inference|int %}
 ## Developing
 {%- if cookiecutter.with_ml_training|int %}
 _Provisioning Datasets_: This package has `DVC` enabled. Here's an example of your very first dataset if you don't have one yet: 
