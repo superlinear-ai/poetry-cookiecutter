@@ -48,6 +48,7 @@ if not is_ml_inference_script:
     os.remove("src/serve/package.json")
     os.remove("src/serve/requirements.txt")
     os.remove("src/serve/serverless.yml")
+    os.remove(f"src/{package_name}/deploy-inference.py")
     shutil.rmtree(f"src/{package_name}/deploy")
 
 # Neither ML training nor inference is selected.
