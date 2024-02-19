@@ -2,7 +2,7 @@
 
 from typer.testing import CliRunner
 
-from {{ cookiecutter.__package_name_snake_case }}cli import app
+from {{ cookiecutter.__package_name_snake_case }}.cli import app
 
 runner = CliRunner()
 

@@ -102,7 +102,7 @@ USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes curl git gnupg ssh sudo vim zsh awscli gh less{%-if cookiecutter.with_ml_inference|int %} nodejs npm {%- endif %}&& \
+    apt-get install --no-install-recommends --yes curl git gnupg ssh sudo vim zsh awscli gh less {%-if cookiecutter.with_ml_inference|int %} nodejs npm {%- endif %}&& \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     {%-if cookiecutter.with_ml_inference|int %}
     npm install serverless -g && \
