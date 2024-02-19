@@ -12,12 +12,6 @@ class Settings(BaseSettings):
                 github_actor (str): The username of the GitHub actor (user or bot) triggering the pipeline.
                 output_s3_uri (str): The S3 URI for the output of the pipeline.
                 ecr_account_id (str): The ID of the AWS account where the ECR repository is located.
-
-    Methods:
-    check_s3_uri(cls, v): A validator method that checks if the provided URI is a valid S3 URI.
-
-    Config:
-    env_file (str): The name of the environment file to load configuration from.
     """
 
     # Github Actions environment variables

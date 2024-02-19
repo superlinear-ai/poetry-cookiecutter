@@ -6,7 +6,7 @@
 
 ## Using
 
-{% if cookiecutter.with_fastapi_api|int or cookiecutter.with_typer_cli|int or cookiecutter.with_streamlit_app|int %}_Python package_: t{% else %}T{% endif %}o add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.__package_name_kebab_case }}`.
+{% if not cookiecutter.with_fastapi_api|int or not cookiecutter.with_streamlit_app|int or not cookiecutter.with_ml_training|int or not cookiecutter.with_ml_inference|int %}{% else %}_Python package_: to add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.__package_name_kebab_case }}`.{% endif %}
 {%- if cookiecutter.with_typer_cli|int %}
 
 _Python CLI_: to view this app's CLI commands once it's installed, run `{{ cookiecutter.__package_name_kebab_case }} --help`.
@@ -52,7 +52,8 @@ dvc add data/
 dvc push
 ```
 
-This will make the Dataset available at the S3 path that has been specified at repository creation and available to Sagemaker during training. It will also create a `data.dvc` file that you can commit to your repository. 
+This will make the Dataset available at the following S3 path: `s3://{{cookiecutter.__organization_name_kebab_case}}-sagemaker/datasets/{{cookiecutter.__package_name_kebab_case}}/` that has been specified at repository creation and available to Sagemaker during training. It will also create a `data.dvc` file that you can commit to your repository. 
+
 </details>
 {%- endif %}
 {%- if cookiecutter.with_ml_inference|int %}
@@ -88,13 +89,15 @@ json_body['prediction'][0]
 
 {%- endif %}
 {%- endif %}
+
+
 ## Contributing
 
 <details>
 <summary>Prerequisites</summary>
 
 <details>
-<summary>1. Set up Git to use SSH</summary>
+<summary>Set up Git to use SSH</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
@@ -114,7 +117,7 @@ json_body['prediction'][0]
 </details>
 
 <details>
-<summary>2. Install Docker</summary>
+<summary>Install Docker</summary>
 
 1. [Install Docker Desktop](https://www.docker.com/get-started).
     - Enable _Use Docker Compose V2_ in Docker Desktop's preferences window.
@@ -140,7 +143,7 @@ json_body['prediction'][0]
 </details>
 
 <details>
-<summary>3. Install VS Code or PyCharm</summary>
+<summary>Install VS Code or PyCharm</summary>
 
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
 2. _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use it.
@@ -149,7 +152,7 @@ json_body['prediction'][0]
 {%- if cookiecutter.private_package_repository_name %}
 
 <details>
-<summary>4. Configure Poetry to use the private package repository</summary>
+<summary>Configure Poetry to use the private package repository</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
@@ -176,7 +179,41 @@ json_body['prediction'][0]
 </details>
 {%- endif %}
 
+{%- if cookiecutter.with_ml_training|int %}
+
+<details>
+<summary>Configure DVC</summary>
+
+1. Login to S3 and create a new bucket for DVC to use. The bucket and key-prefix should be named as such: `s3://{{cookiecutter.__organization_name_kebab_case}}-sagemaker/datasets/{{cookiecutter.__package_name_kebab_case}}/`
+
 </details>
+
+<details>
+<summary>Configure Github OIDC Provider.</summary>
+
+1. Boilerplate for further instructions for later.
+
+</details>
+
+<details>
+<summary>Configure AWS Role ARN.</summary>
+
+1. Boilerplate for further instructions for later.
+
+</details>
+
+<details>
+<summary>Configure W&B Account.</summary>
+
+1. Boilerplate for further instructions for later.
+
+</details>
+{%- endif %}
+
+
+</details>
+
+## Environments
 
 <details open>
 <summary>Development environments</summary>
