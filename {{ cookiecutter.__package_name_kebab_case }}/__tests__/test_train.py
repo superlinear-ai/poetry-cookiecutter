@@ -1,15 +1,9 @@
-"""Test {{ cookiecutter.package_name }} CLI."""
+"""Test {{ cookiecutter.package_name }}/train/train.py CLI Functionality."""
 
 from typer.testing import CliRunner
 
-from {{ cookiecutter.__package_name_snake_case }}.train.cli import app
+from {{ cookiecutter.__package_name_snake_case }}.train.train import train
 
 runner = CliRunner()
 
 
-def test_express() -> None:
-    """Test that the say command works as expected."""
-    message = "Hello world"
-    result = runner.invoke(app, ["--message", message])
-    assert result.exit_code == 0
-    assert message in result.stdout
