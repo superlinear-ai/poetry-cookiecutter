@@ -34,11 +34,6 @@ if not with_sentry_logging:
 if not with_streamlit_app:
     os.remove(f"src/serve/app.py")
 
-# Remove Serve Directory if neither FastAPI nor Streamlit is selected.
-if not with_fastapi_api and not with_streamlit_app:
-    os.remove(".github/workflows/serve.yml")
-    shutil.rmtree("src/serve")
-
 # Remove ML training scripts if not selected.
 if not is_ml_training_script:
     os.remove(f"src/{package_name}/fit.py")
@@ -53,7 +48,6 @@ if not is_ml_inference_script:
     os.remove("src/serve/package.json")
     os.remove("src/serve/requirements.txt")
     os.remove("src/serve/serverless.yml")
-    os.remove(".github/workflows/serve.yml")
     shutil.rmtree(f"src/{package_name}/deploy")
 
 # Neither ML training nor inference is selected.
@@ -64,6 +58,11 @@ if not is_ml_training_script and not is_ml_inference_script:
 if not with_typer_cli:
     os.remove(f"src/{package_name}/cli.py")
     os.remove("__tests__/test_cli.py")
+
+# Remove Serve Directory if neither FastAPI nor Streamlit is selected.
+if not with_fastapi_api and not with_streamlit_app:
+    os.remove(".github/workflows/serve.yml")
+    shutil.rmtree("src/serve")
 
 # Remove the continuous integration provider that is not selected.
 if continuous_integration != "GitHub":
