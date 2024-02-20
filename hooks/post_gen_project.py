@@ -68,11 +68,16 @@ if not with_fastapi_api and not with_streamlit_app:
 
 if is_ml_inference_script and is_api_endpoint:
     os.remove(".github/workflows/ship.yml")
+    os.remove("src/serve/api.py")
+    os.rename("src/serve/api-ml-inference.py", "src/serve/api.py")
 
 if is_ml_inference_script and is_api_endpoint and not is_ml_training_script:
     shutil.rmtree(f"src/{package_name}/deploy")
     os.remove(f"src/{package_name}/deploy.py")
     os.rename(f"src/{package_name}/deploy-inference.py", f"src/{package_name}/deploy.py")
+
+if is_api_endpoint and not is_ml_inference_script:
+    os.remove("src/serve/api-ml-inference.py")
 
 if is_ml_training_script and is_ml_inference_script:
     os.remove(f"src/{package_name}/deploy-inference.py")
