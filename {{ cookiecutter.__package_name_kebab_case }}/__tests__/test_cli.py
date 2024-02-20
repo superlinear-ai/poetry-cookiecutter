@@ -7,7 +7,7 @@ from {{ cookiecutter.__package_name_snake_case }}.cli import app
 runner = CliRunner()
 
 
-def test_say() -> None:
+def test_express() -> None:
     """Test that the say command works as expected."""
     message = "Hello world"
     result = runner.invoke(app, ["--message", message])

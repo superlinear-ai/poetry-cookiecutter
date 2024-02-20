@@ -1,4 +1,5 @@
 {
+  "organization_name": "With Context",
   "package_name": "My Package",
   "package_description": "A Python package that ...",
   "package_url": "https://github.com/user/my-package",
@@ -14,10 +15,13 @@
   "with_sentry_logging": "0",
   "with_streamlit_app": "0",
   "with_typer_cli": "0",
+  "with_ml_training": "0",
+  "with_ml_inference": "0",
   "continuous_integration": ["GitHub", "GitLab"],
   "docstring_style": ["NumPy", "Google"],
   "private_package_repository_name": "",
   "private_package_repository_url": "",
+  "__organization_name_kebab_case": "{{ cookiecutter.organization_name|slugify }}",
   "__package_name_kebab_case": "{{ cookiecutter.package_name|slugify }}",
   "__package_name_snake_case": "{{ cookiecutter.package_name|slugify(separator='_') }}"
 }

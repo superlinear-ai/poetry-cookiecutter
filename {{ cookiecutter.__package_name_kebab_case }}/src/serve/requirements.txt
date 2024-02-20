@@ -1,0 +1,7 @@
+boto3==1.26.90
+mangum
+starlette
+fastapi
+python-multipart
+python-dotenv
+pydantic

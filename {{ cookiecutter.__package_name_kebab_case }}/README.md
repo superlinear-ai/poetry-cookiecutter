@@ -6,7 +6,7 @@
 
 ## Using
 
-{% if cookiecutter.with_fastapi_api|int or cookiecutter.with_typer_cli|int or cookiecutter.with_streamlit_app|int %}_Python package_: t{% else %}T{% endif %}o add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.__package_name_kebab_case }}`.
+{% if not cookiecutter.with_fastapi_api|int or not cookiecutter.with_streamlit_app|int or not cookiecutter.with_ml_training|int or not cookiecutter.with_ml_inference|int %}{% else %}_Python package_: to add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.__package_name_kebab_case }}`.{% endif %}
 {%- if cookiecutter.with_typer_cli|int %}
 
 _Python CLI_: to view this app's CLI commands once it's installed, run `{{ cookiecutter.__package_name_kebab_case }} --help`.
@@ -16,13 +16,88 @@ _Python CLI_: to view this app's CLI commands once it's installed, run `{{ cooki
 _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}REST API{% else %}Streamlit app{% endif %}, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running {% if cookiecutter.with_fastapi_api|int %}`poe api`{% else %}`poe app`{% endif %}.
 {%- endif %}
 
+{%- if cookiecutter.with_ml_training|int or cookiecutter.with_ml_inference|int %}
+## Developing
+{%- if cookiecutter.with_ml_training|int %}
+_Provisioning Datasets_: This package has `DVC` enabled. Here's an example of your very first dataset if you don't have one yet: 
+
+<details>
+<summary>Adding DVC Datasets</summary>
+
+```python
+"""Get the MNIST dataset."""
+
+import boto3
+from torchvision import datasets, transforms
+
+region = boto3.Session().region_name
+
+datasets.MNIST.mirrors = [
+    f"https://sagemaker-example-files-prod-{region}.s3.amazonaws.com/datasets/image/MNIST/"
+]
+
+train_set = datasets.MNIST(
+    "../data/",
+    download=True,
+    transform=transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+    ),
+)
+```
+
+then you may run: 
+
+```bash
+dvc add data/
+dvc push
+```
+
+This will make the Dataset available at the following S3 path: `s3://{{cookiecutter.__organization_name_kebab_case}}-sagemaker/datasets/{{cookiecutter.__package_name_kebab_case}}/` that has been specified at repository creation and available to Sagemaker during training. It will also create a `data.dvc` file that you can commit to your repository. 
+
+</details>
+{%- endif %}
+{%- if cookiecutter.with_ml_inference|int %}
+_Inference Endpoint_: Once a Sagemaker endpoint is deployed, it is important to test its functionality. Here is an example of how to test your endpoint before deploying it to an API gateway: 
+
+<details>
+<summary>Testing Sagemaker Endpoint</summary>
+
+```python
+import json
+
+import boto3
+from src.{{cookiecutter.__package_name_snake_case}}.settings import Settings
+
+SETTINGS = Settings()
+sagemaker_runtime = boto3.client('sagemaker-runtime')
+# This example is for a .png file, but you can change the content type to match your payload
+with open('../data/4.png', 'rb') as f:
+    payload = f.read()
+    try:
+        response = sagemaker_runtime.invoke_endpoint(
+            EndpointName=SETTINGS.github_sha[:7],
+            ContentType='application/octet-stream',  # Change this depending on your payload format
+            Accept='application/json',
+            Body=payload
+        )
+    except Exception as e:
+        raise(e)
+json_body = json.loads(response['Body'].read().decode('utf-8'))
+json_body['prediction'][0]
+```
+</details>
+
+{%- endif %}
+{%- endif %}
+
+
 ## Contributing
 
 <details>
 <summary>Prerequisites</summary>
 
 <details>
-<summary>1. Set up Git to use SSH</summary>
+<summary>Set up Git to use SSH</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
@@ -42,7 +117,7 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 </details>
 
 <details>
-<summary>2. Install Docker</summary>
+<summary>Install Docker</summary>
 
 1. [Install Docker Desktop](https://www.docker.com/get-started).
     - Enable _Use Docker Compose V2_ in Docker Desktop's preferences window.
@@ -68,7 +143,7 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 </details>
 
 <details>
-<summary>3. Install VS Code or PyCharm</summary>
+<summary>Install VS Code or PyCharm</summary>
 
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
 2. _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use it.
@@ -77,7 +152,7 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 {%- if cookiecutter.private_package_repository_name %}
 
 <details>
-<summary>4. Configure Poetry to use the private package repository</summary>
+<summary>Configure Poetry to use the private package repository</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
 1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
@@ -104,7 +179,41 @@ _Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}RE
 </details>
 {%- endif %}
 
+{%- if cookiecutter.with_ml_training|int %}
+
+<details>
+<summary>Configure DVC</summary>
+
+1. Login to S3 and create a new bucket for DVC to use. The bucket and key-prefix should be named as such: `s3://{{cookiecutter.__organization_name_kebab_case}}-sagemaker/datasets/{{cookiecutter.__package_name_kebab_case}}/`
+
 </details>
+
+<details>
+<summary>Configure Github OIDC Provider.</summary>
+
+1. Boilerplate for further instructions for later.
+
+</details>
+
+<details>
+<summary>Configure AWS Role ARN.</summary>
+
+1. Boilerplate for further instructions for later.
+
+</details>
+
+<details>
+<summary>Configure W&B Account.</summary>
+
+1. Boilerplate for further instructions for later.
+
+</details>
+{%- endif %}
+
+
+</details>
+
+## Environments
 
 <details open>
 <summary>Development environments</summary>
@@ -114,10 +223,6 @@ The following development environments are supported:
 1. ⭐️ _GitHub Codespaces_: click on _Code_ and select _Create codespace_ to start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces).
 {%- endif %}
 1. ⭐️ _Dev Container (with container volume)_: click on [Open in Dev Containers](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url={{ cookiecutter.package_url.replace("https://", "git@").replace(".com/", ".com:") if cookiecutter.private_package_repository_url else cookiecutter.package_url }}) to clone this repository in a container volume and create a Dev Container with VS Code.
-1. _Dev Container_: clone this repository, open it with VS Code, and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_.
-1. _PyCharm_: clone this repository, open it with PyCharm, and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote) with the `dev` service.
-1. _Terminal_: clone this repository, open it with your terminal, and run `docker compose up --detach dev` to start a Dev Container in the background, and then run `docker compose exec dev zsh` to open a shell prompt in the Dev Container.
-
 </details>
 
 <details>
@@ -128,6 +233,9 @@ The following development environments are supported:
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
 - Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `pyproject.toml` and `poetry.lock`. Add `--group test` or `--group dev` to install a CI or development dependency, respectively.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
+{%- if cookiecutter.with_ml_training|int %}
+- Run `poe dockerize-requirements` from within the development environment to add training requirements to a Sagemaker package. 
+{%- endif %}
 {%- if cookiecutter.with_conventional_commits|int %}
 - Run `cz bump` to bump the package's version, update the `CHANGELOG.md`, and create a git tag.
 {%- endif %}

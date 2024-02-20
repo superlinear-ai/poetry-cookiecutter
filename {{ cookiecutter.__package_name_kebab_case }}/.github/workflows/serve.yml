@@ -1,0 +1,154 @@
+name: Serve or Destroy Endpoint
+on: 
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+  workflow_dispatch: 
+    inputs:
+      action:
+        description: "Choose action to perform."
+        required: true
+        type: choice
+        default: "destroy"
+        options:
+          - "deploy"
+          - "destroy"
+
+jobs:
+  deploy_endpoint_to_lambda:
+    # this job will only run if the PR has been merged
+    if: github.event.pull_request.merged == true || inputs.action == 'deploy'
+    name: Deploy Endpoint and Lambda to Public API Gateway
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+        # Change this so that only ./src/serverless is checked out
+        with:
+          sparse-checkout: "src/serve/"
+          sparse-checkout-cone-mode: false
+      #----------------------------------------------
+      #       Setup Platform
+      #----------------------------------------------
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: {% raw %}${{ matrix.node-version }}{% endraw %}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: {% raw %}${{secrets.AWS_ASSUME_ROLE_ARN}}{% endraw %}
+          aws-region: us-east-1
+      #----------------------------------------------
+      #       Deploy Serverless
+      #----------------------------------------------
+      - name: Deploy SLS Endpoint
+        id: deploy-sls
+        env:
+          SERVERLESS_ACCESS_KEY: {% raw %}${{ secrets.SERVERLESS_ACCESS_KEY }}{% endraw %}
+        run: |
+          source .env
+          npm install -g serverless
+          npm ci
+          serverless deploy --verbose
+          URL="$(serverless info --verbose | grep endpoint | sed -n 's/^endpoint: ANY - //p')"
+          echo "Endpoint Deployed :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "| Endpoint | URL |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo "| API Gateway | [Here]($URL/docs) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+        working-directory: ./src/serve
+
+  destroy_endpoint:
+    # this job will only run if the PR has been closed without being merged
+    if: github.event.pull_request.merged == false || inputs.action == 'destroy'
+    name: Destroy Sagemaker Endpoint
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+        with:
+          sparse-checkout: "src/serve/"
+          sparse-checkout-cone-mode: false
+
+      - name: Configure AWS Credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Use Github OIDC provider to assume the role
+          role-to-assume: {% raw %}${{secrets.AWS_ASSUME_ROLE_ARN}}{% endraw %}
+          aws-region: us-east-1
+
+      - name: Destroy Sagemaker Endpoint
+        id: destroy_endpoint
+        run: |
+          source .env
+          aws sagemaker delete-endpoint --endpoint-name ${DEPLOY_SHA:0:7}
+          echo "Endpoint Destroyed: ${DEPLOY_SHA:0:7} :fire:" >> "$GITHUB_STEP_SUMMARY"
+        working-directory: ./src/serve
+
+  destroy_serverless:
+    if: inputs.action == 'destroy'
+    needs:
+      - destroy_endpoint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+        with:
+          sparse-checkout: "src/serve/"
+          sparse-checkout-cone-mode: false
+      #----------------------------------------------
+      #       Setup Platform
+      #----------------------------------------------
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: {% raw %}${{ matrix.node-version }}{% endraw %}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: {% raw %}${{secrets.AWS_ASSUME_ROLE_ARN}}{% endraw %}
+          aws-region: us-east-1
+      #----------------------------------------------
+      #       Deploy Serverless
+      #----------------------------------------------
+      - name: Destroy SLS Endpoint
+        id: destroy-sls
+        env:
+          SERVERLESS_ACCESS_KEY: {% raw %}${{ secrets.SERVERLESS_ACCESS_KEY }}{% endraw %}
+        run: |
+          source .env
+          npm install -g serverless
+          npm ci
+          serverless remove --verbose
+          echo "Serverless Endpoint ${DEPLOY_SHA:0:7} Destroyed :fire:" >> $GITHUB_STEP_SUMMARY
+        working-directory: ./src/serve
