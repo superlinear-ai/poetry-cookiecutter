@@ -15,8 +15,7 @@ repository = "{{ cookiecutter.package_url }}"
 bump_message = "bump(release): v$current_version → v$new_version"
 tag_format = "v$version"
 update_changelog_on_bump = true
-version = "0.0.0"
-version_files = ["pyproject.toml:version"]
+version_provider = "poetry"
 {%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
 
