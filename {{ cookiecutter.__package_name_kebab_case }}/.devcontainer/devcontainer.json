@@ -12,9 +12,7 @@
                 "charliermarsh.ruff",
                 "ms-python.mypy-type-checker",
                 "ms-python.python",
-                {%- if cookiecutter.with_jupyter_lab|int %}
                 "ms-toolsai.jupyter",
-                {%- endif %}
                 "ryanluker.vscode-coverage-gutters",
                 "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode"
