@@ -72,6 +72,7 @@ typeguard = ">=3.0.2"
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 cruft = ">=2.14.0"
+ipykernel = ">=6.29.2"
 {%- if cookiecutter.with_jupyter_lab|int %}
 jupyterlab = ">=3.6.3"
 {%- endif %}
