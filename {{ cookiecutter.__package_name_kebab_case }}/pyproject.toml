@@ -73,9 +73,6 @@ typeguard = ">=3.0.2"
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 cruft = ">=2.14.0"
 ipykernel = ">=6.29.2"
-{%- if cookiecutter.with_jupyter_lab|int %}
-jupyterlab = ">=3.6.3"
-{%- endif %}
 pdoc = ">=13.1.1"
 {%- if cookiecutter.private_package_repository_name %}
 
@@ -261,21 +258,6 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
     name = "outputdirectory"
     options = ["--output-directory"]
     default = "docs"
-{%- if cookiecutter.with_jupyter_lab|int %}
-
-  [tool.poe.tasks.lab]
-  help = "Run Jupyter Lab"
-
-    [[tool.poe.tasks.lab.sequence]]
-    cmd = "mkdir -p notebooks"
-
-    [[tool.poe.tasks.lab.sequence]]
-    cmd = """
-      jupyter lab
-        --allow-root
-        --notebook-dir notebooks
-      """
-{%- endif %}
 
   [tool.poe.tasks.lint]
   help = "Lint this package"
