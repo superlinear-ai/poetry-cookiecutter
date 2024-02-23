@@ -37,6 +37,7 @@
                 ],
                 "files.autoSave": "onFocusChange",
                 "mypy-type-checker.importStrategy": "fromEnvironment",
+                "notebook.formatOnSave.enabled": true,
                 "python.defaultInterpreterPath": "/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/python",
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,
