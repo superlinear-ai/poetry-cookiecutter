@@ -6,6 +6,7 @@
   "author_email": "john@example.com",
   "python_version": "3.8",
   "docker_image": "python:$PYTHON_VERSION-slim",
+  "with_zscaler_cert": "1",
   "development_environment": ["simple", "strict"],
   "with_conventional_commits": "{% if cookiecutter.development_environment == 'simple' %}0{% else %}1{% endif %}",
   "with_fastapi_api": "0",

@@ -6,6 +6,11 @@
     "remoteUser": "user",
     "overrideCommand": true,
     "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/${localWorkspaceFolderBasename}/ && mkdir -p /workspaces/${localWorkspaceFolderBasename}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/${localWorkspaceFolderBasename}/.git/hooks/",
+    {%- if cookiecutter.with_zscaler_cert|int %}
+    "containerEnv": {
+        "NODE_EXTRA_CA_CERTS": "/usr/local/share/ca-certificates/zscaler_root.crt"
+    },
+    {%- endif %}
     "customizations": {
         "vscode": {
             "extensions": [

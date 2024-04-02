@@ -13,6 +13,12 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 {%- endif %}
 
+{%- if cookiecutter.with_zscaler_cert|int %}
+# Add the ZScaler CA Cert to the devcontainer if configured.
+ADD zscaler_root.crt /usr/local/share/ca-certificates/zscaler_root.crt
+RUN chmod 644 /usr/local/share/ca-certificates/zscaler_root.crt && update-ca-certificates
+{%- endif %}
+
 # Create a non-root user and switch to it [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 ARG UID=1000
