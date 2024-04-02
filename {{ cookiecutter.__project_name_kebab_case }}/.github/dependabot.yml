@@ -10,9 +10,9 @@ updates:
       prefix-development: "ci"
       include: scope
     groups:
-       ci-dependencies:
-          patterns:
-            - "*"
+      ci-dependencies:
+        patterns:
+          - "*"
 {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
   - package-ecosystem: pip
     directory: /
@@ -26,9 +26,9 @@ updates:
     allow:
       - dependency-type: production
     groups:
-       runtime-dependencies:
-          patterns:
-            - "*"
+      runtime-dependencies:
+        patterns:
+          - "*"
 {%- endif %}
   - package-ecosystem: pip
     directory: /
@@ -42,9 +42,9 @@ updates:
     allow:
       - dependency-type: development
     groups:
-       development-dependencies:
-          patterns:
-            - "*"
+      development-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: pip
     directory: /
     schedule:
@@ -57,6 +57,6 @@ updates:
     allow:
       - dependency-type: indirect
     groups:
-       transitive-dependencies:
-          patterns:
-            - "*"
+      transitive-dependencies:
+        patterns:
+          - "*"
