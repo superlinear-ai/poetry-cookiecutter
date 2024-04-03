@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.11"]
+        python-version: ["3.9", "3.12"]
         project-type: ["app", "package"]
 
     name: Python ${{ matrix.python-version }} ${{ matrix.project-type }}
@@ -58,7 +58,7 @@ jobs:
         run: devcontainer exec --workspace-folder my-project poe test
 
       - name: Build app Docker image
-        if: ${{ matrix.project-type }} == "app"
+        if: ${{ matrix.project-type == 'app' }}
         uses: docker/build-push-action@v5
         with:
           build-args: |
