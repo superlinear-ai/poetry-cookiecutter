@@ -14,6 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.10"]
+        project-type: ["app", "package"]
 
     name: Python ${{ matrix.python-version }}
 
@@ -31,7 +32,7 @@ jobs:
       - name: Scaffold Python project
         run: |
           pip install --no-input cruft
-          cruft create --no-input --extra-context '{"project_type": "app", "project_name": "My App", "python_version": "3.8", "__docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
+          cruft create --no-input --extra-context '{"project_type": "${{ matrix.project-type }}", "project_name": "My Project", "python_version": "3.8", "__docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -39,7 +40,7 @@ jobs:
           node-version: 21
 
       - name: Install @devcontainers/cli
-        run: npm install --location=global @devcontainers/cli@0.55.0
+        run: npm install --location=global @devcontainers/cli@0.58.0
 
       - name: Start Dev Container with Python ${{ matrix.python-version }}
         run: |
@@ -48,19 +49,20 @@ jobs:
           git checkout -b test
           git add .
           PYTHON_VERSION=${{ matrix.python-version }} devcontainer up --workspace-folder .
-        working-directory: ./my-app/
+        working-directory: ./my-project/
 
       - name: Lint project
-        run: devcontainer exec --workspace-folder my-app poe lint
+        run: devcontainer exec --workspace-folder my-project poe lint
 
       - name: Test project
-        run: devcontainer exec --workspace-folder my-app poe test
+        run: devcontainer exec --workspace-folder my-project poe test
 
       - name: Build app Docker image
+        if: ${{ matrix.project-type }} == "app"
         uses: docker/build-push-action@v5
         with:
           build-args: |
             SOURCE_BRANCH=${{ env.GITHUB_REF }}
             SOURCE_COMMIT=${{ env.GITHUB_SHA }}
-          context: ./my-app/
+          context: ./my-project/
           target: app

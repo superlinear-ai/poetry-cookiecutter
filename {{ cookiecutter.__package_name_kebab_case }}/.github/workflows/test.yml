@@ -28,7 +28,7 @@ jobs:
           node-version: 21
 
       - name: Install @devcontainers/cli
-        run: npm install --location=global @devcontainers/cli@0.55.0
+        run: npm install --location=global @devcontainers/cli@0.58.0
 
       - name: Start Dev Container
         run: |
