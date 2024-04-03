@@ -16,7 +16,7 @@ jobs:
         python-version: ["3.8", "3.10"]
         project-type: ["app", "package"]
 
-    name: Python ${{ matrix.python-version }}
+    name: Python ${{ matrix.python-version }} ${{ matrix.project-type }}
 
     steps:
       - name: Checkout
