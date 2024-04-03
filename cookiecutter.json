@@ -1,23 +1,29 @@
 {
-  "package_name": "My Package",
-  "package_description": "A Python package that ...",
-  "package_url": "https://github.com/user/my-package",
+  "project_type": [
+    "package",
+    "application"
+  ],
+  "project_name": "{% if cookiecutter.project_type == 'application' %}My App{% else %}My Package{% endif %}",
+  "project_description": "A Python {{ cookiecutter.project_type }} that reticulates splines.",
+  "project_url": "https://github.com/user/my-{{ cookiecutter.project_type }}",
   "author_name": "John Smith",
   "author_email": "john@example.com",
-  "python_version": "3.8",
-  "docker_image": "python:$PYTHON_VERSION-slim",
-  "development_environment": ["simple", "strict"],
+  "python_version": "{% if cookiecutter.project_type == 'application' %}3.12{% else %}3.10{% endif %}",
+  "development_environment": [
+    "simple",
+    "strict"
+  ],
   "with_conventional_commits": "{% if cookiecutter.development_environment == 'simple' %}0{% else %}1{% endif %}",
   "with_fastapi_api": "0",
-  "with_jupyter_lab": "0",
-  "with_pydantic_typing": "0",
-  "with_sentry_logging": "0",
-  "with_streamlit_app": "0",
   "with_typer_cli": "0",
-  "continuous_integration": ["GitHub", "GitLab"],
-  "docstring_style": ["NumPy", "Google"],
+  "continuous_integration": [
+    "GitHub",
+    "GitLab"
+  ],
   "private_package_repository_name": "",
   "private_package_repository_url": "",
-  "__package_name_kebab_case": "{{ cookiecutter.package_name|slugify }}",
-  "__package_name_snake_case": "{{ cookiecutter.package_name|slugify(separator='_') }}"
+  "__docker_image": "python:$PYTHON_VERSION-slim",
+  "__docstring_style": "NumPy",
+  "__project_name_kebab_case": "{{ cookiecutter.project_name|slugify }}",
+  "__project_name_snake_case": "{{ cookiecutter.project_name|slugify(separator='_') }}"
 }

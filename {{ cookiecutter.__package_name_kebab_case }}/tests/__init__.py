@@ -1,1 +1,1 @@
-"""{{ cookiecutter.package_name }} test suite."""
+"""{{ cookiecutter.project_name }} test suite."""

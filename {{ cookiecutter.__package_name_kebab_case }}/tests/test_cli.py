@@ -1,15 +1,15 @@
-"""Test {{ cookiecutter.package_name }} CLI."""
+"""Test {{ cookiecutter.project_name }} CLI."""
 
 from typer.testing import CliRunner
 
-from {{ cookiecutter.__package_name_snake_case }}.cli import app
+from {{ cookiecutter.__project_name_snake_case }}.cli import app
 
 runner = CliRunner()
 
 
-def test_say() -> None:
-    """Test that the say command works as expected."""
-    message = "Hello world"
-    result = runner.invoke(app, ["--message", message])
+def test_fire() -> None:
+    """Test that the fire command works as expected."""
+    name = "GLaDOS"
+    result = runner.invoke(app, ["fire", "--name", name])
     assert result.exit_code == 0
-    assert message in result.stdout
+    assert name in result.stdout

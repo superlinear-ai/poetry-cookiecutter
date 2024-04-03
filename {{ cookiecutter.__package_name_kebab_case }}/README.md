@@ -3,17 +3,45 @@
 # {{ cookiecutter.package_name }}
 
 {{ cookiecutter.package_description }}
+{%- if cookiecutter.project_type == "package" or cookiecutter.with_typer_cli|int %}
+
+## Installing
+
+To install this package, run:
+
+```sh
+pip install {{ cookiecutter.__project_name_kebab_case }}`
+```
+{%- endif %}
 
 ## Using
-
-{% if cookiecutter.with_fastapi_api|int or cookiecutter.with_typer_cli|int or cookiecutter.with_streamlit_app|int %}_Python package_: t{% else %}T{% endif %}o add and install this package as a dependency of your project, run `poetry add {{ cookiecutter.__package_name_kebab_case }}`.
 {%- if cookiecutter.with_typer_cli|int %}
 
-_Python CLI_: to view this app's CLI commands once it's installed, run `{{ cookiecutter.__package_name_kebab_case }} --help`.
-{%- endif %}
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
+To view the CLI help information, run:
 
-_Python application_: to serve this {% if cookiecutter.with_fastapi_api|int %}REST API{% else %}Streamlit app{% endif %}, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running {% if cookiecutter.with_fastapi_api|int %}`poe api`{% else %}`poe app`{% endif %}.
+```sh
+{{ cookiecutter.__project_name_kebab_case }} --help
+```
+{%- elif cookiecutter.project_type == "application" -%}
+To serve this application, run:
+
+```sh
+docker compose up app
+```
+{%- if cookiecutter.with_fastapi_api|int %}
+
+and open [localhost:8000](http://localhost:8000) in your browser.
+{%- endif %}
+
+Within the Dev Container, this is equivalent to running `poe {% if cookiecutter.with_fastapi_api|int %}api{% else %}app{% endif %}`.
+{%- else %}
+Example usage:
+
+```python
+import {{ cookiecutter.__project_name_snake_case }}
+
+...
+```
 {%- endif %}
 
 ## Contributing

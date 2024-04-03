@@ -3,12 +3,12 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]  # https://python-poetry.org/docs/pyproject/
-name = "{{ cookiecutter.__package_name_kebab_case }}"
+name = "{{ cookiecutter.__project_name_kebab_case }}"
 version = "0.0.0"
-description = "{{ cookiecutter.package_description }}"
+description = "{{ cookiecutter.project_description }}"
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 readme = "README.md"
-repository = "{{ cookiecutter.package_url }}"
+repository = "{{ cookiecutter.project_url }}"
 {%- if cookiecutter.with_conventional_commits|int %}
 
 [tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
@@ -20,60 +20,50 @@ version_provider = "poetry"
 {%- if cookiecutter.with_typer_cli|int %}
 
 [tool.poetry.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
-{{ cookiecutter.__package_name_kebab_case }} = "{{ cookiecutter.__package_name_snake_case }}.cli:app"
+{{ cookiecutter.__project_name_kebab_case }} = "{{ cookiecutter.__project_name_snake_case }}.cli:app"
 {%- endif %}
 
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 {%- if cookiecutter.with_fastapi_api|int %}
-coloredlogs = ">=15.0.1"
-fastapi = { extras = ["all"], version = ">=0.92.0" }
-gunicorn = ">=20.1.0"
+coloredlogs = "^15.0.1"
+fastapi = { extras = ["all"], version = "^0.110.1" }
+gunicorn = "^21.2.0"
 {%- endif %}
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-poethepoet = ">=0.20.0"
-{%- endif %}
-{%- if cookiecutter.with_pydantic_typing|int %}
-pydantic = ">=1.10.7"
+{%- if cookiecutter.project_type == "application" %}
+poethepoet = "^0.25.0"
 {%- endif %}
 python = ">={{ cookiecutter.python_version }},<4.0"
-{%- if cookiecutter.with_sentry_logging|int %}
-sentry-sdk = ">=1.16.0"
-{%- endif %}
-{%- if cookiecutter.with_streamlit_app|int %}
-streamlit = ">=1.19.0"
-{%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
-typer = { extras = ["all"], version = ">=0.9.0" }
+typer = { extras = ["all"], version = "^0.12.0" }
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
-uvicorn = { extras = ["standard"], version = ">=0.20.0" }
+uvicorn = { extras = ["standard"], version = "^0.29.0" }
 {%- endif %}
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 {%- if cookiecutter.with_conventional_commits|int %}
-commitizen = ">=3.2.1"
+commitizen = ">=3.21.3"
 {%- endif %}
-coverage = { extras = ["toml"], version = ">=7.2.5" }
-mypy = ">=1.2.0"
-{%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
-poethepoet = ">=0.20.0"
+coverage = { extras = ["toml"], version = ">=7.4.4" }
+mypy = ">=1.9.0"
+{%- if cookiecutter.project_type == "package" %}
+poethepoet = ">=0.25.0"
 {%- endif %}
-pre-commit = ">=3.3.1"
-pytest = ">=7.3.1"
-pytest-clarity = ">=1.0.1"
-pytest-mock = ">=3.10.0"
-pytest-xdist = ">=3.2.1"
-ruff = ">=0.2.1"
+pre-commit = ">=3.7.0"
+pytest = ">=8.1.1"
+pytest-mock = ">=3.14.0"
+pytest-xdist = ">=3.5.0"
+ruff = ">=0.3.5"
 {%- if cookiecutter.development_environment == "strict" %}
-safety = ">=2.3.4,!=2.3.5"
-shellcheck-py = ">=0.9.0"
-typeguard = ">=3.0.2"
+safety = ">=3.1.0"
+shellcheck-py = ">=0.10.0.1"
+typeguard = ">=4.2.1"
 {%- endif %}
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
-cruft = ">=2.14.0"
-ipykernel = ">=6.29.2"
-pdoc = ">=13.1.1"
+cruft = ">=2.15.0"
+ipykernel = ">=6.29.4"
+pdoc = ">=14.4.0"
 {%- if cookiecutter.private_package_repository_name %}
 
 [[tool.poetry.source]]
@@ -105,7 +95,7 @@ output = "reports/coverage.xml"
 
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int %}
+{%- if cookiecutter.with_fastapi_api|int %}
 plugins = "pydantic.mypy"
 {%- endif %}
 {%- if cookiecutter.development_environment == "strict" %}
@@ -119,7 +109,7 @@ show_column_numbers = true
 show_error_codes = true
 show_error_context = true
 warn_unreachable = true
-{%- if cookiecutter.development_environment == "strict" and (cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int) %}
+{%- if cookiecutter.development_environment == "strict" and cookiecutter.with_fastapi_api|int %}
 
 [tool.pydantic-mypy]  # https://pydantic-docs.helpmanual.io/mypy_plugin/#configuring-the-plugin
 init_forbid_extra = true
@@ -129,7 +119,7 @@ warn_untyped_fields = true
 {%- endif %}
 
 [tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
-addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiecutter.development_environment == 'strict' %} --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__package_name_snake_case }}{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiecutter.development_environment == 'strict' %} --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__project_name_snake_case }}{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
 {%- if cookiecutter.development_environment == "strict" %}
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 {%- endif %}
@@ -163,7 +153,7 @@ max-doc-length = 100
 {%- endif %}
 
 [tool.ruff.lint.pydocstyle]
-convention = "{{ cookiecutter.docstring_style|lower }}"
+convention = "{{ cookiecutter.__docstring_style|lower }}"
 
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
 {%- if cookiecutter.with_fastapi_api|int %}
@@ -177,7 +167,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
         --host $host \
         --port $port \
         --reload \
-        {{ cookiecutter.__package_name_snake_case }}.api:app
+        {{ cookiecutter.__project_name_snake_case }}.api:app
     } else {
       gunicorn \
         --access-logfile - \
@@ -189,7 +179,7 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
         --worker-class uvicorn.workers.UvicornWorker \
         --worker-tmp-dir /dev/shm \
         --workers 2 \
-        {{ cookiecutter.__package_name_snake_case }}.api:app
+        {{ cookiecutter.__project_name_snake_case }}.api:app
     } fi
     """
 
@@ -211,32 +201,6 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
     name = "dev"
     options = ["--dev"]
 {%- endif %}
-{%- if cookiecutter.with_streamlit_app|int %}
-
-  [tool.poe.tasks.app]
-  help = "Serve a Streamlit app"
-  cmd = """
-    streamlit run
-      --browser.gatherUsageStats false
-      --server.address $host
-      --server.port $port
-      --theme.base light
-      src/{{ cookiecutter.__package_name_snake_case }}/app.py
-    """
-  use_exec = true
-
-    [[tool.poe.tasks.app.args]]
-    help = "Bind socket to this host (default: 0.0.0.0)"
-    name = "host"
-    options = ["--host"]
-    default = "0.0.0.0"
-
-    [[tool.poe.tasks.app.args]]
-    help = "Bind socket to this port (default: 8000)"
-    name = "port"
-    options = ["--port"]
-    default = "8000"
-{%- endif %}
 
   [tool.poe.tasks.docs]
   help = "Generate this package's docs"
@@ -244,14 +208,14 @@ convention = "{{ cookiecutter.docstring_style|lower }}"
     pdoc
       --docformat $docformat
       --output-directory $outputdirectory
-      {{ cookiecutter.__package_name_snake_case }}
+      {{ cookiecutter.__project_name_snake_case }}
     """
 
     [[tool.poe.tasks.docs.args]]
-    help = "The docstring style (default: {{ cookiecutter.docstring_style|lower }})"
+    help = "The docstring style (default: {{ cookiecutter.__docstring_style|lower }})"
     name = "docformat"
     options = ["--docformat"]
-    default = "{{ cookiecutter.docstring_style|lower }}"
+    default = "{{ cookiecutter.__docstring_style|lower }}"
 
     [[tool.poe.tasks.docs.args]]
     help = "The output directory (default: docs)"
