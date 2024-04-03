@@ -7,7 +7,7 @@ development_environment = "{{ cookiecutter.development_environment }}"
 with_fastapi_api = int("{{ cookiecutter.with_fastapi_api }}")
 with_typer_cli = int("{{ cookiecutter.with_typer_cli }}")
 continuous_integration = "{{ cookiecutter.continuous_integration }}"
-is_application = "{{ cookiecutter.project_type == 'application' }}" == "True"
+is_application = "{{ cookiecutter.project_type == 'app' }}" == "True"
 
 # Remove py.typed and Dependabot if not in strict mode.
 if development_environment != "strict":

@@ -1,14 +1,14 @@
 {
   "project_type": [
     "package",
-    "application"
+    "app"
   ],
-  "project_name": "{% if cookiecutter.project_type == 'application' %}My App{% else %}My Package{% endif %}",
+  "project_name": "{% if cookiecutter.project_type == 'app' %}My App{% else %}My Package{% endif %}",
   "project_description": "A Python {{ cookiecutter.project_type }} that reticulates splines.",
   "project_url": "https://github.com/user/my-{{ cookiecutter.project_type }}",
   "author_name": "John Smith",
   "author_email": "john@example.com",
-  "python_version": "{% if cookiecutter.project_type == 'application' %}3.12{% else %}3.10{% endif %}",
+  "python_version": "{% if cookiecutter.project_type == 'app' %}3.12{% else %}3.10{% endif %}",
   "development_environment": [
     "simple",
     "strict"

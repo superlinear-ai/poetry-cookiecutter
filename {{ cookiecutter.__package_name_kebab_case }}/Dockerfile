@@ -111,7 +111,7 @@ RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/a
 # Enable Poetry to read the private package repository credentials.
 RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
 {%- endif %}
-{%- if cookiecutter.project_type == "application" %}
+{%- if cookiecutter.project_type == "app" %}
 
 
 
@@ -120,10 +120,10 @@ FROM base AS app
 # Copy the virtual environment from the poetry stage.
 COPY --from=poetry $VIRTUAL_ENV $VIRTUAL_ENV
 
-# Copy the package source code to the working directory.
+# Copy the {{ cookiecutter.project_type }} source code to the working directory.
 COPY --chown=user:user . .
 
-# Expose the application.
+# Expose the app.
 {%- if cookiecutter.with_typer_cli|int %}
 ENTRYPOINT ["/opt/{{ cookiecutter.__project_name_kebab_case }}-env/bin/{{ cookiecutter.__project_name_kebab_case }}"]
 CMD []

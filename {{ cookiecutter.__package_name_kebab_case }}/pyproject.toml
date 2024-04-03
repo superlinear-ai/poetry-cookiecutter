@@ -29,7 +29,7 @@ coloredlogs = "^15.0.1"
 fastapi = { extras = ["all"], version = "^0.110.1" }
 gunicorn = "^21.2.0"
 {%- endif %}
-{%- if cookiecutter.project_type == "application" %}
+{%- if cookiecutter.project_type == "app" %}
 poethepoet = "^0.25.0"
 {%- endif %}
 python = ">={{ cookiecutter.python_version }},<4.0"
@@ -159,7 +159,7 @@ convention = "{{ cookiecutter.__docstring_style|lower }}"
 {%- if cookiecutter.with_fastapi_api|int %}
 
   [tool.poe.tasks.api]
-  help = "Serve a REST API"
+  help = "Serve the REST API"
   shell = """
     if [ $dev ]
     then {
@@ -200,10 +200,17 @@ convention = "{{ cookiecutter.__docstring_style|lower }}"
     type = "boolean"
     name = "dev"
     options = ["--dev"]
+{%- elif cookiecutter.project_type == "app" %}
+
+  [tool.poe.tasks.app]
+  help = "Serve the app"
+
+    [[tool.poe.tasks.lint.sequence]]
+    cmd = "echo 'Serving app...'"
 {%- endif %}
 
   [tool.poe.tasks.docs]
-  help = "Generate this package's docs"
+  help = "Generate this {{ cookiecutter.project_type }}'s docs"
   cmd = """
     pdoc
       --docformat $docformat
@@ -224,7 +231,7 @@ convention = "{{ cookiecutter.__docstring_style|lower }}"
     default = "docs"
 
   [tool.poe.tasks.lint]
-  help = "Lint this package"
+  help = "Lint this {{ cookiecutter.project_type }}"
 
     [[tool.poe.tasks.lint.sequence]]
     cmd = """
@@ -239,7 +246,7 @@ convention = "{{ cookiecutter.__docstring_style|lower }}"
 {%- endif %}
 
   [tool.poe.tasks.test]
-  help = "Test this package"
+  help = "Test this {{ cookiecutter.project_type }}"
 
     [[tool.poe.tasks.test.sequence]]
     cmd = "coverage run"

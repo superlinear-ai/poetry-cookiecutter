@@ -57,7 +57,7 @@ Build:
     reports:
       dotenv: .env
 
-# Lint and test the package.
+# Lint and test the {{ cookiecutter.project_type }}.
 Test:
   extends:
     - .python_matrix
@@ -101,7 +101,7 @@ Publish:
   only:
     - tags
 {%- else -%}
-# Deploy the application to the Docker registry.
+# Deploy the app to the Docker registry.
 Deploy:
   stage: deploy
   image: docker:latest

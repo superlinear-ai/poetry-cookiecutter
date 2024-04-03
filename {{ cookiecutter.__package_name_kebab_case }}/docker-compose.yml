@@ -51,7 +51,7 @@ services:
       - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
     profiles:
       - dev
-  {%- if cookiecutter.project_type == "application" %}
+  {%- if cookiecutter.project_type == "app" %}
 
   app:
     build:

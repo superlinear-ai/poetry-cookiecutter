@@ -22,8 +22,8 @@ To view the CLI help information, run:
 ```sh
 {{ cookiecutter.__project_name_kebab_case }} --help
 ```
-{%- elif cookiecutter.project_type == "application" -%}
-To serve this application, run:
+{%- elif cookiecutter.project_type == "app" -%}
+To serve this app, run:
 
 ```sh
 docker compose up app
@@ -157,7 +157,7 @@ The following development environments are supported:
 - Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `pyproject.toml` and `poetry.lock`. Add `--group test` or `--group dev` to install a CI or development dependency, respectively.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
 {%- if cookiecutter.with_conventional_commits|int %}
-- Run `cz bump` to bump the package's version, update the `CHANGELOG.md`, and create a git tag.
+- Run `cz bump` to bump the {{ cookiecutter.project_type }}'s version, update the `CHANGELOG.md`, and create a git tag.
 {%- endif %}
 
 </details>

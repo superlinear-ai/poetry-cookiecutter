@@ -28,10 +28,10 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Scaffold Python package
+      - name: Scaffold Python project
         run: |
           pip install --no-input cruft
-          cruft create --no-input --extra-context '{"project_name": "My Package", "python_version": "3.8", "__docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
+          cruft create --no-input --extra-context '{"project_type": "app", "project_name": "My App", "python_version": "3.8", "__docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -48,13 +48,13 @@ jobs:
           git checkout -b test
           git add .
           PYTHON_VERSION=${{ matrix.python-version }} devcontainer up --workspace-folder .
-        working-directory: ./my-package/
+        working-directory: ./my-app/
 
-      - name: Lint package
-        run: devcontainer exec --workspace-folder my-package poe lint
+      - name: Lint project
+        run: devcontainer exec --workspace-folder my-app poe lint
 
-      - name: Test package
-        run: devcontainer exec --workspace-folder my-package poe test
+      - name: Test project
+        run: devcontainer exec --workspace-folder my-app poe test
 
       - name: Build app Docker image
         uses: docker/build-push-action@v5
@@ -62,5 +62,5 @@ jobs:
           build-args: |
             SOURCE_BRANCH=${{ env.GITHUB_REF }}
             SOURCE_COMMIT=${{ env.GITHUB_SHA }}
-          context: ./my-package/
+          context: ./my-app/
           target: app
