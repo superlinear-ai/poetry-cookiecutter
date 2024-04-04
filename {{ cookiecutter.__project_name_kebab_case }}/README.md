@@ -10,7 +10,7 @@
 To install this package, run:
 
 ```sh
-pip install {{ cookiecutter.__project_name_kebab_case }}`
+{% if cookiecutter.private_package_repository_name %}poetry add{% else %}pip install{% endif %} {{ cookiecutter.__project_name_kebab_case }}
 ```
 {%- endif %}
 
@@ -23,6 +23,7 @@ To view the CLI help information, run:
 {{ cookiecutter.__project_name_kebab_case }} --help
 ```
 {%- elif cookiecutter.project_type == "app" -%}
+
 To serve this app, run:
 
 ```sh
@@ -33,8 +34,13 @@ docker compose up app
 and open [localhost:8000](http://localhost:8000) in your browser.
 {%- endif %}
 
-Within the Dev Container, this is equivalent to running `poe {% if cookiecutter.with_fastapi_api|int %}api{% else %}app{% endif %}`.
+Within the Dev Container this is equivalent to:
+
+```sh
+poe {% if cookiecutter.with_fastapi_api|int %}api{% else %}app{% endif %}
+```
 {%- else %}
+
 Example usage:
 
 ```python
@@ -53,17 +59,19 @@ import {{ cookiecutter.__project_name_snake_case }}
 <summary>1. Set up Git to use SSH</summary>
 
 {% if cookiecutter.continuous_integration == "GitLab" -%}
-1. [Generate an SSH key](https://docs.gitlab.com/ee/ssh/README.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/ssh/README.html#add-an-ssh-key-to-your-gitlab-account).
+1. [Generate an SSH key](https://docs.gitlab.com/ee/user/ssh.html#generate-an-ssh-key-pair) and [add the SSH key to your GitLab account](https://docs.gitlab.com/ee/user/ssh.html#add-an-ssh-key-to-your-gitlab-account).
 {%- else -%}
 1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 {%- endif %}
 1. Configure SSH to automatically load your SSH keys:
     ```sh
     cat << EOF >> ~/.ssh/config
+    
     Host *
       AddKeysToAgent yes
       IgnoreUnknown UseKeychain
       UseKeychain yes
+      ForwardAgent yes
     EOF
     ```
 
@@ -73,11 +81,11 @@ import {{ cookiecutter.__project_name_snake_case }}
 <summary>2. Install Docker</summary>
 
 1. [Install Docker Desktop](https://www.docker.com/get-started).
-    - Enable _Use Docker Compose V2_ in Docker Desktop's preferences window.
     - _Linux only_:
         - Export your user's user id and group id so that [files created in the Dev Container are owned by your user](https://github.com/moby/moby/issues/3206):
             ```sh
             cat << EOF >> ~/.bashrc
+            
             export UID=$(id --user)
             export GID=$(id --group)
             {%- if cookiecutter.private_package_repository_name %}
