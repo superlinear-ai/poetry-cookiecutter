@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - {% if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}deploy{% else %}publish{% endif %}
+  - {% if cookiecutter.project_type == "package" %}publish{% else %}deploy{% endif %}
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
@@ -18,7 +18,7 @@ variables:
       - .npm_cache
   before_script:
     - mkdir -p .apk_cache && apk add --cache-dir .apk_cache npm
-    - npm install --cache .npm_cache --global --prefer-offline @devcontainers/cli@0.55.0
+    - npm install --cache .npm_cache --global --prefer-offline @devcontainers/cli@0.58.0
 
 # Build the Dev Container.
 Build:
@@ -57,7 +57,7 @@ Build:
     reports:
       dotenv: .env
 
-# Lint and test the package.
+# Lint and test the {{ cookiecutter.project_type }}.
 Test:
   extends:
     - .python_matrix
@@ -69,7 +69,7 @@ Test:
   script:
     - |
       devcontainer up --cache-from "type=registry,ref=$CI_REGISTRY_IMAGE/devcontainer:$PYTHON_VERSION-$CI_IMAGE_SHA" --workspace-folder .
-      devcontainer exec --workspace-folder . git config --global --add safe.directory /workspaces/{{ cookiecutter.__package_name_kebab_case }}
+      devcontainer exec --workspace-folder . git config --global --add safe.directory /workspaces/{{ cookiecutter.__project_name_kebab_case }}
       devcontainer exec --workspace-folder . poe lint
       devcontainer exec --workspace-folder . poe test
   coverage: '/^TOTAL.*\s+(\d+(?:\.\d+)?)%/'
@@ -84,7 +84,7 @@ Test:
     untracked: true
     when: always
 
-{% if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int -%}
+{% if cookiecutter.project_type == "package" -%}
 # Publish this package version to {% if cookiecutter.private_package_repository_name %}a private package repository{% else %}PyPI{% endif %}.
 Publish:
   stage: publish
@@ -101,7 +101,7 @@ Publish:
   only:
     - tags
 {%- else -%}
-# Deploy the application to the Docker registry.
+# Deploy the app to the Docker registry.
 Deploy:
   stage: deploy
   image: docker:latest

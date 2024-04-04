@@ -1,5 +1,5 @@
 {
-    "name": "{{ cookiecutter.__package_name_kebab_case }}",
+    "name": "{{ cookiecutter.__project_name_kebab_case }}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "devcontainer",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/",
@@ -39,7 +39,7 @@
                 "jupyter.kernels.excludePythonEnvironments": ["/usr/local/bin/python"],
                 "mypy-type-checker.importStrategy": "fromEnvironment",
                 "notebook.formatOnSave.enabled": true,
-                "python.defaultInterpreterPath": "/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/python",
+                "python.defaultInterpreterPath": "/opt/{{ cookiecutter.__project_name_kebab_case }}-env/bin/python",
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,
                 "ruff.importStrategy": "fromEnvironment",

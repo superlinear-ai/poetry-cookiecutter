@@ -34,14 +34,14 @@ services:
       [
         "sh",
         "-c",
-        "sudo chown user $$SSH_AUTH_SOCK && cp --update /opt/build/poetry/poetry.lock /workspaces/{{ cookiecutter.__package_name_kebab_case }}/ && mkdir -p /workspaces/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/{{ cookiecutter.__package_name_kebab_case }}/.git/hooks/ && zsh"
+        "sudo chown user $$SSH_AUTH_SOCK && cp --update /opt/build/poetry/poetry.lock /workspaces/{{ cookiecutter.__project_name_kebab_case }}/ && mkdir -p /workspaces/{{ cookiecutter.__project_name_kebab_case }}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/{{ cookiecutter.__project_name_kebab_case }}/.git/hooks/ && zsh"
       ]
     environment:
       {%- if not cookiecutter.private_package_repository_name %}
       - POETRY_PYPI_TOKEN_PYPI
       {%- endif %}
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
-    {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
+    {%- if cookiecutter.with_fastapi_api|int %}
     ports:
       - "8000"
     {%- endif %}
@@ -51,7 +51,7 @@ services:
       - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
     profiles:
       - dev
-  {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
+  {%- if cookiecutter.project_type == "app" %}
 
   app:
     build:
@@ -62,7 +62,7 @@ services:
         - poetry-auth
       {%- endif %}
     tty: true
-    {%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
+    {%- if cookiecutter.with_fastapi_api|int %}
     ports:
       - "8000:8000"
     {%- endif %}
