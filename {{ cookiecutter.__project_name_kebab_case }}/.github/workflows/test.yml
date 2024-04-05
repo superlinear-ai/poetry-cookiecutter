@@ -28,17 +28,17 @@ jobs:
           node-version: 21
 
       - name: Install @devcontainers/cli
-        run: npm install --location=global @devcontainers/cli@0.55.0
+        run: npm install --location=global @devcontainers/cli@0.58.0
 
       - name: Start Dev Container
         run: |
           git config --global init.defaultBranch main
           PYTHON_VERSION={% raw %}${{{% endraw %} matrix.python-version }} devcontainer up --workspace-folder .
 
-      - name: Lint package
+      - name: Lint {{ cookiecutter.project_type }}
         run: devcontainer exec --workspace-folder . poe lint
 
-      - name: Test package
+      - name: Test {{ cookiecutter.project_type }}
         run: devcontainer exec --workspace-folder . poe test
 
       - name: Upload coverage
