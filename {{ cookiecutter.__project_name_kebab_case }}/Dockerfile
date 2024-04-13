@@ -60,7 +60,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
     {%- endif %}
-    poetry install --only main --no-interaction
+    poetry install --only main --all-extras --no-interaction
 
 
 
@@ -82,7 +82,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
     {%- endif %}
-    poetry install --no-interaction
+    poetry install --all-extras --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
 COPY --chown=user:user .pre-commit-config.yaml /workspaces/{{ cookiecutter.__project_name_kebab_case }}/
