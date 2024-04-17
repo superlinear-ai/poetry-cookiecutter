@@ -6,6 +6,7 @@
     "customizations": {
         "vscode": {
             "extensions": [
+                "DavidAnson.vscode-markdownlint",
                 "ms-python.python",
                 "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode"
