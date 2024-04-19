@@ -25,19 +25,19 @@ version_provider = "poetry"
 
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 {%- if cookiecutter.with_fastapi_api|int %}
-coloredlogs = "^15.0.1"
-fastapi = { extras = ["all"], version = "^0.110.1" }
-gunicorn = "^21.2.0"
+coloredlogs = ">=15.0.1"
+fastapi = { extras = ["all"], version = ">=0.110.1" }
+gunicorn = ">=21.2.0"
 {%- endif %}
 {%- if cookiecutter.project_type == "app" %}
-poethepoet = "^0.25.0"
+poethepoet = ">=0.25.0"
 {%- endif %}
 python = ">={{ cookiecutter.python_version }},<4.0"
 {%- if cookiecutter.with_typer_cli|int %}
-typer = { extras = ["all"], version = "^0.12.0" }
+typer = { extras = ["all"], version = ">=0.12.0" }
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
-uvicorn = { extras = ["standard"], version = "^0.29.0" }
+uvicorn = { extras = ["standard"], version = ">=0.29.0" }
 {%- endif %}
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
