@@ -10,6 +10,12 @@
         "vscode": {
             "extensions": [
                 "charliermarsh.ruff",
+                {%- if cookiecutter.continuous_integration == "GitHub" %}
+                "GitHub.vscode-github-actions",
+                "GitHub.vscode-pull-request-github",
+                {%- elif cookiecutter.continuous_integration == "GitLab" %}
+                "GitLab.gitlab-workflow",
+                {%- endif %}
                 "ms-python.mypy-type-checker",
                 "ms-python.python",
                 "ms-toolsai.jupyter",
