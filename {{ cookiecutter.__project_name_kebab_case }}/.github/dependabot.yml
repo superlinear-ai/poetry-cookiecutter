@@ -13,7 +13,6 @@ updates:
       ci-dependencies:
         patterns:
           - "*"
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
   - package-ecosystem: pip
     directory: /
     schedule:
@@ -22,41 +21,16 @@ updates:
       prefix: "chore"
       prefix-development: "build"
       include: scope
-    versioning-strategy: increase
     allow:
+      {%- if cookiecutter.project_type == "app" %}
       - dependency-type: production
-    groups:
-      runtime-dependencies:
-        patterns:
-          - "*"
-{%- endif %}
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: monthly
-    commit-message:
-      prefix: "chore"
-      prefix-development: "build"
-      include: scope
-    versioning-strategy: increase
-    allow:
+      {%- endif %}
       - dependency-type: development
+    versioning-strategy: increase
     groups:
+      {%- if cookiecutter.project_type == "app" %}
+      runtime-dependencies:
+        dependency-type: production
+      {%- endif %}
       development-dependencies:
-        patterns:
-          - "*"
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: monthly
-    commit-message:
-      prefix: "chore"
-      prefix-development: "build"
-      include: scope
-    versioning-strategy: lockfile-only
-    allow:
-      - dependency-type: indirect
-    groups:
-      transitive-dependencies:
-        patterns:
-          - "*"
+        dependency-type: development
