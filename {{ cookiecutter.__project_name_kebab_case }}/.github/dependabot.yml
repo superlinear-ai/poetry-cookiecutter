@@ -8,15 +8,29 @@ updates:
     commit-message:
       prefix: "ci"
       prefix-development: "ci"
-      include: "scope"
+      include: scope
+    groups:
+      ci-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: pip
     directory: /
     schedule:
       interval: monthly
     commit-message:
-      prefix: "build"
+      prefix: "chore"
       prefix-development: "build"
-      include: "scope"
-    versioning-strategy: lockfile-only
+      include: scope
     allow:
-      - dependency-type: "all"
+      {%- if cookiecutter.project_type == "app" %}
+      - dependency-type: production
+      {%- endif %}
+      - dependency-type: development
+    versioning-strategy: increase
+    groups:
+      {%- if cookiecutter.project_type == "app" %}
+      runtime-dependencies:
+        dependency-type: production
+      {%- endif %}
+      development-dependencies:
+        dependency-type: development
