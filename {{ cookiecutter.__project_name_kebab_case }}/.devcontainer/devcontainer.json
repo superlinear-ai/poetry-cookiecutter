@@ -28,8 +28,8 @@
                     "reports/coverage.xml"
                 ],
                 "editor.codeActionsOnSave": {
-                    "source.fixAll": true,
-                    "source.organizeImports": true
+                    "source.fixAll": "explicit",
+                    "source.organizeImports": "explicit"
                 },
                 "editor.formatOnSave": true,
                 "[python]": {
@@ -44,6 +44,10 @@
                 "files.autoSave": "onFocusChange",
                 "jupyter.kernels.excludePythonEnvironments": ["/usr/local/bin/python"],
                 "mypy-type-checker.importStrategy": "fromEnvironment",
+                "notebook.codeActionsOnSave": {
+                    "notebook.source.fixAll": "explicit",
+                    "notebook.source.organizeImports": "explicit"
+                },
                 "notebook.formatOnSave.enabled": true,
                 "python.defaultInterpreterPath": "/opt/{{ cookiecutter.__project_name_kebab_case }}-env/bin/python",
                 "python.terminal.activateEnvironment": false,
