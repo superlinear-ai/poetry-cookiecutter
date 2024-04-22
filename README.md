@@ -44,18 +44,28 @@ To create a new Python project with this template:
    cruft create -f https://github.com/radix-ai/poetry-cookiecutter
    ```
 
-4. _Optional:_ if your repository name differs from your project's slugified name (see `project_name` in the [Template parameters](https://github.com/radix-ai/poetry-cookiecutter#-template-parameters) below), you will need to copy the scaffolded project into the repository with:
+   <details>
 
-   ```sh
-   cp -r {project-name}/ {repository-name}/
-   ```
+   <summary>⚠️ If your repository name ≠ the project's slugified name</summary>
+   If your repository name differs from your project's slugified name (see `project_name` in the [Template parameters](https://github.com/radix-ai/poetry-cookiecutter#-template-parameters) below), you will need to copy the scaffolded project into the repository with:
+
+      ```sh
+      cp -r {project-name}/ {repository-name}/
+      ```
+
+   </details>
 
 ### Updating your Python project
 
-To update your Python project with the latest template:
+To update your Python project to the latest template version:
 
-1. Run `cruft update` to update your project with the latest template.
-2. If any of the updates failed, resolve them by inspecting the generated `.rej` files.
+1. Update the project while verifying the existing template parameters and setting any new parameters, if there are any:
+
+   ```sh
+   cruft update --cookiecutter-input
+   ```
+
+2. If any of the file updates failed, resolve them by inspecting the corresponding `.rej` files.
 
 ## 🤓 Template parameters
 
