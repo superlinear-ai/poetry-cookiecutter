@@ -47,6 +47,7 @@ To create a new Python project with this template:
    <details>
 
    <summary>⚠️ If your repository name ≠ the project's slugified name</summary>
+
    If your repository name differs from your project's slugified name (see `project_name` in the [Template parameters](https://github.com/radix-ai/poetry-cookiecutter#-template-parameters) below), you will need to copy the scaffolded project into the repository with:
 
       ```sh
