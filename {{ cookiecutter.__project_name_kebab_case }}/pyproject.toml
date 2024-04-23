@@ -206,7 +206,7 @@ convention = "{{ cookiecutter.__docstring_style|lower }}"
   [tool.poe.tasks.app]
   help = "Serve the app"
 
-    [[tool.poe.tasks.lint.sequence]]
+    [[tool.poe.tasks.app.sequence]]
     cmd = "echo 'Serving app...'"
 {%- endif %}
 
