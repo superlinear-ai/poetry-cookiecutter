@@ -37,7 +37,7 @@ FROM base as poetry
 USER root
 
 # Install Poetry in separate venv so it doesn't pollute the main venv.
-ENV POETRY_VERSION 1.6.1
+ENV POETRY_VERSION 1.8.0
 ENV POETRY_VIRTUAL_ENV /opt/poetry-env
 RUN --mount=type=cache,target=/root/.cache/pip/ \
     python -m venv $POETRY_VIRTUAL_ENV && \
