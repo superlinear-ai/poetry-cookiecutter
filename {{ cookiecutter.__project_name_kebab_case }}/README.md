@@ -22,7 +22,7 @@ To view the CLI help information, run:
 ```sh
 {{ cookiecutter.__project_name_kebab_case }} --help
 ```
-{%- elif cookiecutter.project_type == "app" -%}
+{%- elif cookiecutter.project_type == "app" %}
 
 To serve this app, run:
 
