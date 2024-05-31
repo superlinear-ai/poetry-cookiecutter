@@ -10,12 +10,8 @@
         "vscode": {
             "extensions": [
                 "charliermarsh.ruff",
-                {%- if cookiecutter.continuous_integration == "GitHub" %}
                 "GitHub.vscode-github-actions",
                 "GitHub.vscode-pull-request-github",
-                {%- elif cookiecutter.continuous_integration == "GitLab" %}
-                "GitLab.gitlab-workflow",
-                {%- endif %}
                 "ms-python.mypy-type-checker",
                 "ms-python.python",
                 "ms-toolsai.jupyter",
@@ -23,7 +19,7 @@
                 "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode",
                 "GitHub.copilot",
-				"GitHub.copilot-chat"
+                "GitHub.copilot-chat"
             ],
             "settings": {
                 "coverage-gutters.coverageFileNames": [
@@ -44,7 +40,9 @@
                     99
                 ],
                 "files.autoSave": "onFocusChange",
-                "jupyter.kernels.excludePythonEnvironments": ["/usr/local/bin/python"],
+                "jupyter.kernels.excludePythonEnvironments": [
+                    "/usr/local/bin/python"
+                ],
                 "mypy-type-checker.importStrategy": "fromEnvironment",
                 "notebook.codeActionsOnSave": {
                     "notebook.source.fixAll": "explicit",
@@ -55,9 +53,11 @@
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,
                 "ruff.importStrategy": "fromEnvironment",
-                {%- if cookiecutter.development_environment == "strict" %}
+                {%- if cookiecutter.development_environment == "strict" %
+                }
                 "ruff.logLevel": "warn",
-                {%- endif %}
+                {%- endif %
+                }
                 "terminal.integrated.defaultProfile.linux": "zsh",
                 "terminal.integrated.profiles.linux": {
                     "zsh": {
