@@ -16,7 +16,7 @@ jobs:
         python-version: ["3.12"]
         project-type: ["app"]
 
-    name: Python ${{ matrix.python-version }} ${{ matrix.project-type }}
+    name: Python ${{ matrix.python-version }} app
 
     steps:
       - name: Checkout
@@ -32,7 +32,7 @@ jobs:
       - name: Scaffold Python project
         run: |
           pip install --no-input cruft
-          cruft create --no-input --extra-context '{"project_type": "${{ matrix.project-type }}", "project_name": "My Project", "python_version": "3.9", "__docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
+          cruft create --no-input --extra-context '{"project_type": "app", "project_name": "My Project", "python_version": "3.12", "__docker_image":"radixai/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
