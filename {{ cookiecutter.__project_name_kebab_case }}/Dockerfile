@@ -57,9 +57,6 @@ COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter._
 RUN mkdir -p /home/user/.cache/pypoetry/ && mkdir -p /home/user/.config/pypoetry/ && \
     mkdir -p src/{{ cookiecutter.__project_name_snake_case }}/ && touch src/{{ cookiecutter.__project_name_snake_case }}/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
-    {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
-    {%- endif %}
     poetry install --only main --all-extras --no-interaction
 
 
@@ -106,14 +103,6 @@ RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/a
     echo 'bindkey "^[[B" history-beginning-search-forward' >> ~/.zshrc && \
     mkdir ~/.history/ && \
     zsh -c 'source ~/.zshrc'
-{%- if cookiecutter.private_package_repository_name %}
-
-# Enable Poetry to read the private package repository credentials.
-RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
-{%- endif %}
-{%- if cookiecutter.project_type == "app" %}
-
-
 
 FROM base AS app
 
@@ -121,14 +110,10 @@ FROM base AS app
 COPY --from=poetry $VIRTUAL_ENV $VIRTUAL_ENV
 
 # Copy the {{ cookiecutter.project_type }} source code to the working directory.
-COPY --chown=user:user . .
+COPY --chown=user:user ./src ./src
+COPY --chown=user:user ./pyproject.toml .
+COPY --chown=user:user ./poetry.lock .
 
 # Expose the app.
-{%- if cookiecutter.with_typer_cli|int %}
-ENTRYPOINT ["/opt/{{ cookiecutter.__project_name_kebab_case }}-env/bin/{{ cookiecutter.__project_name_kebab_case }}"]
-CMD []
-{%- else %}
 ENTRYPOINT ["/opt/{{ cookiecutter.__project_name_kebab_case }}-env/bin/poe"]
-CMD [{% if cookiecutter.with_fastapi_api|int %}"api"{% else %}"app"{% endif %}]
-{%- endif %}
-{%- endif %}
+CMD ["api"]

@@ -1,5 +1,5 @@
 {
-    "name": "Poetry Cookiecutter",
+    "name": "Baseline app Cookiecutter",
     "image": "mcr.microsoft.com/vscode/devcontainers/python:3.10",
     "onCreateCommand": "pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
     "remoteUser": "vscode",

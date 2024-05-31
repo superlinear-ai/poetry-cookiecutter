@@ -46,9 +46,6 @@ commitizen = ">=3.21.3"
 {%- endif %}
 coverage = { extras = ["toml"], version = ">=7.4.4" }
 mypy = ">=1.9.0"
-{%- if cookiecutter.project_type == "package" %}
-poethepoet = ">=0.25.0"
-{%- endif %}
 pre-commit = ">=3.7.0"
 pytest = ">=8.1.1"
 pytest-mock = ">=3.14.0"
@@ -65,17 +62,6 @@ cruft = ">=2.15.0"
 ipykernel = ">=6.29.4"
 ipywidgets = ">=8.1.2"
 pdoc = ">=14.4.0"
-{%- if cookiecutter.private_package_repository_name %}
-
-[[tool.poetry.source]]
-name = "pypi"
-priority = "default"
-
-[[tool.poetry.source]]  # https://python-poetry.org/docs/repositories/#using-a-private-repository
-name = "{{ cookiecutter.private_package_repository_name|slugify }}"
-url = "{{ cookiecutter.private_package_repository_url }}"
-priority = "explicit"
-{%- endif %}
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
 {%- if cookiecutter.development_environment == "strict" %}
@@ -93,6 +79,9 @@ source = ["src"]
 
 [tool.coverage.html]  # https://coverage.readthedocs.io/en/latest/cmd.html#html-reporting-coverage-html
 directory = "reports/htmlcov"
+
+[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/cmd.html#html-reporting-coverage-html
+directory = "reports/coverage.xml"
 
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
@@ -136,8 +125,25 @@ target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
 [tool.ruff.lint]
 ignore-init-module-imports = true
 {%- if cookiecutter.development_environment == "strict" %}
-select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "Q", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
-ignore = ["D203", "D213", "E501", "RET504", "S101", "S307"]
+select = ["ALL"]
+ignore = [
+    "ANN002", # Missing type annotation for args. Complicates the code too much with the current annotation system.
+    "ANN003", # Missing type annotation for kwargs. Complicates the code too much with the current annotation system.
+    "ANN101", # Missing type annotation for self in method. Useless info as it's always the same and clutters the code.
+    "ANN102", # Missing type annotation for cls in classmethod. Useless info as it's always the same and clutters the code.
+    "ANN401", # Typing with Any is not permitted. 
+    "ARG002", # Unused argument. Sometimes it's useful to keep the argument for future use, for retrocompatibility or to abide by an interface.
+    "COM812", # Missing trailing comma in a single-line list. Already handled by ruff formater
+    "CPY001", # Copyright notice missing. Not always needed.
+    "D417", # Missing argument descriptions in the docstring. Not always needed.
+    "E501", # Line too long. Already handled by ruff formater
+    "E731", # Do not assign a lambda expression. Do not agree with this rule, it improves readability as it is self-documenting the lambda function.
+    "PD901", # Do not use the variable name "df". This is a common name for dataframes and is not a problem.
+    "RET504", # Unnecessary assign before return. This is not bad, it helps debugging.
+    "S311", # Standard pseudo-random generators are not suitable for security/cryptographic purposes. Our use case is not security/cryptographic.
+    "TRY003", # Raise exception with vanilla arguments. Creating exception classes should be done only when really needed.
+    "W505", # Doc line too long. Editor autowraps doc, and it's too much work to fix it.
+]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
 select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "Q", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
@@ -164,7 +170,6 @@ convention = "{{ cookiecutter.__docstring_style|lower }}"
 max-args = 6
 
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
-{%- if cookiecutter.with_fastapi_api|int %}
 
   [tool.poe.tasks.api]
   help = "Serve the REST API"
@@ -208,14 +213,6 @@ max-args = 6
     type = "boolean"
     name = "dev"
     options = ["--dev"]
-{%- elif cookiecutter.project_type == "app" %}
-
-  [tool.poe.tasks.app]
-  help = "Serve the app"
-
-    [[tool.poe.tasks.app.sequence]]
-    cmd = "echo 'Serving app...'"
-{%- endif %}
 
   [tool.poe.tasks.docs]
   help = "Generate this {{ cookiecutter.project_type }}'s docs"
@@ -264,3 +261,6 @@ max-args = 6
 
     [[tool.poe.tasks.test.sequence]]
     cmd = "coverage html"
+
+    [[tool.poe.tasks.test.sequence]]
+      cmd = "coverage xml"
