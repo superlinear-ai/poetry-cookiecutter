@@ -76,9 +76,6 @@ USER user
 
 # Install the development Python dependencies in the virtual environment.
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
-    {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
-    {%- endif %}
     poetry install --all-extras --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.

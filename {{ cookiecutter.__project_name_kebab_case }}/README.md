@@ -10,10 +10,8 @@
 To install this package, run:
 
 ```sh
-{% if cookiecutter.private_package_repository_name %}poetry add{% else %}pip install{% endif %} {{ cookiecutter.__project_name_kebab_case }}
+pip install {{ cookiecutter.__project_name_kebab_case }}
 ```
-{%- endif %}
-
 ## Using
 {%- if cookiecutter.with_typer_cli|int %}
 
@@ -88,18 +86,8 @@ import {{ cookiecutter.__project_name_snake_case }}
             
             export UID=$(id --user)
             export GID=$(id --group)
-            {%- if cookiecutter.private_package_repository_name %}
-            export POETRY_AUTH_TOML_PATH="~/.config/pypoetry/auth.toml"
-            {%- endif %}
             EOF
             ```
-    {%- if cookiecutter.private_package_repository_name %}
-    - _Windows only_:
-        - Export the location of your private package repository credentials so that Docker Compose can load these as a [build and run time secret](https://docs.docker.com/compose/compose-file/compose-file-v3/#secrets-configuration-reference):
-            ```bat
-            setx POETRY_AUTH_TOML_PATH %APPDATA%\pypoetry\auth.toml
-            ```
-    {%- endif %}
 
 </details>
 
@@ -108,37 +96,6 @@ import {{ cookiecutter.__project_name_snake_case }}
 
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
 2. _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use it.
-
-</details>
-{%- if cookiecutter.private_package_repository_name %}
-
-<details>
-<summary>4. Configure Poetry to use the private package repository</summary>
-
-{% if cookiecutter.continuous_integration == "GitLab" -%}
-1. [Create a personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) with the `api` scope and use it to [add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
-    ```toml
-    # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
-    # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
-    [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
-    username = "{personal access token name}"
-    password = "{personal access token}"
-    ```
-{%- else -%}
-1. [Add your private package repository credentials to your Poetry's `auth.toml` file](https://python-poetry.org/docs/repositories/#configuring-credentials):
-    ```toml
-    # Linux:   ~/.config/pypoetry/auth.toml
-    # macOS:   ~/Library/Application Support/pypoetry/auth.toml
-    # Windows: C:\Users\%USERNAME%\AppData\Roaming\pypoetry\auth.toml
-    [http-basic.{{ cookiecutter.private_package_repository_name|slugify }}]
-    username = "{username}"
-    password = "{password}"
-    ```
-{%- endif %}
-
-</details>
-{%- endif %}
 
 </details>
 

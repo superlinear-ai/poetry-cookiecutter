@@ -6,41 +6,25 @@ services:
     build:
       context: .
       target: dev
-      {%- if cookiecutter.private_package_repository_name %}
-      secrets:
-        - poetry-auth
-      {%- endif %}
       args:
         PYTHON_VERSION: ${PYTHON_VERSION:-{{ cookiecutter.python_version }}}
         UID: ${UID:-1000}
         GID: ${GID:-1000}
-    {%- if not cookiecutter.private_package_repository_name %}
     environment:
       - POETRY_PYPI_TOKEN_PYPI
-    {%- else %}
-    secrets:
-      - poetry-auth
-    {%- endif %}
     volumes:
       - ..:/workspaces
       - command-history-volume:/home/user/.history/
 
-  app:
+  api:
     build:
       context: .
-      target: app
-      {%- if cookiecutter.private_package_repository_name %}
-      secrets:
-        - poetry-auth
-      {%- endif %}
+      target: api
     tty: true
-    {%- if cookiecutter.with_fastapi_api|int %}
     ports:
       - "8000:8000"
-    {%- endif %}
     profiles:
-      - app
-  {%- endif %}
+      - api
 
 volumes:
   command-history-volume:
