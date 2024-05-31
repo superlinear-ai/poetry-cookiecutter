@@ -56,13 +56,3 @@ jobs:
 
       - name: Test project
         run: devcontainer exec --workspace-folder my-project poe test
-
-      - name: Build app Docker image
-        if: ${{ matrix.project-type == 'app' }}
-        uses: docker/build-push-action@v5
-        with:
-          build-args: |
-            SOURCE_BRANCH=${{ env.GITHUB_REF }}
-            SOURCE_COMMIT=${{ env.GITHUB_SHA }}
-          context: ./my-project/
-          target: app
