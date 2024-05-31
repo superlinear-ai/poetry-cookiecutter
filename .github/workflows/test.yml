@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.12"]
-        project-type: ["app", "package"]
+        python-version: ["3.12"]
+        project-type: ["app"]
 
     name: Python ${{ matrix.python-version }} ${{ matrix.project-type }}
 
@@ -27,7 +27,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.12"
 
       - name: Scaffold Python project
         run: |
