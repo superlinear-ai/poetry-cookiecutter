@@ -3,87 +3,78 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]  # https://python-poetry.org/docs/pyproject/
-name = "{{ cookiecutter.__package_name_kebab_case }}"
+name = "{{ cookiecutter.__project_name_kebab_case }}"
 version = "0.0.0"
-description = "{{ cookiecutter.package_description }}"
+description = "{{ cookiecutter.project_description }}"
 authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 readme = "README.md"
-repository = "{{ cookiecutter.package_url }}"
+repository = "{{ cookiecutter.project_url }}"
 {%- if cookiecutter.with_conventional_commits|int %}
 
 [tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
 bump_message = "bump(release): v$current_version → v$new_version"
 tag_format = "v$version"
 update_changelog_on_bump = true
-version = "0.0.0"
-version_files = ["pyproject.toml:version"]
+version_provider = "poetry"
 {%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
 
 [tool.poetry.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
-{{ cookiecutter.__package_name_kebab_case }} = "{{ cookiecutter.__package_name_snake_case }}.cli:app"
+{{ cookiecutter.__project_name_kebab_case }} = "{{ cookiecutter.__project_name_snake_case }}.cli:app"
 {%- endif %}
 
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 {%- if cookiecutter.with_fastapi_api|int %}
 coloredlogs = ">=15.0.1"
-fastapi = { extras = ["all"], version = ">=0.92.0" }
-gunicorn = ">=20.1.0"
+fastapi = { extras = ["all"], version = ">=0.110.1" }
+gunicorn = ">=21.2.0"
 {%- endif %}
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-poethepoet = ">=0.20.0"
-{%- endif %}
-{%- if cookiecutter.with_pydantic_typing|int %}
-pydantic = ">=1.10.7"
+{%- if cookiecutter.project_type == "app" %}
+poethepoet = ">=0.25.0"
 {%- endif %}
 python = ">={{ cookiecutter.python_version }},<4.0"
-{%- if cookiecutter.with_sentry_logging|int %}
-sentry-sdk = ">=1.16.0"
-{%- endif %}
-{%- if cookiecutter.with_streamlit_app|int %}
-streamlit = ">=1.19.0"
-{%- endif %}
 {%- if cookiecutter.with_typer_cli|int %}
-typer = { extras = ["all"], version = ">=0.9.0" }
+typer = { extras = ["all"], version = ">=0.12.0" }
 {%- endif %}
 {%- if cookiecutter.with_fastapi_api|int %}
-uvicorn = { extras = ["standard"], version = ">=0.20.0" }
+uvicorn = { extras = ["standard"], version = ">=0.29.0" }
 {%- endif %}
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 {%- if cookiecutter.with_conventional_commits|int %}
-commitizen = ">=3.2.1"
+commitizen = ">=3.21.3"
 {%- endif %}
-coverage = { extras = ["toml"], version = ">=7.2.5" }
-mypy = ">=1.2.0"
-{%- if not cookiecutter.with_fastapi_api|int and not cookiecutter.with_streamlit_app|int %}
-poethepoet = ">=0.20.0"
+coverage = { extras = ["toml"], version = ">=7.4.4" }
+mypy = ">=1.9.0"
+{%- if cookiecutter.project_type == "package" %}
+poethepoet = ">=0.25.0"
 {%- endif %}
-pre-commit = ">=3.3.1"
-pytest = ">=7.3.1"
-pytest-clarity = ">=1.0.1"
-pytest-mock = ">=3.10.0"
-pytest-xdist = ">=3.2.1"
-ruff = ">=0.1.3"
+pre-commit = ">=3.7.0"
+pytest = ">=8.1.1"
+pytest-mock = ">=3.14.0"
+pytest-xdist = ">=3.5.0"
+ruff = ">=0.3.5"
 {%- if cookiecutter.development_environment == "strict" %}
-safety = ">=2.3.4,!=2.3.5"
-shellcheck-py = ">=0.9.0"
-typeguard = ">=3.0.2"
+safety = ">=3.1.0"
+shellcheck-py = ">=0.10.0.1"
+typeguard = ">=4.2.1"
 {%- endif %}
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
-cruft = ">=2.14.0"
-ipython = ">=8.14.0"
-ipykernel = ">=6.25.1"
-{%- if cookiecutter.with_jupyter_lab|int %}
-jupyterlab = ">=3.6.3"
-{%- endif %}
-pdoc = ">=13.1.1"
+cruft = ">=2.15.0"
+ipykernel = ">=6.29.4"
+ipywidgets = ">=8.1.2"
+pdoc = ">=14.4.0"
 {%- if cookiecutter.private_package_repository_name %}
+
+[[tool.poetry.source]]
+name = "pypi"
+priority = "default"
 
 [[tool.poetry.source]]  # https://python-poetry.org/docs/repositories/#using-a-private-repository
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
+priority = "explicit"
 {%- endif %}
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
@@ -105,7 +96,7 @@ directory = "reports/htmlcov"
 
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int %}
+{%- if cookiecutter.with_fastapi_api|int %}
 plugins = "pydantic.mypy"
 {%- endif %}
 {%- if cookiecutter.development_environment == "strict" %}
@@ -119,7 +110,7 @@ show_column_numbers = true
 show_error_codes = true
 show_error_context = true
 warn_unreachable = true
-{%- if cookiecutter.development_environment == "strict" and (cookiecutter.with_fastapi_api|int or cookiecutter.with_pydantic_typing|int) %}
+{%- if cookiecutter.development_environment == "strict" and cookiecutter.with_fastapi_api|int %}
 
 [tool.pydantic-mypy]  # https://pydantic-docs.helpmanual.io/mypy_plugin/#configuring-the-plugin
 init_forbid_extra = true
@@ -129,7 +120,7 @@ warn_untyped_fields = true
 {%- endif %}
 
 [tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
-addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiecutter.development_environment == 'strict' %} --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__package_name_snake_case }}{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if cookiecutter.development_environment == 'strict' %} --strict-config --strict-markers --typeguard-packages={{ cookiecutter.__project_name_snake_case }}{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
 {%- if cookiecutter.development_environment == "strict" %}
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 {%- endif %}
@@ -138,21 +129,21 @@ xfail_strict = true
 
 [tool.ruff]  # https://github.com/charliermarsh/ruff
 fix = true
-preview = true
-lint.ignore-init-module-imports = true
 line-length = 99
-{%- if cookiecutter.development_environment == "strict" %}
-lint.select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
-lint.ignore = ["E501", "E731", "PTH123", "RET504", "S101", "S307", "W505"]
-
-lint.unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
-{%- else %}
-lint.select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
-lint.ignore = ["E501", "E731", "PGH001", "PGH002", "PGH003", "PTH123", "RET504", "S101", "W505"]
-lint.unfixable = ["F401", "F841"]
-{%- endif %}
 src = ["src", "tests"]
 target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
+
+[tool.ruff.lint]
+ignore-init-module-imports = true
+{%- if cookiecutter.development_environment == "strict" %}
+select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "Q", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
+ignore = ["D203", "D213", "E501", "RET504", "S101", "S307"]
+unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
+{%- else %}
+select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "Q", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
+ignore = ["D203", "D213", "E501", "PGH002", "PGH003", "RET504", "S101", "S307"]
+unfixable = ["F401", "F841"]
+{%- endif %}
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -162,12 +153,12 @@ lines-after-imports = 2
 
 {%- if cookiecutter.development_environment == "strict" %}
 
-[tool.ruff.pycodestyle]
+[tool.ruff.lint.pycodestyle]
 max-doc-length = 99
 {%- endif %}
 
-[tool.ruff.pydocstyle]
-convention = "{{ cookiecutter.docstring_style|lower }}"
+[tool.ruff.lint.pydocstyle]
+convention = "{{ cookiecutter.__docstring_style|lower }}"
 
 [tool.ruff.pylint]
 max-args = 6
@@ -176,7 +167,7 @@ max-args = 6
 {%- if cookiecutter.with_fastapi_api|int %}
 
   [tool.poe.tasks.api]
-  help = "Serve a REST API"
+  help = "Serve the REST API"
   shell = """
     if [ $dev ]
     then {
@@ -184,7 +175,7 @@ max-args = 6
         --host $host \
         --port $port \
         --reload \
-        {{ cookiecutter.__package_name_snake_case }}.api:app
+        {{ cookiecutter.__project_name_snake_case }}.api:app
     } else {
       gunicorn \
         --access-logfile - \
@@ -196,7 +187,7 @@ max-args = 6
         --worker-class uvicorn.workers.UvicornWorker \
         --worker-tmp-dir /dev/shm \
         --workers 2 \
-        {{ cookiecutter.__package_name_snake_case }}.api:app
+        {{ cookiecutter.__project_name_snake_case }}.api:app
     } fi
     """
 
@@ -217,72 +208,38 @@ max-args = 6
     type = "boolean"
     name = "dev"
     options = ["--dev"]
-{%- endif %}
-{%- if cookiecutter.with_streamlit_app|int %}
+{%- elif cookiecutter.project_type == "app" %}
 
   [tool.poe.tasks.app]
-  help = "Serve a Streamlit app"
-  cmd = """
-    streamlit run
-      --browser.gatherUsageStats false
-      --server.address $host
-      --server.port $port
-      --theme.base light
-      src/{{ cookiecutter.__package_name_snake_case }}/app.py
-    """
-  use_exec = true
+  help = "Serve the app"
 
-    [[tool.poe.tasks.app.args]]
-    help = "Bind socket to this host (default: 0.0.0.0)"
-    name = "host"
-    options = ["--host"]
-    default = "0.0.0.0"
-
-    [[tool.poe.tasks.app.args]]
-    help = "Bind socket to this port (default: 8000)"
-    name = "port"
-    options = ["--port"]
-    default = "8000"
+    [[tool.poe.tasks.app.sequence]]
+    cmd = "echo 'Serving app...'"
 {%- endif %}
 
   [tool.poe.tasks.docs]
-  help = "Generate this package's docs"
+  help = "Generate this {{ cookiecutter.project_type }}'s docs"
   cmd = """
     pdoc
       --docformat $docformat
       --output-directory $outputdirectory
-      {{ cookiecutter.__package_name_snake_case }}
+      {{ cookiecutter.__project_name_snake_case }}
     """
 
     [[tool.poe.tasks.docs.args]]
-    help = "The docstring style (default: {{ cookiecutter.docstring_style|lower }})"
+    help = "The docstring style (default: {{ cookiecutter.__docstring_style|lower }})"
     name = "docformat"
     options = ["--docformat"]
-    default = "{{ cookiecutter.docstring_style|lower }}"
+    default = "{{ cookiecutter.__docstring_style|lower }}"
 
     [[tool.poe.tasks.docs.args]]
     help = "The output directory (default: docs)"
     name = "outputdirectory"
     options = ["--output-directory"]
     default = "docs"
-{%- if cookiecutter.with_jupyter_lab|int %}
-
-  [tool.poe.tasks.lab]
-  help = "Run Jupyter Lab"
-
-    [[tool.poe.tasks.lab.sequence]]
-    cmd = "mkdir -p notebooks"
-
-    [[tool.poe.tasks.lab.sequence]]
-    cmd = """
-      jupyter lab
-        --allow-root
-        --notebook-dir notebooks
-      """
-{%- endif %}
 
   [tool.poe.tasks.lint]
-  help = "Lint this package"
+  help = "Lint this {{ cookiecutter.project_type }}"
 
     [[tool.poe.tasks.lint.sequence]]
     cmd = """
@@ -297,7 +254,7 @@ max-args = 6
 {%- endif %}
 
   [tool.poe.tasks.test]
-  help = "Test this package"
+  help = "Test this {{ cookiecutter.project_type }}"
 
     [[tool.poe.tasks.test.sequence]]
     cmd = "coverage run"

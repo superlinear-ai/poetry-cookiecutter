@@ -1,25 +1,22 @@
 {
-  "package_name": "My Package",
-  "package_description": "A Python package that ...",
-  "package_url": "https://github.com/user/my-package",
+  "project_type": "app",
+  "project_name": "my-app",
+  "project_description": "A Python {{ cookiecutter.project_type }} that reticulates splines.",
+  "project_url": "https://github.com/user/my-{{ cookiecutter.project_type }}",
   "author_name": "John Smith",
   "author_email": "john@example.com",
-  "python_version": "3.11",
-  "docker_image": "python:$PYTHON_VERSION-slim",
-  "development_environment": "strict",
-  "with_conventional_commits": "1",
-  "with_fastapi_api": "1",
-  "with_jupyter_lab": "0",
-  "with_pydantic_typing": "1",
-  "with_sentry_logging": "1",
-  "with_streamlit_app": "0",
-  "with_typer_cli": "0",
+  "python_version": "3.12",
   "continuous_integration": "GitHub",
-  "docstring_style": "Google",
-  "private_package_repository_name": "",
-  "private_package_repository_url": "",
   "teamwork_uri": "",
-  "__package_name_kebab_case": "{{ cookiecutter.package_name|slugify }}",
-  "__package_name_snake_case": "{{ cookiecutter.package_name|slugify(separator='_') }}"
-
+  "development_environment": [
+    "simple",
+    "strict"
+  ],
+  "with_conventional_commits": "{% if cookiecutter.development_environment == 'simple' %}0{% else %}1{% endif %}",
+  "with_fastapi_api": "1",
+  "with_typer_cli": "1",
+  "__docker_image": "python:$PYTHON_VERSION-slim",
+  "__docstring_style": "Google",
+  "__project_name_kebab_case": "{{ cookiecutter.project_name|slugify }}",
+  "__project_name_snake_case": "{{ cookiecutter.project_name|slugify(separator='_') }}"
 }
