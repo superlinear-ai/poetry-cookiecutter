@@ -142,7 +142,7 @@ ignore = [
 ]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
-select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "Q", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
+select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "Q", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
 ignore = ["D203", "D213", "E501", "G010", "PGH003", "RET504", "S101", "S307"]
 unfixable = ["F401", "F841"]
 {%- endif %}
