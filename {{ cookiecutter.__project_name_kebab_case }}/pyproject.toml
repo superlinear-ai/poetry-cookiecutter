@@ -157,16 +157,13 @@ ban-relative-imports = "all"
 [tool.ruff.lint.isort]
 lines-after-imports = 2
 
-{%- if cookiecutter.development_environment == "strict" %}
-
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 99
-{%- endif %}
 
 [tool.ruff.lint.pydocstyle]
 convention = "{{ cookiecutter.__docstring_style|lower }}"
 
-[tool.ruff.pylint]
+[tool.ruff.lint.pylint]
 max-args = 6
 
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
