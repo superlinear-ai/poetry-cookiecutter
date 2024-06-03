@@ -80,7 +80,7 @@ source = ["src"]
 [tool.coverage.html]  # https://coverage.readthedocs.io/en/latest/cmd.html#html-reporting-coverage-html
 directory = "reports/htmlcov"
 
-[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/cmd.html#html-reporting-coverage-html
+[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/cmd.html#cmd-xml
 directory = "reports/coverage.xml"
 
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
@@ -121,7 +121,6 @@ fix = true
 line-length = 99
 src = ["src", "tests"]
 target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
-lint.ignore-init-module-imports = true
 
 [tool.ruff.lint]
 {%- if cookiecutter.development_environment == "strict" %}
@@ -131,11 +130,8 @@ ignore = [
     "ANN003", # Missing type annotation for kwargs. Complicates the code too much with the current annotation system.
     "ANN101", # Missing type annotation for self in method. Useless info as it's always the same and clutters the code.
     "ANN102", # Missing type annotation for cls in classmethod. Useless info as it's always the same and clutters the code.
-    "ANN401", # Typing with Any is not permitted. 
-    "ARG002", # Unused argument. Sometimes it's useful to keep the argument for future use, for retrocompatibility or to abide by an interface.
     "COM812", # Missing trailing comma in a single-line list. Already handled by ruff formater
     "CPY001", # Copyright notice missing. Not always needed.
-    "D417", # Missing argument descriptions in the docstring. Not always needed.
     "E501", # Line too long. Already handled by ruff formater
     "E731", # Do not assign a lambda expression. Do not agree with this rule, it improves readability as it is self-documenting the lambda function.
     "PD901", # Do not use the variable name "df". This is a common name for dataframes and is not a problem.
@@ -260,4 +256,4 @@ max-args = 6
     cmd = "coverage html"
 
     [[tool.poe.tasks.test.sequence]]
-      cmd = "coverage xml"
+    cmd = "coverage xml"
