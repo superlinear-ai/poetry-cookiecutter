@@ -121,9 +121,9 @@ fix = true
 line-length = 99
 src = ["src", "tests"]
 target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
+lint.ignore-init-module-imports = true
 
 [tool.ruff.lint]
-ignore-init-module-imports = true
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["ALL"]
 ignore = [
@@ -147,7 +147,7 @@ ignore = [
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
 select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "Q", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
-ignore = ["D203", "D213", "E501", "PGH002", "PGH003", "RET504", "S101", "S307"]
+ignore = ["D203", "D213", "E501", "G010", "PGH003", "RET504", "S101", "S307"]
 unfixable = ["F401", "F841"]
 {%- endif %}
 
