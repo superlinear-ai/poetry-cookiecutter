@@ -3,7 +3,6 @@
 # {{ cookiecutter.project_name }}
 
 {{ cookiecutter.project_description }}
-{%- if cookiecutter.project_type == "package" or cookiecutter.with_typer_cli|int %}
 
 ## Installing
 
