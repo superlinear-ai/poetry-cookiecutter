@@ -10,7 +10,7 @@ from fastapi import FastAPI
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
     """Handle FastAPI startup and shutdown events."""
     # Startup events:
     # - Remove all handlers associated with the root logger object.
@@ -34,3 +34,7 @@ async def compute(n: int = 42) -> int:
 
     result = await asyncio.to_thread(fibonacci, n)
     return result
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run("main:app", port=8000, log_level="info")

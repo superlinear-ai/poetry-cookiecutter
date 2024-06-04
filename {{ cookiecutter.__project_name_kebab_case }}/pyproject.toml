@@ -147,6 +147,9 @@ ignore = ["D203", "D213", "E501", "G010", "PGH003", "RET504", "S101", "S307"]
 unfixable = ["F401", "F841"]
 {%- endif %}
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "INP001", "D100", "D101", "SLF"]
+
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
