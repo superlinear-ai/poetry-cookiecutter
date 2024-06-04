@@ -139,6 +139,7 @@ ignore = [
     "S311", # Standard pseudo-random generators are not suitable for security/cryptographic purposes. Our use case is not security/cryptographic.
     "TRY003", # Raise exception with vanilla arguments. Creating exception classes should be done only when really needed.
     "W505", # Doc line too long. Editor autowraps doc, and it's too much work to fix it.
+    "ISC001", # This rule may cause conflicts when used with the formatter
 ]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
