@@ -9,8 +9,8 @@
   "continuous_integration": "GitHub",
   "teamwork_uri": "",
   "development_environment": [
-    "simple",
-    "strict"
+    "strict",
+    "simple"
   ],
   "with_conventional_commits": "{% if cookiecutter.development_environment == 'simple' %}0{% else %}1{% endif %}",
   "with_fastapi_api": "1",
