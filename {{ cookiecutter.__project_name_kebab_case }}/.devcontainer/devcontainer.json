@@ -1,5 +1,5 @@
 {
-    "name": "{{ cookiecutter.__package_name_kebab_case }}",
+    "name": "{{ cookiecutter.__project_name_kebab_case }}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "devcontainer",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/",
@@ -10,24 +10,24 @@
         "vscode": {
             "extensions": [
                 "charliermarsh.ruff",
+                "GitHub.vscode-github-actions",
+                "GitHub.vscode-pull-request-github",
                 "ms-python.mypy-type-checker",
                 "ms-python.python",
-                {%- if cookiecutter.with_jupyter_lab|int %}
                 "ms-toolsai.jupyter",
-                {%- endif %}
                 "ryanluker.vscode-coverage-gutters",
                 "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode",
                 "GitHub.copilot",
-				"GitHub.copilot-chat"
+                "GitHub.copilot-chat"
             ],
             "settings": {
                 "coverage-gutters.coverageFileNames": [
                     "reports/coverage.xml"
                 ],
                 "editor.codeActionsOnSave": {
-                    "source.fixAll": true,
-                    "source.organizeImports": true
+                    "source.fixAll": "explicit",
+                    "source.organizeImports": "explicit"
                 },
                 "editor.formatOnSave": true,
                 "[python]": {
@@ -40,14 +40,20 @@
                     99
                 ],
                 "files.autoSave": "onFocusChange",
+                "jupyter.kernels.excludePythonEnvironments": [
+                    "/usr/local/bin/python"
+                ],
                 "mypy-type-checker.importStrategy": "fromEnvironment",
-                "python.defaultInterpreterPath": "/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/python",
+                "notebook.codeActionsOnSave": {
+                    "notebook.source.fixAll": "explicit",
+                    "notebook.source.organizeImports": "explicit"
+                },
+                "notebook.formatOnSave.enabled": true,
+                "python.defaultInterpreterPath": "/opt/{{ cookiecutter.__project_name_kebab_case }}-env/bin/python",
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestEnabled": true,
                 "ruff.importStrategy": "fromEnvironment",
-                {%- if cookiecutter.development_environment == "strict" %}
                 "ruff.logLevel": "warn",
-                {%- endif %}
                 "terminal.integrated.defaultProfile.linux": "zsh",
                 "terminal.integrated.profiles.linux": {
                     "zsh": {

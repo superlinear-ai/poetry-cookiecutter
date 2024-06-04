@@ -1,11 +1,12 @@
 {
-    "name": "Poetry Cookiecutter",
+    "name": "Baseline app Cookiecutter",
     "image": "mcr.microsoft.com/vscode/devcontainers/python:3.10",
     "onCreateCommand": "pip install commitizen cruft pre-commit && pre-commit install --install-hooks",
     "remoteUser": "vscode",
     "customizations": {
         "vscode": {
             "extensions": [
+                "DavidAnson.vscode-markdownlint",
                 "ms-python.python",
                 "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode"

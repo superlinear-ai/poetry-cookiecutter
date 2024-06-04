@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+
+  devcontainer:
+    build:
+      context: .
+      target: dev
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION:-{{ cookiecutter.python_version }}}
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    environment:
+      - POETRY_PYPI_TOKEN_PYPI
+    volumes:
+      - ..:/workspaces
+      - command-history-volume:/home/user/.history/
+
+  api:
+    build:
+      context: .
+      target: api
+    tty: true
+    ports:
+      - "8000:8000"
+    profiles:
+      - api
+
+volumes:
+  command-history-volume:

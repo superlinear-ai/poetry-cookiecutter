@@ -8,7 +8,7 @@ updates:
     commit-message:
       prefix: "ci"
       prefix-development: "ci"
-      include: "scope"
+      include: scope
     groups:
       ci-dependencies:
         patterns:
@@ -26,13 +26,18 @@ updates:
     schedule:
       interval: monthly
     commit-message:
-      prefix: "build"
+      prefix: "chore"
       prefix-development: "build"
-      include: "scope"
-    versioning-strategy: increase
+      include: scope
     allow:
-      - dependency-type: "all"
+      - dependency-type: production
+      - dependency-type: development
+    versioning-strategy: increase
     groups:
+      runtime-dependencies:
+        dependency-type: production
+      development-dependencies:
+        dependency-type: development
       dependencies:
         patterns:
         - "*"

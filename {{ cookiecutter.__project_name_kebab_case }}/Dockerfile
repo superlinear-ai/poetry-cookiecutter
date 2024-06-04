@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION={{ cookiecutter.python_version }}
-FROM {{ cookiecutter.docker_image }} AS base
+FROM {{ cookiecutter.__docker_image }} AS base
 
 # Remove docker-clean so we can keep the apt cache in Docker build cache.
 RUN rm /etc/apt/apt.conf.d/docker-clean
@@ -23,12 +23,12 @@ RUN groupadd --gid $GID user && \
 USER user
 
 # Create and activate a virtual environment.
-ENV VIRTUAL_ENV /opt/{{ cookiecutter.__package_name_kebab_case }}-env
+ENV VIRTUAL_ENV /opt/{{ cookiecutter.__project_name_kebab_case }}-env
 ENV PATH $VIRTUAL_ENV/bin:$PATH
 RUN python -m venv $VIRTUAL_ENV
 
 # Set the working directory.
-WORKDIR /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+WORKDIR /workspaces/{{ cookiecutter.__project_name_kebab_case }}/
 
 
 
@@ -37,7 +37,7 @@ FROM base as poetry
 USER root
 
 # Install Poetry in separate venv so it doesn't pollute the main venv.
-ENV POETRY_VERSION 1.6.1
+ENV POETRY_VERSION 1.8.0
 ENV POETRY_VIRTUAL_ENV /opt/poetry-env
 RUN --mount=type=cache,target=/root/.cache/pip/ \
     python -m venv $POETRY_VIRTUAL_ENV && \
@@ -53,14 +53,11 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 USER user
 
 # Install the run time Python dependencies in the virtual environment.
-COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/{{ cookiecutter.__project_name_kebab_case }}/
 RUN mkdir -p /home/user/.cache/pypoetry/ && mkdir -p /home/user/.config/pypoetry/ && \
-    mkdir -p src/{{ cookiecutter.__package_name_snake_case }}/ && touch src/{{ cookiecutter.__package_name_snake_case }}/__init__.py && touch README.md
+    mkdir -p src/{{ cookiecutter.__project_name_snake_case }}/ && touch src/{{ cookiecutter.__project_name_snake_case }}/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
-    {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
-    {%- endif %}
-    poetry install --only main --no-interaction
+    poetry install --only main --all-extras --no-interaction
 
 
 
@@ -79,13 +76,10 @@ USER user
 
 # Install the development Python dependencies in the virtual environment.
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
-    {%- if cookiecutter.private_package_repository_name %}
-    --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
-    {%- endif %}
-    poetry install --no-interaction
+    poetry install --all-extras --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
-COPY --chown=user:user .pre-commit-config.yaml /workspaces/{{ cookiecutter.__package_name_kebab_case }}/
+COPY --chown=user:user .pre-commit-config.yaml /workspaces/{{ cookiecutter.__project_name_kebab_case }}/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
@@ -106,29 +100,17 @@ RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/a
     echo 'bindkey "^[[B" history-beginning-search-forward' >> ~/.zshrc && \
     mkdir ~/.history/ && \
     zsh -c 'source ~/.zshrc'
-{%- if cookiecutter.private_package_repository_name %}
-
-# Enable Poetry to read the private package repository credentials.
-RUN ln -s /run/secrets/poetry-auth /home/user/.config/pypoetry/auth.toml
-{%- endif %}
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int or cookiecutter.with_typer_cli|int %}
-
-
 
 FROM base AS app
 
 # Copy the virtual environment from the poetry stage.
 COPY --from=poetry $VIRTUAL_ENV $VIRTUAL_ENV
 
-# Copy the package source code to the working directory.
-COPY --chown=user:user . .
+# Copy the {{ cookiecutter.project_type }} source code to the working directory.
+COPY --chown=user:user ./src ./src
+COPY --chown=user:user ./pyproject.toml .
+COPY --chown=user:user ./poetry.lock .
 
-# Expose the application.
-{%- if cookiecutter.with_fastapi_api|int or cookiecutter.with_streamlit_app|int %}
-ENTRYPOINT ["/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/poe"]
-CMD [{% if cookiecutter.with_fastapi_api|int %}"api"{% else %}"app"{% endif %}]
-{%- else %}
-ENTRYPOINT ["/opt/{{ cookiecutter.__package_name_kebab_case }}-env/bin/{{ cookiecutter.__package_name_kebab_case }}"]
-CMD []
-{%- endif %}
-{%- endif %}
+# Expose the app.
+ENTRYPOINT ["/opt/{{ cookiecutter.__project_name_kebab_case }}-env/bin/poe"]
+CMD ["api"]
