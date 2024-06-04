@@ -35,6 +35,8 @@ async def compute(n: int = 42) -> int:
     result = await asyncio.to_thread(fibonacci, n)
     return result
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("main:app", port=8000, log_level="info")
