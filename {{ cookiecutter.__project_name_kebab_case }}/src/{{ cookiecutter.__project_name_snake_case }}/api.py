@@ -39,4 +39,4 @@ async def compute(n: int = 42) -> int:
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", port=8000, log_level="info")
+    uvicorn.run(app, port=8000, log_level="info")

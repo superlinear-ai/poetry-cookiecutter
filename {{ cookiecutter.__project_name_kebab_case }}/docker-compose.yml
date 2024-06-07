@@ -16,6 +16,28 @@ services:
       - ..:/workspaces
       - command-history-volume:/home/user/.history/
 
+  dev:
+    extends: devcontainer
+    stdin_open: true
+    tty: true
+    entrypoint: []
+    command:
+      [
+        "sh",
+        "-c",
+        "sudo chown user $$SSH_AUTH_SOCK && cp --update /opt/build/poetry/poetry.lock /workspaces/{{ cookiecutter.__project_name_kebab_case }}/ && mkdir -p /workspaces/{{ cookiecutter.__project_name_kebab_case }}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/{{ cookiecutter.__project_name_kebab_case }}/.git/hooks/ && zsh"
+      ]
+    environment:
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+    ports:
+      - "8000"
+    volumes:
+      - ~/.gitconfig:/etc/gitconfig
+      - ~/.ssh/known_hosts:/home/user/.ssh/known_hosts
+      - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
+    profiles:
+      - dev
+
   api:
     build:
       context: .
