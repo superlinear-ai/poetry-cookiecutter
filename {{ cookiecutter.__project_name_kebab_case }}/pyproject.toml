@@ -63,6 +63,7 @@ typeguard = ">=4.2.1"
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 cruft = ">=2.15.0"
 ipykernel = ">=6.29.4"
+ipython = ">=8.23.0"
 ipywidgets = ">=8.1.2"
 pdoc = ">=14.4.0"
 {%- if cookiecutter.private_package_repository_name %}
