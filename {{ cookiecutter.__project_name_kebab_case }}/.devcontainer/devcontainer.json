@@ -55,7 +55,7 @@
                 "python.testing.pytestEnabled": true,
                 "ruff.importStrategy": "fromEnvironment",
                 {%- if cookiecutter.development_environment == "strict" %}
-                "ruff.logLevel": "warn",
+                "ruff.logLevel": "warning",
                 {%- endif %}
                 "terminal.integrated.defaultProfile.linux": "zsh",
                 "terminal.integrated.profiles.linux": {
