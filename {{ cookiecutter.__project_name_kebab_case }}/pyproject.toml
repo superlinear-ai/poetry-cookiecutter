@@ -53,7 +53,7 @@ pre-commit = ">=3.7.0"
 pytest = ">=8.1.1"
 pytest-mock = ">=3.14.0"
 pytest-xdist = ">=3.5.0"
-ruff = ">=0.3.5"
+ruff = ">=0.5.7"
 {%- if cookiecutter.development_environment == "strict" %}
 safety = ">=3.1.0"
 shellcheck-py = ">=0.10.0.1"
@@ -134,7 +134,6 @@ src = ["src", "tests"]
 target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
 
 [tool.ruff.lint]
-ignore-init-module-imports = true
 {%- if cookiecutter.development_environment == "strict" %}
 select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "Q", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
 ignore = ["D203", "D213", "E501", "RET504", "S101", "S307"]
