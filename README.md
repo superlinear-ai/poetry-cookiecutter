@@ -1,4 +1,4 @@
-[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/radix-ai/poetry-cookiecutter) [![Open in GitHub Codespaces](https://img.shields.io/static/v1?label=GitHub%20Codespaces&message=Open&color=blue&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=444870763)
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/superlinear-ai/poetry-cookiecutter) [![Open in GitHub Codespaces](https://img.shields.io/static/v1?label=GitHub%20Codespaces&message=Open&color=blue&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=444870763)
 
 # 🍪 Poetry Cookiecutter
 
@@ -6,7 +6,7 @@ A modern [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template f
 
 ## 🍿 Demo
 
-See 👖 [Conformal Tights](https://github.com/radix-ai/conformal-tights) for an example of a Python package that is scaffolded with this template. Contributing to this package can be done with a single click by [starting a GitHub Codespace](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=765698489&skip_quickstart=true) or [starting a Dev Container](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/radix-ai/conformal-tights).
+See 👖 [Conformal Tights](https://github.com/superlinear-ai/conformal-tights) for an example of a Python package that is scaffolded with this template. Contributing to this package can be done with a single click by [starting a GitHub Codespace](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=765698489&skip_quickstart=true) or [starting a Dev Container](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/superlinear-ai/conformal-tights).
 
 ## 🎁 Features
 
@@ -41,14 +41,14 @@ To create a new Python project with this template:
 3. Run the following command in the parent directory of the cloned repository to apply the Poetry Cookiecutter template:
 
    ```sh
-   cruft create -f https://github.com/radix-ai/poetry-cookiecutter
+   cruft create -f https://github.com/superlinear-ai/poetry-cookiecutter
    ```
 
    <details>
 
    <summary>⚠️ If your repository name ≠ the project's slugified name</summary>
 
-   If your repository name differs from your project's slugified name (see `project_name` in the [Template parameters](https://github.com/radix-ai/poetry-cookiecutter#-template-parameters) below), you will need to copy the scaffolded project into the repository with:
+   If your repository name differs from your project's slugified name (see `project_name` in the [Template parameters](https://github.com/superlinear-ai/poetry-cookiecutter#-template-parameters) below), you will need to copy the scaffolded project into the repository with:
 
       ```sh
       cp -r {project-name}/ {repository-name}/
