@@ -66,12 +66,13 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 FROM poetry AS dev
 
-# Install development tools: curl, git, gpg, ssh, starship, sudo, vim, and zsh.
+# Install development tools: curl, git, gpg, nodejs, ssh, starship, sudo, vim, and zsh.
 USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
+    curl -fsSL https://deb.nodesource.com/setup_current.x | bash - && \
     apt-get update && \
-    apt-get install --no-install-recommends --yes curl git gnupg ssh sudo vim zsh && \
+    apt-get install --no-install-recommends --yes curl git gnupg nodejs ssh sudo vim zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     usermod --shell /usr/bin/zsh user && \
     echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user

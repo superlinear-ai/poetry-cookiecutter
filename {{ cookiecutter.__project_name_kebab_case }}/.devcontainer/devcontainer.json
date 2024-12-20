@@ -7,6 +7,12 @@
     "overrideCommand": true,
     "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/${localWorkspaceFolderBasename}/ && mkdir -p /workspaces/${localWorkspaceFolderBasename}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/${localWorkspaceFolderBasename}/.git/hooks/",
     "customizations": {
+        "jetbrains": {
+            "backend": "PyCharm",
+            "plugins": [
+                "com.github.copilot"
+            ]
+        },
         "vscode": {
             "extensions": [
                 "charliermarsh.ruff",
