@@ -16,6 +16,7 @@
                 {%- elif cookiecutter.continuous_integration == "GitLab" %}
                 "GitLab.gitlab-workflow",
                 {%- endif %}
+                "ms-azuretools.vscode-docker",
                 "ms-python.mypy-type-checker",
                 "ms-python.python",
                 "ms-toolsai.jupyter",

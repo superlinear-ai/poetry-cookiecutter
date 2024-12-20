@@ -7,6 +7,7 @@
         "vscode": {
             "extensions": [
                 "DavidAnson.vscode-markdownlint",
+                "ms-azuretools.vscode-docker",
                 "ms-python.python",
                 "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode"
