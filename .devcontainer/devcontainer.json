@@ -7,6 +7,10 @@
         "vscode": {
             "extensions": [
                 "DavidAnson.vscode-markdownlint",
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "GitHub.vscode-github-actions",
+                "GitHub.vscode-pull-request-github",
                 "ms-azuretools.vscode-docker",
                 "ms-python.python",
                 "tamasfe.even-better-toml",
@@ -20,7 +24,8 @@
                 "editor.rulers": [
                     100
                 ],
-                "files.autoSave": "onFocusChange"
+                "files.autoSave": "onFocusChange",
+                "github.copilot.chat.edits.enabled": true
             }
         }
     }
