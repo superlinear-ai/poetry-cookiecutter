@@ -32,7 +32,7 @@ WORKDIR /workspaces/{{ cookiecutter.__project_name_kebab_case }}/
 
 
 
-FROM base as poetry
+FROM base AS poetry
 
 USER root
 
@@ -64,7 +64,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 
 
-FROM poetry as dev
+FROM poetry AS dev
 
 # Install development tools: curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 USER root
