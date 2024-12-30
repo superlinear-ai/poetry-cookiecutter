@@ -30,6 +30,9 @@ notebooks/
 # macOS
 .DS_Store
 
+# mise
+mise.local.toml
+
 # mypy
 .dmypy.json
 .mypy_cache/
