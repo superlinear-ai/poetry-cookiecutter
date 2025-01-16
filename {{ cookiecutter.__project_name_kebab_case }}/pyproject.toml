@@ -2,45 +2,47 @@
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]  # https://python-poetry.org/docs/pyproject/
+[project]  # https://packaging.python.org/en/latest/specifications/pyproject-toml/
 name = "{{ cookiecutter.__project_name_kebab_case }}"
 version = "0.0.0"
 description = "{{ cookiecutter.project_description }}"
-authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 readme = "README.md"
-repository = "{{ cookiecutter.project_url }}"
-{%- if cookiecutter.with_conventional_commits|int %}
+license-files = ["LICENSE*"]
+authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
+requires-python = ">={{ cookiecutter.python_version }},<4.0"
 
-[tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
-bump_message = "bump(release): v$current_version → v$new_version"
-tag_format = "v$version"
-update_changelog_on_bump = true
-version_provider = "poetry"
+[project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
+homepage = "{{ cookiecutter.project_url }}"
+source = "{{ cookiecutter.project_url }}"
+{%- if cookiecutter.with_conventional_commits|int %}
+changelog = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}blob/main/CHANGELOG.md"
 {%- endif %}
+releasenotes = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}releases"
+documentation = "{{ cookiecutter.project_url }}"
+issues = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}issues"
+dependencies = [
+  {%- if cookiecutter.with_fastapi_api|int %}
+  "coloredlogs (>=15.0.1)",
+  "fastapi[all] (>=0.110.1)",
+  "gunicorn (>=21.2.0)",
+  {%- endif %}
+  {%- if cookiecutter.project_type == "app" %}
+  "poethepoet (>=0.25.0)",
+  {%- endif %}
+  {%- if cookiecutter.with_typer_cli|int %}
+  "typer[all] (>=0.12.0)",
+  {%- endif %}
+  {%- if cookiecutter.with_fastapi_api|int %}
+  "uvicorn[standard] (>=0.29.0)",
+  {%- endif %}
+]
 {%- if cookiecutter.with_typer_cli|int %}
 
-[tool.poetry.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
+[project.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
 {{ cookiecutter.__project_name_kebab_case }} = "{{ cookiecutter.__project_name_snake_case }}.cli:app"
 {%- endif %}
 
-[tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
-{%- if cookiecutter.with_fastapi_api|int %}
-coloredlogs = ">=15.0.1"
-fastapi = { extras = ["all"], version = ">=0.110.1" }
-gunicorn = ">=21.2.0"
-{%- endif %}
-{%- if cookiecutter.project_type == "app" %}
-poethepoet = ">=0.25.0"
-{%- endif %}
-python = ">={{ cookiecutter.python_version }},<4.0"
-{%- if cookiecutter.with_typer_cli|int %}
-typer = { extras = ["all"], version = ">=0.12.0" }
-{%- endif %}
-{%- if cookiecutter.with_fastapi_api|int %}
-uvicorn = { extras = ["standard"], version = ">=0.29.0" }
-{%- endif %}
-
-[tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
+[tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/managing-dependencies#dependency-groups
 {%- if cookiecutter.with_conventional_commits|int %}
 commitizen = ">=3.21.3"
 {%- endif %}
@@ -60,7 +62,7 @@ shellcheck-py = ">=0.10.0.1"
 typeguard = ">=4.2.1"
 {%- endif %}
 
-[tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
+[tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/managing-dependencies#dependency-groups
 cruft = ">=2.15.0"
 ipykernel = ">=6.29.4"
 ipython = ">=8.18.0"
@@ -76,6 +78,14 @@ priority = "default"
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
 priority = "explicit"
+{%- endif %}
+{%- if cookiecutter.with_conventional_commits|int %}
+
+[tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
+bump_message = "bump(release): v$current_version → v$new_version"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_provider = "poetry"
 {%- endif %}
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
@@ -128,7 +138,8 @@ filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
 xfail_strict = true
 
-[tool.ruff]  # https://github.com/charliermarsh/ruff
+[tool.ruff]  # https://docs.astral.sh/ruff/settings/
+docstring-code-format = true
 fix = true
 line-length = 100
 src = ["src", "tests"]

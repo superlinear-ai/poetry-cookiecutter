@@ -40,8 +40,3 @@ jobs:
 
       - name: Test {{ cookiecutter.project_type }}
         run: devcontainer exec --workspace-folder . poe test
-
-      - name: Upload coverage
-        uses: codecov/codecov-action@v5
-        with:
-          files: reports/coverage.xml
