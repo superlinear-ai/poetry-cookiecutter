@@ -8,7 +8,9 @@ version = "0.0.0"
 description = "{{ cookiecutter.project_description }}"
 readme = "README.md"
 license-files = ["LICENSE*"]
-authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
+authors = [
+  { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" },
+]
 requires-python = ">={{ cookiecutter.python_version }},<4.0"
 
 [project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
