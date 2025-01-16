@@ -12,16 +12,6 @@ authors = [
   { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" },
 ]
 requires-python = ">={{ cookiecutter.python_version }},<4.0"
-
-[project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
-homepage = "{{ cookiecutter.project_url }}"
-source = "{{ cookiecutter.project_url }}"
-{%- if cookiecutter.with_conventional_commits|int %}
-changelog = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}blob/main/CHANGELOG.md"
-{%- endif %}
-releasenotes = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}releases"
-documentation = "{{ cookiecutter.project_url }}"
-issues = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}issues"
 dependencies = [
   {%- if cookiecutter.with_fastapi_api|int %}
   "coloredlogs (>=15.0.1)",
@@ -43,6 +33,16 @@ dependencies = [
 [project.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
 {{ cookiecutter.__project_name_kebab_case }} = "{{ cookiecutter.__project_name_snake_case }}.cli:app"
 {%- endif %}
+
+[project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
+homepage = "{{ cookiecutter.project_url }}"
+source = "{{ cookiecutter.project_url }}"
+{%- if cookiecutter.with_conventional_commits|int %}
+changelog = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}blob/main/CHANGELOG.md"
+{%- endif %}
+releasenotes = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}releases"
+documentation = "{{ cookiecutter.project_url }}"
+issues = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}issues"
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/managing-dependencies#dependency-groups
 {%- if cookiecutter.with_conventional_commits|int %}
