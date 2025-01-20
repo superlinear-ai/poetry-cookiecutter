@@ -5,19 +5,15 @@ import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-import coloredlogs
 from fastapi import FastAPI
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Handle FastAPI startup and shutdown events."""
-    # Startup events:
-    # - Remove all handlers associated with the root logger object.
+    # Startup events.
     for handler in logging.root.handlers:
         logging.root.removeHandler(handler)
-    # - Add coloredlogs' colored StreamHandler to the root logger.
-    coloredlogs.install()
     yield
     # Shutdown events.
 

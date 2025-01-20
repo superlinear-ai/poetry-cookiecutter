@@ -2,69 +2,72 @@
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]  # https://python-poetry.org/docs/pyproject/
+[project]  # https://packaging.python.org/en/latest/specifications/pyproject-toml/
 name = "{{ cookiecutter.__project_name_kebab_case }}"
 version = "0.0.0"
 description = "{{ cookiecutter.project_description }}"
-authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
 readme = "README.md"
-repository = "{{ cookiecutter.project_url }}"
-{%- if cookiecutter.with_conventional_commits|int %}
-
-[tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
-bump_message = "bump(release): v$current_version → v$new_version"
-tag_format = "v$version"
-update_changelog_on_bump = true
-version_provider = "poetry"
-{%- endif %}
+license-files = ["LICENSE*"]
+authors = [
+  { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" },
+]
+requires-python = ">={{ cookiecutter.python_version }},<4.0"
+dependencies = [
+  {%- if cookiecutter.with_fastapi_api|int %}
+  "fastapi[all] (>=0.115.6)",
+  "gunicorn (>=23.0.0)",
+  {%- endif %}
+  {%- if cookiecutter.project_type == "app" %}
+  "poethepoet (>=0.32.1)",
+  {%- endif %}
+  {%- if cookiecutter.with_typer_cli|int %}
+  "typer[all] (>=0.15.1)",
+  {%- endif %}
+  {%- if cookiecutter.with_fastapi_api|int %}
+  "uvicorn[standard] (>=0.34.0)",
+  {%- endif %}
+]
 {%- if cookiecutter.with_typer_cli|int %}
 
-[tool.poetry.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
+[project.scripts]  # https://python-poetry.org/docs/pyproject/#scripts
 {{ cookiecutter.__project_name_kebab_case }} = "{{ cookiecutter.__project_name_snake_case }}.cli:app"
 {%- endif %}
 
-[tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
-{%- if cookiecutter.with_fastapi_api|int %}
-coloredlogs = ">=15.0.1"
-fastapi = { extras = ["all"], version = ">=0.110.1" }
-gunicorn = ">=21.2.0"
-{%- endif %}
-{%- if cookiecutter.project_type == "app" %}
-poethepoet = ">=0.25.0"
-{%- endif %}
-python = ">={{ cookiecutter.python_version }},<4.0"
-{%- if cookiecutter.with_typer_cli|int %}
-typer = { extras = ["all"], version = ">=0.12.0" }
-{%- endif %}
-{%- if cookiecutter.with_fastapi_api|int %}
-uvicorn = { extras = ["standard"], version = ">=0.29.0" }
-{%- endif %}
-
-[tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
+[project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
+homepage = "{{ cookiecutter.project_url }}"
+source = "{{ cookiecutter.project_url }}"
 {%- if cookiecutter.with_conventional_commits|int %}
-commitizen = ">=3.21.3"
+changelog = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}blob/main/CHANGELOG.md"
 {%- endif %}
-coverage = { extras = ["toml"], version = ">=7.4.4" }
-mypy = ">=1.9.0"
+releasenotes = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}releases"
+documentation = "{{ cookiecutter.project_url }}"
+issues = "{{ cookiecutter.project_url }}/{% if cookiecutter.continuous_integration == "GitLab" %}-/{% endif %}issues"
+
+[tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/managing-dependencies#dependency-groups
+{%- if cookiecutter.with_conventional_commits|int %}
+commitizen = ">=4.1.0"
+{%- endif %}
+coverage = { extras = ["toml"], version = ">=7.6.10" }
+mypy = ">=1.14.1"
 {%- if cookiecutter.project_type == "package" %}
-poethepoet = ">=0.25.0"
+poethepoet = ">=0.32.1"
 {%- endif %}
-pre-commit = ">=3.7.0"
-pytest = ">=8.1.1"
+pre-commit = ">=4.0.1"
+pytest = ">=8.3.4"
 pytest-mock = ">=3.14.0"
-pytest-xdist = ">=3.5.0"
-ruff = ">=0.5.7"
+pytest-xdist = ">=3.6.1"
+ruff = ">=0.9.2"
 {%- if cookiecutter.development_environment == "strict" %}
 shellcheck-py = ">=0.10.0.1"
-typeguard = ">=4.2.1"
+typeguard = ">=4.4.1"
 {%- endif %}
 
-[tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
-cruft = ">=2.15.0"
+[tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/managing-dependencies#dependency-groups
+cruft = ">=2.16.0"
 ipykernel = ">=6.29.4"
 ipython = ">=8.18.0"
 ipywidgets = ">=8.1.2"
-pdoc = ">=14.4.0"
+pdoc = ">=15.0.1"
 {%- if cookiecutter.private_package_repository_name %}
 
 [[tool.poetry.source]]
@@ -75,6 +78,14 @@ priority = "default"
 name = "{{ cookiecutter.private_package_repository_name|slugify }}"
 url = "{{ cookiecutter.private_package_repository_url }}"
 priority = "explicit"
+{%- endif %}
+{%- if cookiecutter.with_conventional_commits|int %}
+
+[tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
+bump_message = "bump(release): v$current_version → v$new_version"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_provider = "poetry"
 {%- endif %}
 
 [tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
@@ -127,15 +138,18 @@ filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
 xfail_strict = true
 
-[tool.ruff]  # https://github.com/charliermarsh/ruff
+[tool.ruff]  # https://docs.astral.sh/ruff/settings/
 fix = true
 line-length = 100
 src = ["src", "tests"]
 target-version = "py{{ cookiecutter.python_version.split('.')[:2]|join }}"
 
+[tool.ruff.format]
+docstring-code-format = true
+
 [tool.ruff.lint]
 {%- if cookiecutter.development_environment == "strict" %}
-select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "Q", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TCH", "TID", "TRY", "UP", "W", "YTT"]
+select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "Q", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TC", "TID", "TRY", "UP", "W", "YTT"]
 ignore = ["D203", "D213", "E501", "RET504", "S101", "S307"]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 {%- else %}
