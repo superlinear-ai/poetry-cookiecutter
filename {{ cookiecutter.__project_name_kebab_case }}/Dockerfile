@@ -60,7 +60,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     {%- if cookiecutter.private_package_repository_name %}
     --mount=type=secret,id=poetry-auth,uid=$UID,gid=$GID,target=/home/user/.config/pypoetry/auth.toml \
     {%- endif %}
-    poetry install --only main --all-extras --no-interaction
+    poetry install --without test,dev --all-extras --no-interaction
 
 
 
