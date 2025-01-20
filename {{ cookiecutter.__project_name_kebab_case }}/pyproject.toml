@@ -55,7 +55,6 @@ pytest-mock = ">=3.14.0"
 pytest-xdist = ">=3.5.0"
 ruff = ">=0.5.7"
 {%- if cookiecutter.development_environment == "strict" %}
-safety = ">=3.1.0"
 shellcheck-py = ">=0.10.0.1"
 typeguard = ">=4.2.1"
 {%- endif %}
@@ -233,18 +232,11 @@ convention = "{{ cookiecutter.__docstring_style|lower }}"
 
   [tool.poe.tasks.lint]
   help = "Lint this {{ cookiecutter.project_type }}"
-
-    [[tool.poe.tasks.lint.sequence]]
-    cmd = """
-      pre-commit run
-        --all-files
-        --color always
-      """
-{%- if cookiecutter.development_environment == "strict" %}
-
-    [[tool.poe.tasks.lint.sequence]]
-    shell = "safety check --continue-on-error --full-report"
-{%- endif %}
+  cmd = """
+    pre-commit run
+      --all-files
+      --color always
+    """
 
   [tool.poe.tasks.test]
   help = "Test this {{ cookiecutter.project_type }}"
