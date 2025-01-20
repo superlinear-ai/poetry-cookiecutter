@@ -10,7 +10,7 @@ See 👖 [Conformal Tights](https://github.com/superlinear-ai/conformal-tights) 
 
 ## 🎁 Features
 
-- 🧑‍💻 Quick and reproducible development environments with VS Code's [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), PyCharm's [Docker Compose interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote), and [GitHub Codespaces](https://github.com/features/codespaces)
+- 🧑‍💻 Quick and reproducible development environments with VS Code's [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), PyCharm's [Dev Containers](https://www.jetbrains.com/help/pycharm/start-dev-container-inside-ide.html), and [GitHub Codespaces](https://github.com/features/codespaces)
 - 🌈 Cross-platform support for Linux, macOS (Apple silicon and Intel), and Windows
 - 🐚 Modern shell prompt with [Starship](https://github.com/starship/starship)
 - 📦 Packaging and dependency management with [Poetry](https://github.com/python-poetry/poetry)
