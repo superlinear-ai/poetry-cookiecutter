@@ -1,0 +1,245 @@
+[project]  # https://packaging.python.org/en/latest/specifications/pyproject-toml/
+name = "{{ project_name_kebab_case }}"
+version = "0.0.0"
+description = "{{ project_description }}"
+readme = "README.md"
+authors = [
+  { name = "{{ author_name }}", email = "{{ author_email }}" },
+]
+requires-python = ">={{ python_version }},<4.0"
+dependencies = [
+  {%- if with_fastapi_api %}
+  "fastapi[all] (>=0.115.6)",
+  "gunicorn (>=23.0.0)",
+  {%- endif %}
+  {%- if project_type == 'app' %}
+  "poethepoet (>=0.32.1)",
+  {%- endif %}
+  {%- if with_typer_cli %}
+  "typer (>=0.15.1)",
+  {%- endif %}
+]
+{%- if with_typer_cli %}
+
+[project.scripts]  # https://docs.astral.sh/uv/concepts/projects/config/#command-line-interfaces
+{{ project_name_kebab_case }} = "{{ project_name_snake_case }}.cli:app"
+{%- endif %}
+
+[project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
+homepage = "{{ project_url }}"
+source = "{{ project_url }}"
+{%- if with_conventional_commits %}
+changelog = "{{ project_url.rstrip('/') }}/{% if ci == 'gitlab' %}-/{% endif %}blob/main/CHANGELOG.md"
+{%- endif %}
+releasenotes = "{{ project_url.rstrip('/') }}/{% if ci == 'gitlab' %}-/{% endif %}releases"
+documentation = "{{ project_url }}"
+issues = "{{ project_url.rstrip('/') }}/{% if ci == 'gitlab' %}-/{% endif %}issues"
+
+[dependency-groups]  # https://docs.astral.sh/uv/concepts/projects/dependencies/#development-dependencies
+dev = [
+  {%- if with_conventional_commits %}
+  "commitizen (>=4.1.0)",
+  {%- endif %}
+  "coverage[toml] (>=7.6.10)",
+  "ipykernel (>=6.29.4)",
+  "ipython (>=8.18.0)",
+  "ipywidgets (>=8.1.2)",
+  "mypy (>=1.14.1)",
+  "pdoc (>=15.0.1)",
+  {%- if project_type == 'package' %}
+  "poethepoet (>=0.32.1)",
+  {%- endif %}
+  "pre-commit (>=4.0.1)",
+  "pytest (>=8.3.4)",
+  "pytest-mock (>=3.14.0)",
+  "pytest-xdist (>=3.6.1)",
+  "ruff (>=0.9.2)",
+  {%- if typing == 'strict' %}
+  "typeguard (>=4.4.1)",
+  {%- endif %}
+]
+{%- if with_conventional_commits %}
+
+[tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
+bump_message = "bump: v$current_version → v$new_version"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_provider = "pep621"
+{%- endif %}
+
+[tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
+{%- if typing == 'strict' %}
+fail_under = 50
+{%- endif %}
+precision = 1
+show_missing = true
+skip_covered = true
+
+[tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
+branch = true
+command_line = "--module pytest"
+data_file = "reports/.coverage"
+source = ["src"]
+
+[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
+output = "reports/coverage.xml"
+
+[tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
+junit_xml = "reports/mypy.xml"
+{%- if with_fastapi_api %}
+plugins = "pydantic.mypy"
+{%- endif %}
+{%- if typing == 'strict' %}
+strict = true
+disallow_subclassing_any = false
+disallow_untyped_decorators = false
+{%- endif %}
+ignore_missing_imports = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+warn_unreachable = true
+{%- if typing == 'strict' and with_fastapi_api %}
+
+[tool.pydantic-mypy]  # https://docs.pydantic.dev/latest/integrations/mypy/#configuring-the-plugin
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+{%- endif %}
+
+[tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first{% if typing == 'strict' %} --strict-config --strict-markers{% endif %} --verbosity=2 --junitxml=reports/pytest.xml"
+{%- if typing == 'strict' %}
+filterwarnings = ["error", "ignore::DeprecationWarning"]
+{%- endif %}
+testpaths = ["src", "tests"]
+xfail_strict = true
+
+[tool.ruff]  # https://docs.astral.sh/ruff/settings/
+fix = true
+line-length = 100
+src = ["src", "tests"]
+target-version = "py{{ python_version.split('.')[:2] | join }}"
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+{%- if typing == 'strict' %}
+select = ["A", "ASYNC", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "EM", "ERA", "F", "FBT", "FLY", "FURB", "G", "I", "ICN", "INP", "INT", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "Q", "RET", "RSE", "RUF", "S", "SIM", "SLF", "SLOT", "T10", "T20", "TC", "TID", "TRY", "UP", "W", "YTT"]
+ignore = ["D203", "D213", "E501", "RET504", "S101", "S307"]
+unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
+{%- else %}
+select = ["A", "ASYNC", "B", "C4", "C90", "D", "DTZ", "E", "F", "FLY", "FURB", "I", "ISC", "LOG", "N", "NPY", "PERF", "PGH", "PIE", "PL", "PT", "Q", "RET", "RUF", "RSE", "SIM", "TID", "UP", "W", "YTT"]
+ignore = ["D203", "D213", "E501", "PGH002", "PGH003", "RET504", "S101", "S307"]
+unfixable = ["F401", "F841"]
+{%- endif %}
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 100
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.uv]  # https://docs.astral.sh/uv/reference/settings/
+package = true
+
+[tool.poe.tasks]  # https://github.com/nat-n/poethepoet
+{%- if with_fastapi_api %}
+
+  [tool.poe.tasks.serve]
+  help = "Serve the REST API"
+  shell = """
+    if [ $dev ]
+    then {
+      uvicorn \
+        --host $host \
+        --port $port \
+        --reload \
+        {{ project_name_snake_case }}.api:app
+    } else {
+      gunicorn \
+        --access-logfile - \
+        --bind $host:$port \
+        --graceful-timeout 10 \
+        --keep-alive 10 \
+        --log-file - \
+        --timeout 30 \
+        --worker-class uvicorn.workers.UvicornWorker \
+        --worker-tmp-dir /dev/shm \
+        --workers 2 \
+        {{ project_name_snake_case }}.api:app
+    } fi
+    """
+
+    [[tool.poe.tasks.serve.args]]
+    help = "Bind socket to this host (default: 0.0.0.0)"
+    name = "host"
+    options = ["--host"]
+    default = "0.0.0.0"
+
+    [[tool.poe.tasks.serve.args]]
+    help = "Bind socket to this port (default: 8000)"
+    name = "port"
+    options = ["--port"]
+    default = "8000"
+
+    [[tool.poe.tasks.serve.args]]
+    help = "Enable development mode"
+    type = "boolean"
+    name = "dev"
+    options = ["--dev"]
+{%- elif project_type == 'app' %}
+
+  [tool.poe.tasks.serve]
+  help = "Serve the app"
+
+    [[tool.poe.tasks.app.sequence]]
+    cmd = "echo 'Serving app (placeholder)...'"
+{%- endif %}
+
+  [tool.poe.tasks.docs]
+  help = "Generate this {{ project_type }}'s docs"
+  cmd = """
+    pdoc
+      --docformat $docformat
+      --output-directory $outputdirectory
+      {{ project_name_snake_case }}
+    """
+
+    [[tool.poe.tasks.docs.args]]
+    help = "The docstring style (default: numpy)"
+    name = "docformat"
+    options = ["--docformat"]
+    default = "numpy"
+
+    [[tool.poe.tasks.docs.args]]
+    help = "The output directory (default: docs)"
+    name = "outputdirectory"
+    options = ["--output-directory"]
+    default = "docs"
+
+  [tool.poe.tasks.lint]
+  help = "Lint this {{ project_type }}"
+  cmd = """
+    pre-commit run
+      --all-files
+      --color always
+    """
+
+  [tool.poe.tasks.test]
+  help = "Test this {{ project_type }}"
+
+    [[tool.poe.tasks.test.sequence]]
+    cmd = "coverage run"
+
+    [[tool.poe.tasks.test.sequence]]
+    cmd = "coverage report"
+
+    [[tool.poe.tasks.test.sequence]]
+    cmd = "coverage xml"

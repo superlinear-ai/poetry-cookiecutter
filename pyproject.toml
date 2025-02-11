@@ -1,0 +1,16 @@
+[project]
+name = "uv-copier-template"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "commitizen>=4.1.0",
+    "copier>=9.4.1",
+    "pre-commit>=4.1.0",
+    "ruff>=0.9.3",
+]
+
+[tool.commitizen]
+bump_message = "bump: v$current_version → v$new_version"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_provider = "pep621"

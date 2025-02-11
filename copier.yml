@@ -1,0 +1,100 @@
+_subdirectory: template
+
+project_type:
+  type: str
+  help: Is this project a package or an app?
+  choices:
+    - app
+    - package
+  default: package
+
+project_name:
+  type: str
+  help: What is your {{ project_type }}'s name?
+  placeholder: "{% if project_type == 'app' %}My App{% else %}My Package{% endif %}"
+  validator: >-
+    {% if not project_name.strip() %}
+    Invalid project name
+    {% endif %}
+
+project_description:
+  type: str
+  help: What does your {{ project_type }} do in one sentence?
+  placeholder: A Python {{ project_type }} that reticulates splines.
+  validator: >-
+    {% if not project_description.strip() %}
+    Invalid project description
+    {% endif %}
+
+project_url:
+  type: str
+  help: What is the URL of your project's repository?
+  placeholder: https://github.com/user/{{ project_type }}
+  validator: >-
+    {% if not project_url.startswith("https://") %}
+    Invalid project URL
+    {% endif %}
+
+author_name:
+  type: str
+  help: What is the name of your {{ project_type }}'s primary author?
+  placeholder: John Smith
+  validator: >-
+    {% if not author_name %}
+    Invalid author name
+    {% endif %}
+
+author_email:
+  type: str
+  help: What is the email address of your {{ project_type }}'s primary author?
+  placeholder: john@example.com
+  validator: >-
+    {% if not "@" in author_email %}
+    Invalid author email address
+    {% endif %}
+
+python_version:
+  type: str
+  help: "{% if project_type == 'app' %}Which Python version should your app use?{% else %}What is the minimum Python version your package should support?{% endif %}"
+  default: "{% if project_type == 'app' %}3.12{% else %}3.10{% endif %}"
+
+ci:
+  type: str
+  help: Which CI/CD provider would you like to use?
+  choices:
+    GitHub Actions: github
+    GitLab CI/CD: gitlab
+  default: "{% if 'github' in project_url %}github{% else %}gitlab{% endif %}"
+  when: "{{ 'github' not in project_url and 'gitlab' not in project_url }}"
+
+typing:
+  type: str
+  help: Do you want to use optional or strict typing and linting?
+  choices:
+    Optional: optional
+    Strict: strict
+  default: optional
+
+with_conventional_commits:
+  type: bool
+  help: Do you want to follow the Conventional Commits standard (https://www.conventionalcommits.org) for your commit messages?
+  default: true
+
+with_fastapi_api:
+  type: bool
+  help: Does your app need a FastAPI API?
+  default: false
+  when: "{{ project_type == 'app' }}"
+
+with_typer_cli:
+  type: bool
+  help: Does your {{ project_type }} need a Typer CLI?
+  default: false
+
+project_name_kebab_case:
+  when: false
+  default: "{{ project_name | lower | replace(' ', '-') }}"
+
+project_name_snake_case:
+  when: false
+  default: "{{ project_name | lower | replace(' ', '_') }}"

@@ -1,0 +1,88 @@
+{
+    "name": "{{ project_name_kebab_case }}",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "devcontainer",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/",
+    "features": {
+        {%- if project_type == 'app' %}
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        {%- endif %}
+        "ghcr.io/devcontainers/features/node:1": {},
+        "ghcr.io/devcontainers-extra/features/starship": {}
+    },
+    "overrideCommand": true,
+    "postCreateCommand": "echo 'eval \"$(starship init bash)\"' >> ~/.bashrc",
+    "postStartCommand": "uv sync --python ${PYTHON_VERSION:-{{ python_version }}} ${RESOLUTION_STRATEGY:+--resolution $RESOLUTION_STRATEGY} --all-extras && pre-commit install --install-hooks",
+    "customizations": {
+        "jetbrains": {
+            "backend": "PyCharm",
+            "plugins": [
+                "com.github.copilot"
+            ]
+        },
+        "vscode": {
+            "extensions": [
+                "charliermarsh.ruff",
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                {%- if ci == 'github' %}
+                "GitHub.vscode-github-actions",
+                "GitHub.vscode-pull-request-github",
+                {%- elif ci == 'gitlab' %}
+                "GitLab.gitlab-workflow",
+                {%- endif %}
+                "ms-azuretools.vscode-docker",
+                "ms-python.mypy-type-checker",
+                "ms-python.python",
+                "ms-toolsai.jupyter",
+                "ryanluker.vscode-coverage-gutters",
+                "tamasfe.even-better-toml",
+                "visualstudioexptteam.vscodeintellicode"
+            ],
+            "settings": {
+                "coverage-gutters.coverageFileNames": [
+                    "reports/coverage.xml"
+                ],
+                "editor.codeActionsOnSave": {
+                    "source.fixAll": "explicit",
+                    "source.organizeImports": "explicit"
+                },
+                "editor.formatOnSave": true,
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                },
+                "[toml]": {
+                    "editor.formatOnSave": false
+                },
+                "editor.rulers": [
+                    100
+                ],
+                "files.autoSave": "onFocusChange",
+                "github.copilot.chat.edits.enabled": true,
+                "jupyter.kernels.excludePythonEnvironments": [
+                    "/usr/local/bin/python"
+                ],
+                "mypy-type-checker.importStrategy": "fromEnvironment",
+                "mypy-type-checker.preferDaemon": true,
+                "notebook.codeActionsOnSave": {
+                    "notebook.source.fixAll": "explicit",
+                    "notebook.source.organizeImports": "explicit"
+                },
+                "notebook.formatOnSave.enabled": true,
+                "python.defaultInterpreterPath": "/opt/venv/bin/python",
+                "python.terminal.activateEnvironment": false,
+                "python.testing.pytestEnabled": true,
+                "ruff.importStrategy": "fromEnvironment",
+                {%- if typing == 'strict' %}
+                "ruff.logLevel": "warning",
+                {%- endif %}
+                "terminal.integrated.env.linux": {
+                    "GIT_EDITOR": "code --wait"
+                },
+                "terminal.integrated.env.mac": {
+                    "GIT_EDITOR": "code --wait"
+                }
+            }
+        }
+    }
+}

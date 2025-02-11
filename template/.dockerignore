@@ -1,0 +1,8 @@
+# Caches
+.*_cache/
+
+# Git
+.git/
+
+# Python
+.venv/
