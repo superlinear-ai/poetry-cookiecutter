@@ -15,7 +15,7 @@ repos:
       - id: uv-lock-check
         name: uv lock check
         entry: uv lock
-        args: ["--check", "--offline"]
+        args: ["--check"]
         require_serial: true
         language: system
         pass_filenames: false
