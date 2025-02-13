@@ -1,0 +1,30 @@
+services:
+
+  devcontainer:
+    build:
+      target: dev
+    {%- if project_type == 'package' %}
+    environment:
+      - UV_PUBLISH_TOKEN
+    {%- endif %}
+    volumes:
+      - ..:/workspaces
+      - command-history-volume:/root/.history/
+  {%- if project_type == 'app' %}
+
+  app:
+    build:
+      target: app
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    {%- if with_fastapi_api %}
+    ports:
+      - "8000:8000"
+    {%- endif %}
+    profiles:
+      - app
+  {%- endif %}
+
+volumes:
+  command-history-volume:

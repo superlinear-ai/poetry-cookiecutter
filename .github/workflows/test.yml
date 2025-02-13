@@ -7,16 +7,80 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test-copier:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
         project-type: ["app", "package"]
+        typing: ["optional", "strict"]
 
-    name: Python ${{ matrix.python-version }} ${{ matrix.project-type }}
+    name: "Copier: Python ${{ matrix.python-version }} ${{ matrix.project-type }} with ${{ matrix.typing }} typing"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: substrate
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - name: Scaffold Python project
+        run: |
+          uvx copier copy substrate my-project \
+            --defaults \
+            --data project_type="${{ matrix.project-type }}" \
+            --data project_name="My Project" \
+            --data project_description="A Python ${{ matrix.project-type }} that reticulates splines." \
+            --data project_url="https://github.com/user/repo" \
+            --data author_name="John Smith" \
+            --data author_email="john@example.com" \
+            --data python_version="3.10" \
+            --data typing="${{ matrix.typing }}" \
+            --data with_fastapi_api=true \
+            --data with_typer_cli=true
+          cd my-project
+          git config --global init.defaultBranch main
+          git init
+          git checkout -b test
+          git add .
+
+      - name: Lint and test project
+        uses: devcontainers/ci@v0.3
+        with:
+          subFolder: ./my-project/
+          runCmd: |
+            uv lock
+            poe lint
+            poe test
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+
+      - name: Build app Docker image
+        if: ${{ matrix.project-type == 'app' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ./my-project/
+          target: app
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+
+  test-cookiecutter:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.10", "3.13"]
+        project-type: ["app", "package"]
+
+    name: "Cookiecutter: Python ${{ matrix.python-version }} ${{ matrix.project-type }}"
 
     steps:
       - name: Checkout
@@ -40,7 +104,7 @@ jobs:
           node-version: 23
 
       - name: Install @devcontainers/cli
-        run: npm install --location=global @devcontainers/cli@0.72.0
+        run: npm install --location=global @devcontainers/cli@0.73.0
 
       - name: Start Dev Container with Python ${{ matrix.python-version }}
         run: |
@@ -59,7 +123,7 @@ jobs:
 
       - name: Build app Docker image
         if: ${{ matrix.project-type == 'app' }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           build-args: |
             SOURCE_BRANCH=${{ env.GITHUB_REF }}

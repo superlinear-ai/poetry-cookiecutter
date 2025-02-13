@@ -14,7 +14,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["{{ cookiecutter.python_version }}"]
+        python-version: {% if project_type == 'package' %}["3.10", "3.11", "3.12"]{% else %}["{{ python_version }}"]{% endif %}
+        {%- if project_type == 'package' %}
+        resolution-strategy: ["highest", "lowest-direct"]
+        {%- endif %}
 
     name: Python {% raw %}${{{% endraw %} matrix.python-version }}
 
@@ -33,10 +36,10 @@ jobs:
       - name: Start Dev Container
         run: |
           git config --global init.defaultBranch main
-          PYTHON_VERSION={% raw %}${{{% endraw %} matrix.python-version }} devcontainer up --workspace-folder .
+          PYTHON_VERSION={% raw %}${{{% endraw %} matrix.python-version }}{% if project_type == 'package' %} RESOLUTION_STRATEGY={% raw %}${{{% endraw %} matrix.resolution-strategy }}{% endif %} devcontainer up --workspace-folder .
 
-      - name: Lint {{ cookiecutter.project_type }}
+      - name: Lint {{ project_type }}
         run: devcontainer exec --workspace-folder . poe lint
 
-      - name: Test {{ cookiecutter.project_type }}
+      - name: Test {{ project_type }}
         run: devcontainer exec --workspace-folder . poe test
