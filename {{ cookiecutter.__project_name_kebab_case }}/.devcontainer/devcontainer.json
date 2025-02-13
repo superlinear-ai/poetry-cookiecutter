@@ -11,7 +11,10 @@
             "backend": "PyCharm",
             "plugins": [
                 "com.github.copilot"
-            ]
+            ],
+            "settings": {
+              "org.jetbrains.plugins.terminal:app:TerminalOptionsProvider.myShellPath": "/usr/bin/zsh"
+            }
         },
         "vscode": {
             "extensions": [
