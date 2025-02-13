@@ -33,7 +33,7 @@ for project_type in "${project_types[@]}"; do
         npm install -g @devcontainers/cli
 
         # Lint and test the project with a dev container
-        PYTHON_VERSION=3.10 devcontainer up --workspace-folder .
+        devcontainer up --workspace-folder .
         devcontainer exec --workspace-folder . uv lock
         devcontainer exec --workspace-folder . poe lint
         devcontainer exec --workspace-folder . poe test

@@ -585,7 +585,7 @@ wheels = [
 ]
 
 [[package]]
-name = "uv-copier-template"
+name = "substrate"
 version = "0.0.0"
 source = { virtual = "." }
 dependencies = [

@@ -1,6 +1,6 @@
-[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE3IDE2VjdsLTYgNU0yIDlWOGwxLTFoMWw0IDMgOC04aDFsNCAyIDEgMXYxNGwtMSAxLTQgMmgtMWwtOC04LTQgM0gzbC0xLTF2LTFsMy0zIi8+PC9zdmc+)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/superlinear-ai/uv-copier-template) [![Open in GitHub Codespaces](https://img.shields.io/static/v1?label=GitHub%20Codespaces&message=Open&color=blue&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=444870763) [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-black.json)](https://github.com/copier-org/copier)
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE3IDE2VjdsLTYgNU0yIDlWOGwxLTFoMWw0IDMgOC04aDFsNCAyIDEgMXYxNGwtMSAxLTQgMmgtMWwtOC04LTQgM0gzbC0xLTF2LTFsMy0zIi8+PC9zdmc+)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/superlinear-ai/substrate) [![Open in GitHub Codespaces](https://img.shields.io/static/v1?label=GitHub%20Codespaces&message=Open&color=blue&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=444870763) [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-black.json)](https://github.com/copier-org/copier)
 
-# ☄️ UV Copier Template
+# 🌱 Substrate
 
 A modern [Copier template](https://github.com/copier-org/copier) for scaffolding Python packages and apps.
 
@@ -39,7 +39,7 @@ See 👖 [Conformal Tights](https://github.com/superlinear-ai/conformal-tights) 
 To create a new Python project with this template, run:
 
 ```sh
-uvx copier copy gh:superlinear-ai/uv-copier-template path/to/local/repository
+uvx copier copy gh:superlinear-ai/substrate path/to/local/repository
 ```
 
 ### Update your Python project
@@ -60,7 +60,7 @@ cz bump
 git push origin main --tags
 ```
 
-## 🌱 Migrating from Cookiecutter
+## 🍪 Migrating from Cookiecutter
 
 > [!IMPORTANT]
 > This project was formerly known as `Poetry Cookiecutter` and was based on [Poetry](https://github.com/python-poetry/poetry) and [Cookiecutter](https://github.com/cookiecutter/cookiecutter). We will continue to support the original Cookiecutter-based template side by side with the new Copier-based template. However, we do encourage users to upgrade to the new Copier-based template by following the instructions below.
@@ -74,7 +74,7 @@ To migrate a project from Cookiecutter to Copier, follow these steps:
     git checkout -b rescaffold
     
     # Rescaffold the project without changing src/ and tests/
-    uvx copier copy --overwrite --exclude src/ --exclude tests/ gh:superlinear-ai/uv-copier-template .
+    uvx copier copy --overwrite --exclude src/ --exclude tests/ gh:superlinear-ai/substrate .
     ```
 
 2. Review the changes to `pyproject.toml` and reinsert your project's dependencies.

@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: uv-copier-template
+          path: substrate
       
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
@@ -33,7 +33,7 @@ jobs:
 
       - name: Scaffold Python project
         run: |
-          uvx copier copy uv-copier-template my-project \
+          uvx copier copy substrate my-project \
             --defaults \
             --data project_type="${{ matrix.project-type }}" \
             --data project_name="My Project" \
