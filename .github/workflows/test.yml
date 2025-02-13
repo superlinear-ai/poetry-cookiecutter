@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test-copier:
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,7 +17,7 @@ jobs:
         project-type: ["app", "package"]
         typing: ["optional", "strict"]
 
-    name: Python ${{ matrix.python-version }} ${{ matrix.project-type }} with ${{ matrix.typing }} typing
+    name: "Copier: Python ${{ matrix.python-version }} ${{ matrix.project-type }} with ${{ matrix.typing }} typing"
 
     steps:
       - name: Checkout
@@ -70,3 +70,63 @@ jobs:
           target: app
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
+
+  test-cookiecutter:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.10", "3.13"]
+        project-type: ["app", "package"]
+
+    name: "Cookiecutter: Python ${{ matrix.python-version }} ${{ matrix.project-type }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: template
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Scaffold Python project
+        run: |
+          pip install --no-input cruft
+          cruft create --no-input --extra-context '{"project_type": "${{ matrix.project-type }}", "project_name": "My Project", "python_version": "3.10", "__docker_image":"superlinear/python-gpu:$PYTHON_VERSION-cuda11.8", "with_fastapi_api": "1", "with_typer_cli": "1"}' ./template/
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+
+      - name: Install @devcontainers/cli
+        run: npm install --location=global @devcontainers/cli@0.73.0
+
+      - name: Start Dev Container with Python ${{ matrix.python-version }}
+        run: |
+          git config --global init.defaultBranch main
+          git init
+          git checkout -b test
+          git add .
+          PYTHON_VERSION=${{ matrix.python-version }} devcontainer up --workspace-folder .
+        working-directory: ./my-project/
+
+      - name: Lint project
+        run: devcontainer exec --workspace-folder my-project poe lint
+
+      - name: Test project
+        run: devcontainer exec --workspace-folder my-project poe test
+
+      - name: Build app Docker image
+        if: ${{ matrix.project-type == 'app' }}
+        uses: docker/build-push-action@v6
+        with:
+          build-args: |
+            SOURCE_BRANCH=${{ env.GITHUB_REF }}
+            SOURCE_COMMIT=${{ env.GITHUB_SHA }}
+          context: ./my-project/
+          target: app
