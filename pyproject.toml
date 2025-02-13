@@ -1,6 +1,6 @@
 [project]
 name = "substrate"
-version = "0.0.0"
+version = "1.0.0"
 requires-python = ">=3.10"
 dependencies = [
     "commitizen>=4.1.0",
