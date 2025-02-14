@@ -72,6 +72,9 @@ To migrate a project from Cookiecutter to Copier, follow these steps:
     ```sh
     # Create a new branch
     git checkout -b rescaffold
+
+    # Remove files specific to Poetry
+    rm -f poetry.lock
     
     # Rescaffold the project without changing src/ and tests/
     uvx copier copy --overwrite --exclude src/ --exclude tests/ gh:superlinear-ai/substrate .
