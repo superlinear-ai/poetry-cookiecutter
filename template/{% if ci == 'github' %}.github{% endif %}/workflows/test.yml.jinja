@@ -14,12 +14,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: {% if project_type == 'package' %}["3.10", "3.11", "3.12"]{% else %}["{{ python_version }}"]{% endif %}
+        python-version: {% if project_type == 'package' %}["3.10", "3.12"]{% else %}["{{ python_version }}"]{% endif %}
         {%- if project_type == 'package' %}
         resolution-strategy: ["highest", "lowest-direct"]
         {%- endif %}
 
-    name: Python {% raw %}${{{% endraw %} matrix.python-version }}
+    name: Python {% raw %}${{{% endraw %} matrix.python-version }}{% if project_type == 'package' %} (resolution={% raw %}${{{% endraw %} matrix.resolution-strategy }}){% endif %}
 
     steps:
       - name: Checkout
