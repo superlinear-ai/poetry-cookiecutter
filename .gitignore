@@ -51,6 +51,7 @@ node_modules/
 
 # Python
 __pycache__/
+*.egg-info/
 *.py[cdo]
 .venv/
 dist/
