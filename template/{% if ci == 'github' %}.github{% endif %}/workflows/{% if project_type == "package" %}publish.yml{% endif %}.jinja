@@ -15,4 +15,7 @@ jobs:
 
       - name: Publish package
         run: |
-          uv publish --token "{% raw %}${{ secrets.UV_PUBLISH_TOKEN }}{% endraw %}" --build
+          uv build
+          uv publish
+        env:
+          UV_PUBLISH_TOKEN: {% raw %}${{ secrets.UV_PUBLISH_TOKEN }}{% endraw %}
