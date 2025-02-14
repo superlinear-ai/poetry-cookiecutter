@@ -55,6 +55,7 @@ dist/
 
 # Python
 __pycache__/
+*.egg-info/
 *.py[cdo]
 
 # Ruff
