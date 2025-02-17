@@ -32,7 +32,10 @@
                     100
                 ],
                 "files.autoSave": "onFocusChange",
+                "github.copilot.chat.agent.enabled": true,
+                "github.copilot.chat.edits.codesearch.enabled": true,
                 "github.copilot.chat.edits.enabled": true,
+                "github.copilot.nextEditSuggestions.enabled": true,
                 "python.defaultInterpreterPath": "/workspaces/substrate/.venv/bin/python",
                 "python.terminal.activateEnvironment": true,
                 "terminal.integrated.env.linux": {
