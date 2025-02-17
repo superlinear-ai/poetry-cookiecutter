@@ -4,13 +4,7 @@
 
 A modern [Copier template](https://github.com/copier-org/copier) for scaffolding Python packages and apps.
 
-<!-- TODO: Remove the Demo section below with a mp4 demo.
-
-## 🍿 Demo
-
-See 👖 [Conformal Tights](https://github.com/superlinear-ai/conformal-tights) for an example of a Python package that is scaffolded with this template. Contributing to this package can be done with a single click by [starting a GitHub Codespace](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=765698489&skip_quickstart=true) or [starting a Dev Container](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/superlinear-ai/conformal-tights).
-
--->
+<video src="https://github.com/user-attachments/assets/28d23137-ebae-47d8-a6e5-11f66abf2a91" controls preload></video>
 
 ## 🎁 Features
 
@@ -96,3 +90,56 @@ To migrate a project from Cookiecutter to Copier, follow these steps:
     ```
 
 5. Create a PR from your branch, review it, and merge it!
+
+## Contributing
+
+<details>
+<summary>Prerequisites</summary>
+
+1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+2. Configure SSH to automatically load your SSH keys:
+    ```sh
+    cat << EOF >> ~/.ssh/config
+    
+    Host *
+      AddKeysToAgent yes
+      IgnoreUnknown UseKeychain
+      UseKeychain yes
+      ForwardAgent yes
+    EOF
+    ```
+3. [Install Docker Desktop](https://www.docker.com/get-started).
+4. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
+5. _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use it.
+
+</details>
+
+<details open>
+<summary>Development environments</summary>
+
+The following development environments are supported:
+1. ⭐️ _GitHub Codespaces_: click on [Open in GitHub Codespaces](https://github.com/codespaces/new/superlinear-ai/substrate) to start developing in your browser.
+2. ⭐️ _VS Code Dev Container (with container volume)_: click on [Open in Dev Containers](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/superlinear-ai/substrate) to clone this repository in a container volume and create a Dev Container with VS Code.
+3. ⭐️ _uv_: clone this repository and run the following from root of the repository:
+    ```sh
+    # Create and install a virtual environment
+    uv sync
+
+    # Activate the virtual environment
+    source .venv/bin/activate
+
+    # Install the pre-commit hooks
+    pre-commit install --install-hooks
+    ```
+3. _VS Code Dev Container_: clone this repository, open it with VS Code, and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_.
+4. _PyCharm Dev Container_: clone this repository, open it with PyCharm, [create a Dev Container with Mount Sources](https://www.jetbrains.com/help/pycharm/start-dev-container-inside-ide.html), and [configure an existing Python interpreter](https://www.jetbrains.com/help/pycharm/configuring-python-interpreter.html#widget) at `/opt/venv/bin/python`.
+
+</details>
+
+<details open>
+<summary>Developing</summary>
+
+- This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
+- Run `cz bump` to bump Substrate's version, update the `CHANGELOG.md`, and create a git tag. Then push the changes and the git tag with `git push origin main --tags`.
+
+</details>
