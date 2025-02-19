@@ -13,6 +13,9 @@
     "overrideCommand": true,
     "postCreateCommand": "echo 'eval \"$(starship init bash)\"' >> ~/.bashrc",
     "postStartCommand": "uv sync --python ${PYTHON_VERSION:-{{ python_version }}} ${RESOLUTION_STRATEGY:+--resolution $RESOLUTION_STRATEGY} --all-extras && pre-commit install --install-hooks",
+    "containerEnv": {
+        "UV_CACHE_DIR": "/opt/cache"
+    },
     "customizations": {
         "jetbrains": {
             "backend": "PyCharm",

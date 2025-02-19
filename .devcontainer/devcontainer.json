@@ -12,7 +12,8 @@
     "containerEnv": {
         "VIRTUAL_ENV": "/opt/venv",
         "PATH": "/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-        "UV_PROJECT_ENVIRONMENT": "/opt/venv"
+        "UV_PROJECT_ENVIRONMENT": "/opt/venv",
+        "UV_CACHE_DIR": "/opt/cache"
     },
     "customizations": {
         "vscode": {
