@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {%- if with_fastapi_api %}
+        {
+            "name": "API [debug]",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "{{ project_name_snake_case }}.api:app",
+                "--reload"
+            ],
+            "jinja": true,
+            "justMyCode": true,
+            "console": "integratedTerminal"
+        },
+        {%- endif %}
+        {%- if with_typer_cli %}
+        {
+            "name": "CLI [debug]",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}//src//{{ project_name_snake_case }}//cli.py",
+            "args": [
+                "--name",
+                "Someone"
+            ],
+            "justMyCode": true,
+            "console": "integratedTerminal"
+        },
+        {%- endif %}
+        {
+            "name": "Python file [debug]",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

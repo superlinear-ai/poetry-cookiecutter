@@ -63,7 +63,7 @@ dist/
 .terraform/
 
 # VS Code
-.vscode/
+.vscode/*
 
 # Default template
 my-project/

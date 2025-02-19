@@ -62,5 +62,6 @@ dist/
 # Terraform
 .terraform/
 
-# VS Code
-.vscode/
+# VS Code (but still include launch configurations)
+.vscode/*
+!/.vscode/launch.json*

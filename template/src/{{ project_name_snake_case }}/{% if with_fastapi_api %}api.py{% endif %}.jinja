@@ -9,7 +9,7 @@ from fastapi import FastAPI
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     """Handle FastAPI startup and shutdown events."""
     # Startup events.
     for handler in logging.root.handlers:
