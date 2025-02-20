@@ -8,7 +8,12 @@
     },
     "remoteUser": "root",
     "onCreateCommand": "echo 'eval \"$(starship init bash)\"' >> ~/.bashrc",
-    "postCreateCommand": "uv sync && uv run pre-commit install --install-hooks",
+    "postCreateCommand": "uv sync && pre-commit install --install-hooks",
+    "containerEnv": {
+        "VIRTUAL_ENV": "/opt/venv",
+        "PATH": "/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "UV_PROJECT_ENVIRONMENT": "/opt/venv",
+    },
     "customizations": {
         "vscode": {
             "extensions": [
@@ -36,8 +41,8 @@
                 "github.copilot.chat.edits.codesearch.enabled": true,
                 "github.copilot.chat.edits.enabled": true,
                 "github.copilot.nextEditSuggestions.enabled": true,
-                "python.defaultInterpreterPath": "/workspaces/substrate/.venv/bin/python",
-                "python.terminal.activateEnvironment": true,
+                "python.defaultInterpreterPath": "/opt/venv/bin/python",
+                "python.terminal.activateEnvironment": false,
                 "terminal.integrated.env.linux": {
                     "GIT_EDITOR": "code --wait"
                 },
