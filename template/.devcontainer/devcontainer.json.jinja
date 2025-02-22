@@ -7,7 +7,7 @@
         {%- if project_type == 'app' %}
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         {%- endif %}
-        "ghcr.io/devcontainers-extra/features/starship": {}
+        "ghcr.io/devcontainers-extra/features/starship:1": {}
     },
     "overrideCommand": true,
     "postCreateCommand": "echo 'eval \"$(starship init bash)\"' >> ~/.bashrc",
