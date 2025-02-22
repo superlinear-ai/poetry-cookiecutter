@@ -1,5 +1,5 @@
 {
-    "name": "Substrate",
+    "name": "substrate",
     "image": "ghcr.io/astral-sh/uv:python3.10-bookworm",
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
