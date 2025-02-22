@@ -10,7 +10,7 @@ typing_options=("optional" "strict")
 for project_type in "${project_types[@]}"; do
     for typing in "${typing_options[@]}"; do
         # Scaffold a Python project
-        uvx copier copy . my-project \
+        uvx copier copy --vcs-ref=HEAD . my-project \
             --defaults \
             --data project_type="$project_type" \
             --data project_name="My Project" \
