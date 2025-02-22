@@ -3,6 +3,9 @@ services:
   devcontainer:
     build:
       target: dev
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     {%- if project_type == 'package' %}
     environment:
       - UV_PUBLISH_TOKEN
