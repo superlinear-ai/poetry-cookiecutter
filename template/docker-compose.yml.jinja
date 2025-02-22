@@ -9,7 +9,7 @@ services:
     {%- endif %}
     volumes:
       - ..:/workspaces
-      - command-history-volume:/root/.history/
+      - command-history-volume:/home/user/.history/
   {%- if project_type == 'app' %}
 
   app:
