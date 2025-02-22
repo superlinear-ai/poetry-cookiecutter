@@ -1,7 +1,4 @@
 # syntax=docker/dockerfile:1
-ARG UID=1000
-ARG GID=1000
-
 FROM ghcr.io/astral-sh/uv:python{{ python_version }}-bookworm AS dev
 
 # Create and activate a virtual environment [1].
@@ -15,6 +12,8 @@ RUN git config --system --add safe.directory '*'
 
 # Create a non-root user and give it passwordless sudo access [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+ARG UID=1000
+ARG GID=$UID
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     groupadd --gid $GID user && \
@@ -51,6 +50,8 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 
 # Create a non-root user and switch to it [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+ARG UID=1000
+ARG GID=$UID
 RUN groupadd --gid $GID user && \
     useradd --create-home --no-log-init --gid $GID --uid $UID user
 USER user
