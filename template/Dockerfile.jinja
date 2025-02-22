@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG UID=1000
-ARG GID=$UID
+ARG GID=1000
 
 FROM ghcr.io/astral-sh/uv:python{{ python_version }}-bookworm AS dev
 
