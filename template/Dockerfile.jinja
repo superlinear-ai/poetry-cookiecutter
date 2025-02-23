@@ -12,12 +12,10 @@ RUN git config --system --add safe.directory '*'
 
 # Create a non-root user and give it passwordless sudo access [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
-ARG UID=1000
-ARG GID=$UID
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
-    groupadd --gid $GID user && \
-    useradd --create-home --no-log-init --gid $GID --uid $UID user && \
+    groupadd --gid 1000 user && \
+    useradd --create-home --no-log-init --gid 1000 --uid 1000 user && \
     chown user:user /opt/ && \
     apt-get update && apt-get install --no-install-recommends --yes sudo && \
     echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
@@ -50,10 +48,8 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 
 # Create a non-root user and switch to it [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
-ARG UID=1000
-ARG GID=$UID
-RUN groupadd --gid $GID user && \
-    useradd --create-home --no-log-init --gid $GID --uid $UID user
+RUN groupadd --gid 1000 user && \
+    useradd --create-home --no-log-init --gid 1000 --uid 1000 user
 USER user
 
 # Set the working directory.
@@ -64,7 +60,7 @@ COPY --chown=user:user . .
 
 # Install the application and its dependencies [1].
 # [1] https://docs.astral.sh/uv/guides/integration/docker/#optimizations
-RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/uv \
+RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/uv \
     --mount=from=ghcr.io/astral-sh/uv,source=/uv,target=/bin/uv \
     uv sync \
     --all-extras \
