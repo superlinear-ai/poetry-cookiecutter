@@ -1,3 +1,12 @@
+## v1.1.1 (2025-02-23)
+
+### Fix
+
+- fix invalid paths on Windows (#284)
+- relock before cz bump (#277)
+- **api**: remove unnecessary default type argument (#280)
+- use serve instead of app in task sequence (#279)
+
 ## v1.1.0 (2025-02-17)
 
 ### Feat
