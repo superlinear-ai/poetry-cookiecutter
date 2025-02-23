@@ -50,9 +50,6 @@ jobs:
           git init
           git checkout -b test
           git add .
-          whoami
-          echo $UID
-          ls -la
 
       - name: Lint and test project
         uses: devcontainers/ci@v0.3
