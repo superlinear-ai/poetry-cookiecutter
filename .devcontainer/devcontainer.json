@@ -1,19 +1,18 @@
 {
-    "name": "Substrate",
+    "name": "substrate",
     "image": "ghcr.io/astral-sh/uv:python3.10-bookworm",
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-        "ghcr.io/devcontainers/features/node:1": {},
-        "ghcr.io/devcontainers-extra/features/starship": {}
+        "ghcr.io/devcontainers-extra/features/devcontainers-cli:1": {},
+        "ghcr.io/devcontainers-extra/features/starship:1": {}
     },
-    "remoteUser": "root",
+    "remoteEnv": {
+        "VIRTUAL_ENV": "/opt/venv",
+        "PATH": "/opt/venv/bin:${containerEnv:PATH}",
+        "UV_PROJECT_ENVIRONMENT": "/opt/venv"
+    },
     "onCreateCommand": "echo 'eval \"$(starship init bash)\"' >> ~/.bashrc",
     "postCreateCommand": "uv sync && pre-commit install --install-hooks",
-    "containerEnv": {
-        "VIRTUAL_ENV": "/opt/venv",
-        "PATH": "/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-        "UV_PROJECT_ENVIRONMENT": "/opt/venv",
-    },
     "customizations": {
         "vscode": {
             "extensions": [

@@ -10,7 +10,7 @@ typing_options=("optional" "strict")
 for project_type in "${project_types[@]}"; do
     for typing in "${typing_options[@]}"; do
         # Scaffold a Python project
-        uvx copier copy . my-project \
+        uvx copier copy --vcs-ref=HEAD . my-project \
             --defaults \
             --data project_type="$project_type" \
             --data project_name="My Project" \
@@ -29,11 +29,8 @@ for project_type in "${project_types[@]}"; do
         git checkout -b test
         git add .
 
-        # Install the devcontainers CLI
-        npm install -g @devcontainers/cli
-
         # Lint and test the project with a dev container
-        devcontainer up --workspace-folder .
+        devcontainer up --remove-existing-container --workspace-folder .
         devcontainer exec --workspace-folder . uv lock
         devcontainer exec --workspace-folder . poe lint
         devcontainer exec --workspace-folder . poe test

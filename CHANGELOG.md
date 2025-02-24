@@ -1,3 +1,10 @@
+## v1.2.0 (2025-02-24)
+
+### Feat
+
+- use a non-root user the Dev Container (#287)
+- optimize Dev Container features (#285)
+
 ## v1.1.1 (2025-02-23)
 
 ### Fix

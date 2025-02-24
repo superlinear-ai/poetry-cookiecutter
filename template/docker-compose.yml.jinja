@@ -9,15 +9,12 @@ services:
     {%- endif %}
     volumes:
       - ..:/workspaces
-      - command-history-volume:/root/.history/
+      - command-history-volume:/home/user/.history/
   {%- if project_type == 'app' %}
 
   app:
     build:
       target: app
-      args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
     {%- if with_fastapi_api %}
     ports:
       - "8000:8000"

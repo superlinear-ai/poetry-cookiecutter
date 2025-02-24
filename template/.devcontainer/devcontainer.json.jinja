@@ -7,11 +7,11 @@
         {%- if project_type == 'app' %}
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         {%- endif %}
-        "ghcr.io/devcontainers-extra/features/starship": {}
+        "ghcr.io/devcontainers-extra/features/starship:1": {}
     },
     "overrideCommand": true,
-    "postCreateCommand": "echo 'eval \"$(starship init bash)\"' >> ~/.bashrc",
-    "postStartCommand": "uv sync --python ${PYTHON_VERSION:-{{ python_version }}} ${RESOLUTION_STRATEGY:+--resolution $RESOLUTION_STRATEGY} --all-extras && pre-commit install --install-hooks",
+    "remoteUser": "user",
+    "postStartCommand": "sudo chown -R user:user /opt/ && uv sync --python ${PYTHON_VERSION:-{{ python_version }}} ${RESOLUTION_STRATEGY:+--resolution $RESOLUTION_STRATEGY} --all-extras && pre-commit install --install-hooks",
     "customizations": {
         "jetbrains": {
             "backend": "PyCharm",
