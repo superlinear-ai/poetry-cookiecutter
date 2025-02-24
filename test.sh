@@ -29,9 +29,6 @@ for project_type in "${project_types[@]}"; do
         git checkout -b test
         git add .
 
-        # Install the devcontainers CLI
-        npm install -g @devcontainers/cli
-
         # Lint and test the project with a dev container
         devcontainer up --workspace-folder .
         devcontainer exec --workspace-folder . uv lock
